@@ -1,0 +1,21 @@
+# Python temporary files
+*.py[cod]
+__pycache__/
+*.sqlite3
+
+# Django automatically generated files
+*.log
+*.pot
+migrations/
+
+# Virtual Environment files
+.env
+venv/
+env/
+
+# OS temporary files
+.DS_Store
+desktop.ini
+
+# IDE specific files
+.vscode/
