@@ -1,0 +1,23 @@
+{% load static %}
+<header>
+
+  <nav>
+    <a href="{% url 'index' %}"><img class="logo" src="{% static 'images/logo.png' %}" alt="logo.png"></a>
+    <div><p>Administrativo</p></div>
+    <a class="button-nav" href="{% url 'index' %}">Página Inicial</a>
+      <ul class="dropdown-nav">
+        <li class="dropdown">
+        <a class="button-nav" href="">Gerenciar <img class="down-arrow" src="{% static 'icons/down-arrow.ico' %}" alt="down-arrow.ico"></a>
+        <ul class="dropdown-nav-choices">
+          <li class="dropdown-nav-option"><a class="button-nav" href="">Refeições</a></li>
+          <li class="dropdown-nav-option"><a class="button-nav" href="">Categorias</a></li>
+          <li class="dropdown-nav-option"><a class="button-nav" href="">Estoque</a></li>
+          <li class="dropdown-nav-option"><a class="button-nav" href="">Produtos</a></li>
+        </ul>
+        </li>
+      </ul>
+    <a class="button-nav" href="">Promoções</a>
+    <a class="button-nav" href="">Comunicação</a>
+  </nav>
+
+</header>

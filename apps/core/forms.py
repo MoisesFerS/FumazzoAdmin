@@ -1,28 +1,28 @@
 from django import forms
 from phonenumber_field.formfields import PhoneNumberField
 from .models import Supplier
-from workers.models import Worker
+from ..workers.models import Worker
 
 class SupplierRegister(forms.Form):
     name = forms.CharField(
         max_length=50, 
-        widget=forms.TextInput(attrs={'class': ''})
+        widget=forms.TextInput(attrs={'class': 'css class'})
     )
 
     address = forms.CharField(
         max_length=150, 
-        widget=forms.TextInput(attrs={'class': ''})
+        widget=forms.TextInput(attrs={'class': 'css class'})
     )
 
     phone = PhoneNumberField(
         required=False,
-        widget=forms.TextInput(attrs={'class': ''})
+        widget=forms.TextInput(attrs={'class': 'css class'})
     )
 
     email = forms.CharField(
         required=False,
         max_length=150, 
-        widget=forms.TextInput(attrs={'class': ''})
+        widget=forms.TextInput(attrs={'class': 'css class'})
     )
 
     def clean(self):
@@ -52,12 +52,12 @@ class SupplierRegister(forms.Form):
 class ProductRegister(forms.Form):
     name = forms.CharField(
         max_length=50,
-        widget=forms.TextInput(attrs={'class': ''}),
+        widget=forms.TextInput(attrs={'class': 'css class'}),
     )
 
     quantity = forms.IntegerField(
         min_value=1,
-        widget=forms.NumberInput(attrs={'class': ''}),
+        widget=forms.NumberInput(attrs={'class': 'css class'}),
         
     )
 
@@ -70,19 +70,19 @@ class ProductRegister(forms.Form):
             (5, 'Unidade'),
             (6, 'Pacote'),
         ],
-        widget=forms.RadioSelect(attrs={'class': ''}),
+        widget=forms.RadioSelect(attrs={'class': 'css class'}),
     )
 
     individual_price = forms.DecimalField(
         min_value=0.01,
         max_digits=10,
         decimal_places=2,
-        widget=forms.NumberInput(attrs={'class': ''}),
+        widget=forms.NumberInput(attrs={'class': 'css class'}),
     )
 
     image = forms.ImageField(
         required=False,
-        widget=forms.FileInput(attrs={'class': ''}),
+        widget=forms.FileInput(attrs={'class': 'css class'}),
     )
 
     type = forms.ChoiceField(
@@ -94,7 +94,7 @@ class ProductRegister(forms.Form):
             (5, 'Bebida'),
             (6, 'Sorvete'),
         ],
-        widget=forms.RadioSelect(attrs={'class': ''}),
+        widget=forms.RadioSelect(attrs={'class': 'css class'}),
     )
 
     def clean_quantity(self):
@@ -112,7 +112,7 @@ class ProductRegister(forms.Form):
 class CategoryRegister(forms.Form):
     name = forms.CharField(
         max_length=50,
-        widget=forms.TextInput(attrs={'class': ''}),
+        widget=forms.TextInput(attrs={'class': 'css class'}),
     )
 
     def clean_name(self):
@@ -124,43 +124,43 @@ class CategoryRegister(forms.Form):
     
 class RestockRegister(forms.Form):
     date = forms.DateField(
-        widget=forms.DateInput(attrs={'class': '', 'type': 'date'}),
+        widget=forms.DateInput(attrs={'class': 'css class', 'type': 'date'}),
     )
 
     total_price = forms.DecimalField(
-        widget=forms.NumberInput(attrs={'class': ''}),
+        widget=forms.NumberInput(attrs={'class': 'css class'}),
     )
 
     supplier = forms.ModelChoiceField(
         queryset=Supplier.objects.all(),
-        widget=forms.Select(attrs={'class': ''}),
+        widget=forms.Select(attrs={'class': 'css class'}),
     )
 
     receiver = forms.ModelChoiceField(
         queryset=Worker.objects.all(),
-        widget=forms.Select(attrs={'class': ''}),
+        widget=forms.Select(attrs={'class': 'css class'}),
     )
 
 class MealRegister(forms.Form):
     name = forms.CharField(
         max_length=50,
-        widget=forms.TextInput(attrs={'class': ''}),
+        widget=forms.TextInput(attrs={'class': 'css class'}),
     )
 
     price = forms.DecimalField(
-        widget=forms.NumberInput(attrs={'class': ''}),
+        widget=forms.NumberInput(attrs={'class': 'css class'}),
     )
 
     description = forms.CharField(
-        widget=forms.Textarea(attrs={'class': ''})
+        widget=forms.Textarea(attrs={'class': 'css class'})
     )
 
     calories = forms.IntegerField(
-        widget=forms.NumberInput(attrs={'class': ''})
+        widget=forms.NumberInput(attrs={'class': 'css class'})
     )
 
     image = forms.ImageField(
-        widget=forms.FileInput(attrs={'class': ''})
+        widget=forms.FileInput(attrs={'class': 'css class'})
     )
     
     def clean_price(self):
@@ -176,4 +176,13 @@ class MealRegister(forms.Form):
         if calories < 0:
             raise forms.ValidationError('O valor deve ser positivo.')
         return calories
-    
+
+class WorkerLogin(forms.Form):
+    id = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'css class'})
+    )
+
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'css class'})
+    )
+

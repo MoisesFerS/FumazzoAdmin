@@ -1,0 +1,322 @@
+/* --- GLOBAL CSS --- */
+
+/* ##### IMPORTS ##### */
+
+  /* FONTS */
+
+  @font-face {
+
+    font-family: 'Oswald';
+    src: url('/static/fonts/Oswald.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+
+  }
+
+/* ##### GLOBAL VARIABLES ##### */
+
+:root{
+
+  /* COLORS */
+  --color-primary: #000000; /* Black */
+  --color-secundary: #F6872C; /* Orange */
+  --color-detail1: #1B1B1B; /* Dark Gray */
+  --color-detail2: #FFEBD8; /* Cream */
+
+  /* FONTS CONFIGS */
+  --font-family: 'Oswald', sans-serif;
+  --size-title: 3.25rem;
+  --size-subtitle: 2.25rem;
+  --size-text: 1.25rem;
+  --size-caption: 1rem;
+  --weight-title: 700;
+  --weight-subtitle: 600;
+  --weight-text: 400;
+  --weight-caption: 300;
+
+  /* FONTS */
+  --font-title: normal normal var(--weight-title) var(--size-title) var(--font-family);
+  --font-subtitle: normal normal var(--weight-subtitle) var(--size-subtitle) var(--font-family);
+  --font-text: normal normal var(--weight-text) var(--size-text) var(--font-family);
+  --font-caption: normal normal var(--weight-caption) var(--size-caption) var(--font-family);
+
+}
+
+/* ##### GLOBAL RESET ##### */
+
+*{
+
+  list-style-type: none;
+  text-decoration: none;
+  padding: 0px;
+  margin: 0px;
+
+}
+
+button, input{
+
+  border: none;
+
+}
+
+/* ##### BASE CONFIG ##### */
+
+body{
+
+  background-color: var(--color-primary);
+  min-height: 100vh;
+  min-width: 100vw;
+  background-image: url('../images/background.png');
+  display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+      'header'
+      'content'
+      'footer';
+  justify-items: center;
+  gap: 100px;
+
+}
+
+p{
+
+  font: var(--font-text);
+  color: var(--color-detail2);
+
+}
+
+h1{
+
+  font: var(--font-title);
+  color: var(--color-detail2);
+
+}
+
+h2{
+
+  font: var(--font-subtitle);
+  color: var(--color-detail2);
+
+}
+
+.title{
+
+  font: var(--font-title);
+  color: var(--color-detail2);
+
+}
+
+.subtitle{
+
+  font: var(--font-subtitle);
+  color: var(--color-detail2);
+
+}
+
+.text{
+
+  font: var(--font-text);
+  color: var(--color-detail2);
+
+}
+
+.caption{
+
+  font: var(--font-caption);
+  color: var(--color-detail2);
+
+}
+
+.logo{
+
+  height: 125px;
+
+}
+
+input{
+
+  border-radius: 3px;
+  padding-left: 20px;
+  font: var(--font-text);
+
+}
+
+/* ##### HEADER ##### */
+
+/* BASE CONFIG */
+
+header{
+
+  grid-area: header;
+  min-width: 100vw;
+  height: 8.25rem;
+  display: flex;
+  justify-content: center;
+
+}
+
+/* ##### NAVBAR ##### */
+
+/* BASE CONFIG */
+
+nav{
+
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto auto auto;
+  align-items: center;
+  align-self: center;
+  width: 1024px;
+  gap: 25px;
+
+}
+
+/* DROPDOWN */
+
+  /* Dropdown Icon */
+  .down-arrow{
+
+    width: 16px;
+
+  }
+
+  /* Dropdown choices */
+  .dropdown-nav-choices {
+    
+    display: none; /* Hidden */
+    position: absolute;
+    background-color: #333;
+    width: 6.25rem;
+    z-index: 1;
+
+  }
+
+  /* Show dropdown options */
+  .dropdown:hover .dropdown-nav-choices {
+
+    display: block;
+
+  }
+
+  /* Hover over dropdown options */
+  .dropdown-nav-option a:hover {
+
+    background-color: var(--color-detail1);
+
+  }
+
+  /* Keep the button selected as the user hover over the options */
+  .dropdown:hover > .button-nav {
+
+    background-color: var(--color-detail1);
+
+  }
+
+  /* Change the down arrow to an up arrow when the user hovers over the dropdown */
+  .dropdown:hover .down-arrow {
+
+    content: url("../icons/up-arrow.ico");
+
+  }
+
+/* ##### FOOTER ##### */
+
+/* BASE CONFIG */
+
+  footer{
+
+    width: 100vw;
+    display: flex;
+    background-color: var(--color-primary);
+    justify-content: center;
+
+  }
+
+  .footer-content{
+
+    width: 1024px;
+    height: 25.5rem;
+    grid-template-areas: footer;
+    display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: 1fr auto;
+
+
+  }
+
+/* BRAND */
+
+  .brand{
+
+    display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto;
+    align-content: center;
+    margin: auto;
+
+  }
+
+/* RIGTHS */
+
+.rights{
+
+  grid-column: 1 /span 2;
+  height: 100px;
+  display: flex;
+    flex-direction: column;
+  gap: 20px;
+
+}
+
+/* ##### BUTTONS ##### */
+
+.button-nav{
+
+  font: var(--font-text);
+  color: var(--color-detail2);
+  width: 6.25rem;
+  height: 2.5rem;
+  text-align: center;
+  align-content: center;
+  display: block;
+
+}
+
+.button-nav:hover{
+
+  background-color: #333;
+
+}
+
+.button-1{
+
+  font: var(--font-text);
+  color: var(--color-detail2);
+  width: 11.5rem;
+  height: 3.25rem;
+  text-align: center;
+  align-content: center;
+  background-color: var(--color-secundary);
+  border: 3px solid var(--color-secundary);
+  border-radius: 3px;
+
+}
+
+.button-1:hover{
+
+  background-color: var(--color-primary);
+  color: var(--color-secundary);
+
+}
+
+/* ##### X ##### */
+
+.content{
+
+grid-template-areas: content;
+width: 1024px;
+display: flex;
+flex-direction: column;
+gap: 100px;
+
+}

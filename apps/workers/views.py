@@ -1,3 +1,4 @@
 from django.shortcuts import render
 
-# Create your views here.
+def workers_index(request):
+    return render(request, 'workers/index.html')

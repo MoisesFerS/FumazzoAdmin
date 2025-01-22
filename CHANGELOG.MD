@@ -7,6 +7,29 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.5.0] - 22/01/2025 - Views Paths
+
+### ADDED
+- Updated the `Fumazzo/urls` to include:
+    - `core/urls` - To redirect to rigth view.
+    - `workers/urls` - To redirect to rigth view.
+- Updated `core/views` with the defs:
+    - `index` - Render the main page of the core app.
+    - `login` - Render the login page of the core app and authenticate the worker.
+- Updated `workers/views` at both apps:
+    - `index` - Render the main page of the workers app.
+- Created form `login` at `partials/forms/`.
+- Created the folder `statics/fonts` the `Oswald.ttf` font.
+- Updated the base structure of the site:
+    - `base.html` - Basic structure of a HTML file.
+    - `header.html` - Header of the site.
+    - `footer.html` - Footer of the site.
+    - `styles.css` - Sytle of the base page.
+- Added the `logo.png`, `background.png` and the navbar icons.
+
+### CHANGED
+- Updated the static configuration of `Fumazzo/settings.py`
+
 ## [0.4.0] - 22/01/2025 - Forms and Models
 
 ### ADDED
