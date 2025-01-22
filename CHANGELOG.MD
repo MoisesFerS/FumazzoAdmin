@@ -7,6 +7,29 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.4.0] - 22/01/2025 - Forms and Models
+
+### ADDED
+- Created the following models at `core.models`:
+    - `Supplier` - Stores the suppliers data.
+    - `Product` - Stores the stock products data.
+    - `Category` - To organize the meals and products.
+    - `Restock` - To create entries of the products being added to the stock.
+    - `Ressuply` - Stores entries of batches of individual products.
+    - `Product_meal` - Relation between Products(ingredients) and Meals.
+    - `Category_meal` - Relation between Categories and Meals.
+- Created the following models at `workers.models`:
+    - `Shift` - To store the workers shift data.
+    - `Role` - To store the workers role data.
+    - `Worker` - To store the workers data.
+- Added to `INSTALLED_APPS` at `FumazzoAdmin/settings.py`:
+    -  `phonenumber_field` - To enable the phonenumbers from django.
+- Added to `requirements.txt`:
+    - `setuptools` - To be able to run the servar within Linux.
+
+### CHANGED
+- Fixed typos at `CHANGELOG.MD`.
+
 ## [0.3.0] - 21/01/2025 - Folder Structure
 
 ### ADDED
@@ -48,7 +71,7 @@ The format is based on:
 ### CHANGED
 
 - Updated the `apps.py` in both apps to use the format `apps.<appname>` instead of `<appname>`, ensuring the correct import path.
-- Updated `Fumazzo/settings.py` to include both apps in the `INSTALLED_APPS` configuration.
+- Updated `FumazzoAdmin/settings.py` to include both apps in the `INSTALLED_APPS` configuration.
 
 
 
