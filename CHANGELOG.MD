@@ -11,24 +11,32 @@ The format is based on:
 
 ### ADDED
 - Created the following models at `core.models`:
-    - `Supplier` - Stores the suppliers data.
-    - `Product` - Stores the stock products data.
-    - `Category` - To organize the meals and products.
-    - `Restock` - To create entries of the products being added to the stock.
-    - `Ressuply` - Stores entries of batches of individual products.
-    - `Product_meal` - Relation between Products(ingredients) and Meals.
-    - `Category_meal` - Relation between Categories and Meals.
+    - `Supplier` - Stores supplier data.
+    - `Product` - Stores stock product data.
+    - `Category` - Organizes meals and products.
+    - `Restock` - Tracks products added to stock.
+    - `Resupply` - Stores entries of product batches.
+    - `ProductMeal` - Relation between Products (ingredients) and Meals.
 - Created the following models at `workers.models`:
-    - `Shift` - To store the workers shift data.
-    - `Role` - To store the workers role data.
-    - `Worker` - To store the workers data.
-- Added to `INSTALLED_APPS` at `FumazzoAdmin/settings.py`:
-    -  `phonenumber_field` - To enable the phonenumbers from django.
-- Added to `requirements.txt`:
-    - `setuptools` - To be able to run the servar within Linux.
+    - `Shift` - Stores worker shift data.
+    - `Role` - Stores worker role data.
+    - `Worker` - Stores worker data.
+- Added the following forms at `core.forms`:
+    - `SupplierRegister` - Form to register a supplier.
+    - `ProductRegister` - Form to register a product in stock.
+    - `CategoryRegister` - Form to register a new category.
+    - `RestockRegister` - Form to register a stock entry.
+    - `MealRegister` - Form to register a meal.
+- Added the following forms at `workers.forms`:
+    - `ShiftRegister` - Form to register a shift.
+    - `RoleRegister` - Form to register a role.
+    - `WorkerRegister` - Form to register a new worker.
+- Created `products` and `meals` folders at `media/core/` for storing product and meal media files.
+- Added `phonenumber_field` to `INSTALLED_APPS` in `FumazzoAdmin/settings.py` to enable phone number handling with Django.
+- Added `setuptools` to `requirements.txt` for running the server on Linux.
 
 ### CHANGED
-- Fixed typos at `CHANGELOG.MD`.
+- Fixed typos in `CHANGELOG.MD`.
 
 ## [0.3.0] - 21/01/2025 - Folder Structure
 

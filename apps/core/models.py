@@ -12,24 +12,13 @@ class Supplier(models.Model):
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
-    type_choices = [
-        (1, 'Lanches'),
-        (2, 'Sobremesa Quente'),
-        (3, 'Sobremesa Gelada'),
-        (4, 'Bebida Quente'),
-        (5, 'Bebida Gelada'),
-        (6, 'Refrigerante'),
-        (7, 'Suco'),
-        (8, 'Alcólico'),
-    ]
-    type = models.IntegerField(choices=type_choices, default=1)
 
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     quantity = models.IntegerField()
     individual_price = models.IntegerField()
-    image = models.ImageField(upload_to='images/Products')
+    image = models.ImageField(upload_to='media/products', null=True, blank=True)
     status_choices = [
         (1, 'Cheio(100%)'),
         (2, 'Metade(50%)'),
@@ -69,14 +58,11 @@ class Meal(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2)
     description = models.TextField()
     calories = models.IntegerField()
-    image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(upload_to='media/meals', null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 class Product_meal(models.Model):
     id = models.AutoField(primary_key=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
-
-class Category_meal(models.Model):
-    id = models.AutoField(primary_key=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
