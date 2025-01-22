@@ -7,6 +7,32 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.3.0] - 21/01/2025 - Folder Structure
+
+### ADDED
+- Created the following folder structure:
+    - `static` - For static files related to page structure.
+        - `css` - Stores all CSS files.
+        - `icons` - Stores icons used in the project.
+        - `images` - Stores images related to the pages.
+        - `js` - Stores all JavaScript files used.
+    - `templates` - For HTML templates.
+        - `core` - Stores templates for the core app.
+        - `partials` - Stores reusable pieces of HTML.
+            - `forms` - Stores all forms.
+        - `workers` - Stores templates for the workers app.
+    - `media` - For uploaded files.
+        - `core` - Stores uploads from the core app.
+        - `workers` - Stores uploads from the workers app.
+- Created the following files:
+    - `base.html` - Base template at `templates/`.
+    - Created `header.html` and `footer.html` - Partial templates stored at `templates/partials/` for reusable page sections.
+    - `styles.css` - CSS file at `static/css/`.
+    - `scripts.js` - JavaScript file at `static/js/`.
+    - `index.html` - Created for both `templates/core` and `templates/workers`.
+- Added `.gitkeep` files to empty folders to ensure they are tracked by Git.
+
+ 
 ## [0.2.0] - 21/01/2025 - Creating Apps
 
 ### ADDED
