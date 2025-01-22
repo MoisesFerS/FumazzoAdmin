@@ -7,6 +7,37 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.4.0] - 22/01/2025 - Forms and Models
+
+### ADDED
+- Created the following models at `core.models`:
+    - `Supplier` - Stores supplier data.
+    - `Product` - Stores stock product data.
+    - `Category` - Organizes meals and products.
+    - `Restock` - Tracks products added to stock.
+    - `Resupply` - Stores entries of product batches.
+    - `ProductMeal` - Relation between Products (ingredients) and Meals.
+- Created the following models at `workers.models`:
+    - `Shift` - Stores worker shift data.
+    - `Role` - Stores worker role data.
+    - `Worker` - Stores worker data.
+- Added the following forms at `core.forms`:
+    - `SupplierRegister` - Form to register a supplier.
+    - `ProductRegister` - Form to register a product in stock.
+    - `CategoryRegister` - Form to register a new category.
+    - `RestockRegister` - Form to register a stock entry.
+    - `MealRegister` - Form to register a meal.
+- Added the following forms at `workers.forms`:
+    - `ShiftRegister` - Form to register a shift.
+    - `RoleRegister` - Form to register a role.
+    - `WorkerRegister` - Form to register a new worker.
+- Created `products` and `meals` folders at `media/core/` for storing product and meal media files.
+- Added `phonenumber_field` to `INSTALLED_APPS` in `FumazzoAdmin/settings.py` to enable phone number handling with Django.
+- Added `setuptools` to `requirements.txt` for running the server on Linux.
+
+### CHANGED
+- Fixed typos in `CHANGELOG.MD`.
+
 ## [0.3.0] - 21/01/2025 - Folder Structure
 
 ### ADDED
@@ -48,7 +79,7 @@ The format is based on:
 ### CHANGED
 
 - Updated the `apps.py` in both apps to use the format `apps.<appname>` instead of `<appname>`, ensuring the correct import path.
-- Updated `Fumazzo/settings.py` to include both apps in the `INSTALLED_APPS` configuration.
+- Updated `FumazzoAdmin/settings.py` to include both apps in the `INSTALLED_APPS` configuration.
 
 
 
