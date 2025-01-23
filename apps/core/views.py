@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from . import models
 from . import forms
 from django.contrib import messages 
-from .utils import bcrypt
+from ..workers.utils import bcrypt
 
 def index(request):
     if 'workerID' in request.session:
@@ -10,6 +10,7 @@ def index(request):
             'workerID': request.session['workerID'],
             'worker_first_name': request.session.get('worker_first_name', ''),
             'worker_last_name': request.session.get('worker_last_name', ''),
+            'worker_permisson': request.session.get('worker_permission', ''),
         }
         return render(request, 'core/index.html', context)
     else:
@@ -28,11 +29,13 @@ def login(request):
         try:
 
             worker = models.Worker.objects.get(id=id)
+            role = models.Role.objects.get(id=worker.role)
 
             if bcrypt.checkpw(password.encode('UTF-8'), worker.password.encode('UTF-8')):
                 request.session['workerID'] = worker.id
                 request.session['worker_first_name'] = worker.first_name
                 request.session['worker_last_name'] = worker.last_name
+                request.session['worker_permission'] = role.permission
                 return redirect('core:index')  
             else:
                 messages.error(request, 'Senha inválida')

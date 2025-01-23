@@ -177,12 +177,3 @@ class MealRegister(forms.Form):
             raise forms.ValidationError('O valor deve ser positivo.')
         return calories
 
-class WorkerLogin(forms.Form):
-    id = forms.IntegerField(
-        widget=forms.NumberInput(attrs={'class': 'css class'})
-    )
-
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'css class'})
-    )
-

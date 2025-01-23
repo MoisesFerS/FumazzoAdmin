@@ -2,10 +2,10 @@
 <header>
 
   <nav>
-    <a href="{% url 'core:index' %}"><img class="logo" src="{% static 'images/logo.png' %}" alt="logo.png"></a>
+    <a href="{% url 'workers:index' %}"><img class="logo" src="{% static 'images/logo.png' %}" alt="logo.png"></a>
     <div><p>Administrativo</p></div>
     {% if workerID %}
-      <a class="button-nav" href="{% url 'core:index' %}">Página Inicial</a>
+      <a class="button-nav" href="{% url 'workers:index' %}">Página Inicial</a>
         <ul class="dropdown-nav">
           <li class="dropdown">
           <a class="button-nav" href="">Gerenciar <img class="down-arrow" src="{% static 'icons/down-arrow.ico' %}" alt="down-arrow.ico"></a>
@@ -20,7 +20,7 @@
       <a class="button-nav" href="">Promoções</a>
       <a class="button-nav" href="">Comunicação</a>
     {% else %}
-      <a href="{% url 'core:login' %}" class="button-1">Fazer Log-in</a>
+      <a href="{% url 'workers:login' %}" class="button-1">Fazer Log-in</a>
     {% endif %}
   </nav>
 
