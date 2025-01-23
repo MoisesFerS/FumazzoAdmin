@@ -7,6 +7,41 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.5.0] - 22/01/2025 - Views Paths
+
+### ADDED
+- Created `login` form at `partials/forms/`.
+- Created `static/fonts/` folder and added the `Oswald.ttf` font.
+- Added assets:
+    - `logo.png` - Project logo.
+    - `background.png` - Background image for pages.
+    - Navbar icons.
+
+### CHANGED
+- Settings:
+    - Updated `Fumazzo/settings.py` to include static file configurations.
+- URLs:
+    - Updated `Fumazzo/urls.py` to include:
+    - `core/urls` - Routes requests to the correct views in the `core` app.
+    - `workers/urls` - Routes requests to the correct views in the `workers` app.
+    - `Updated urls.py` in both apps to include namespaces for better URL resolution.
+- Core Views:
+    - Added:
+        - `index` - Renders the main page of the core app.
+        - `login` - Renders the login page of the core app and authenticates workers.
+        - `logout` - Logs out users by flushing their session.
+- Workers Views:
+    - Added:
+        - `index` - Renders the main page of the `workers` app.
+- Base Site Structure:
+    - Updated templates:
+        - `base.html` - Defines the basic structure of the site's HTML.
+        - `header.html` - Site header.
+        - `footer.html` - Site footer.
+- Updated `styles.css` to refine the base page's styling.
+    - Dependencies:
+        - Added `bcrypt` to `requirements.txt` for secure password hashing.
+
 ## [0.4.0] - 22/01/2025 - Forms and Models
 
 ### ADDED

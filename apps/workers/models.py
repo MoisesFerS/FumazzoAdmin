@@ -16,10 +16,11 @@ class Role(models.Model):
 
 class Worker(models.Model):
     id = models.AutoField(primary_key=True)
+    password = models.CharField(max_length=150)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=150)
-    phone = PhoneNumberField(max_length=15)
+    email = models.EmailField(max_length=150, unique=True)
+    phone = PhoneNumberField(max_length=15, unique=True)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
     shift = models.ForeignKey(Shift, on_delete=models.CASCADE)
     hiring_date = models.DateField()

@@ -1,0 +1,23 @@
+{% load static %}
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <div class="form">
+        <div>
+            <p><b>ID</b></p>
+            {{form.id}}
+        </div>
+
+        <div>
+            <p><b>SENHA</b></p>
+            {{form.password}}
+        </div>
+
+        <div>
+            <button type="submit" class="button-1">FAZER LOG-IN</button>
+        </div>
+    </div>
+
+</form>
