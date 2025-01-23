@@ -10,25 +10,37 @@ The format is based on:
 ## [0.5.0] - 22/01/2025 - Views Paths
 
 ### ADDED
-- Updated the `Fumazzo/urls` to include:
-    - `core/urls` - To redirect to rigth view.
-    - `workers/urls` - To redirect to rigth view.
-- Updated `core/views` with the defs:
-    - `index` - Render the main page of the core app.
-    - `login` - Render the login page of the core app and authenticate the worker.
-- Updated `workers/views` at both apps:
-    - `index` - Render the main page of the workers app.
-- Created form `login` at `partials/forms/`.
-- Created the folder `statics/fonts` the `Oswald.ttf` font.
-- Updated the base structure of the site:
-    - `base.html` - Basic structure of a HTML file.
-    - `header.html` - Header of the site.
-    - `footer.html` - Footer of the site.
-    - `styles.css` - Sytle of the base page.
-- Added the `logo.png`, `background.png` and the navbar icons.
+- Created `login` form at `partials/forms/`.
+- Created `static/fonts/` folder and added the `Oswald.ttf` font.
+- Added assets:
+    - `logo.png` - Project logo.
+    - `background.png` - Background image for pages.
+    - Navbar icons.
 
 ### CHANGED
-- Updated the static configuration of `Fumazzo/settings.py`
+- Settings:
+    - Updated `Fumazzo/settings.py` to include static file configurations.
+- URLs:
+    - Updated `Fumazzo/urls.py` to include:
+    - `core/urls` - Routes requests to the correct views in the `core` app.
+    - `workers/urls` - Routes requests to the correct views in the `workers` app.
+    - `Updated urls.py` in both apps to include namespaces for better URL resolution.
+- Core Views:
+    - Added:
+        - `index` - Renders the main page of the core app.
+        - `login` - Renders the login page of the core app and authenticates workers.
+        - `logout` - Logs out users by flushing their session.
+- Workers Views:
+    - Added:
+        - `index` - Renders the main page of the `workers` app.
+- Base Site Structure:
+    - Updated templates:
+        - `base.html` - Defines the basic structure of the site's HTML.
+        - `header.html` - Site header.
+        - `footer.html` - Site footer.
+- Updated `styles.css` to refine the base page's styling.
+    - Dependencies:
+        - Added `bcrypt` to `requirements.txt` for secure password hashing.
 
 ## [0.4.0] - 22/01/2025 - Forms and Models
 

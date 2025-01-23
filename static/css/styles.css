@@ -136,9 +136,19 @@ h2{
 
 input{
 
+  height: 40px;
+  width: 180px;
   border-radius: 3px;
-  padding-left: 20px;
+  padding-left: 15px;
   font: var(--font-text);
+
+}
+
+.form{
+
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 
 }
 
@@ -173,88 +183,88 @@ nav{
 
 /* DROPDOWN */
 
-  /* Dropdown Icon */
-  .down-arrow{
+/* Dropdown Icon */
+.down-arrow{
 
-    width: 16px;
+  width: 16px;
 
-  }
+}
 
-  /* Dropdown choices */
-  .dropdown-nav-choices {
-    
-    display: none; /* Hidden */
-    position: absolute;
-    background-color: #333;
-    width: 6.25rem;
-    z-index: 1;
+/* Dropdown choices */
+.dropdown-nav-choices {
+  
+  display: none; /* Hidden */
+  position: absolute;
+  background-color: #333;
+  width: 6.25rem;
+  z-index: 1;
 
-  }
+}
 
-  /* Show dropdown options */
-  .dropdown:hover .dropdown-nav-choices {
+/* Show dropdown options */
+.dropdown:hover .dropdown-nav-choices {
 
-    display: block;
+  display: block;
 
-  }
+}
 
-  /* Hover over dropdown options */
-  .dropdown-nav-option a:hover {
+/* Hover over dropdown options */
+.dropdown-nav-option a:hover {
 
-    background-color: var(--color-detail1);
+  background-color: var(--color-detail1);
 
-  }
+}
 
-  /* Keep the button selected as the user hover over the options */
-  .dropdown:hover > .button-nav {
+/* Keep the button selected as the user hover over the options */
+.dropdown:hover > .button-nav {
 
-    background-color: var(--color-detail1);
+  background-color: var(--color-detail1);
 
-  }
+}
 
-  /* Change the down arrow to an up arrow when the user hovers over the dropdown */
-  .dropdown:hover .down-arrow {
+/* Change the down arrow to an up arrow when the user hovers over the dropdown */
+.dropdown:hover .down-arrow {
 
-    content: url("../icons/up-arrow.ico");
+  content: url("../icons/up-arrow.ico");
 
-  }
+}
 
 /* ##### FOOTER ##### */
 
 /* BASE CONFIG */
 
-  footer{
+footer{
 
-    width: 100vw;
-    display: flex;
-    background-color: var(--color-primary);
-    justify-content: center;
+  width: 100vw;
+  display: flex;
+  background-color: var(--color-primary);
+  justify-content: center;
 
-  }
+}
 
-  .footer-content{
+.footer-content{
 
-    width: 1024px;
-    height: 25.5rem;
-    grid-template-areas: footer;
-    display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: 1fr auto;
+  width: 1024px;
+  height: 25.5rem;
+  grid-template-areas: footer;
+  display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr auto;
 
 
-  }
+}
 
 /* BRAND */
 
-  .brand{
+.brand{
 
-    display: grid;
-      grid-template-columns: 1fr;
-      grid-template-rows: auto auto;
-    align-content: center;
-    margin: auto;
+  display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+  align-content: center;
+  margin: auto;
 
-  }
+}
 
 /* RIGTHS */
 
@@ -285,6 +295,7 @@ nav{
 .button-nav:hover{
 
   background-color: #333;
+  cursor: pointer;
 
 }
 
@@ -306,6 +317,7 @@ nav{
 
   background-color: var(--color-primary);
   color: var(--color-secundary);
+  cursor: pointer;
 
 }
 

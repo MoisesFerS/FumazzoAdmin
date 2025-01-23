@@ -6,10 +6,15 @@ from .utils import bcrypt
 
 def index(request):
     if 'workerID' in request.session:
-        return render(request, 'core/index.html')
-    
+        context = {
+            'workerID': request.session['workerID'],
+            'worker_first_name': request.session.get('worker_first_name', ''),
+            'worker_last_name': request.session.get('worker_last_name', ''),
+        }
+        return render(request, 'core/index.html', context)
     else:
-        return redirect('login')
+        return redirect('core:login')
+
 
 def login(request):
     form = forms.WorkerLogin()
@@ -28,7 +33,7 @@ def login(request):
                 request.session['workerID'] = worker.id
                 request.session['worker_first_name'] = worker.first_name
                 request.session['worker_last_name'] = worker.last_name
-                return redirect('index')  
+                return redirect('core:index')  
             else:
                 messages.error(request, 'Senha inválida')
         except models.Worker.DoesNotExist:
@@ -38,3 +43,7 @@ def login(request):
             messages.error(request, 'Por favor, corrija os erros no formulário.')
 
     return render(request, 'core/login.html', {'form': form})
+
+def logout(request):
+    request.session.flush()
+    return redirect('core:login')
