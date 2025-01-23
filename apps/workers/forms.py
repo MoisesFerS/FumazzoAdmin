@@ -51,7 +51,7 @@ class RoleRegister(forms.Form):
         widget=forms.NumberInput(attrs={'class': '', 'step': '0.01'}) 
     )
 
-class WorkerRegister(forms.Fomr):
+class WorkerRegister(forms.Form):
     first_name = forms.CharField(
         max_length=50, 
         widget=forms.TextInput(attrs={'class': ''})  
@@ -81,3 +81,13 @@ class WorkerRegister(forms.Fomr):
         queryset=Shift.objects.all(),
         widget=forms.Select(attrs={'class': ''})
     )
+
+class WorkerLogin(forms.Form):
+    id = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'css class'})
+    )
+
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'css class'})
+    )
+

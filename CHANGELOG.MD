@@ -7,6 +7,22 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.5.1] -23/01/2025 - Fixing URLS
+
+### CHANGED
+- `URLs:`
+    - Updated `Fumazzo/urls.py`:
+        - Set the `authentication app` to `workers` by changing the primary path.
+        - Set the `core app` as the manager by assigning it the secondary path.
+- `Templates:`
+    - Swapped templates between `templates/core/` and `templates/workers/` to align with their respective app responsibilities.
+- `Views:`
+    - Reorganized `views.py` files:
+        - Adjusted views and paths to correspond to the correct app (`core` or `workers`).
+- `Header Namespaces:`
+    - Updated the `header` template namespaces:
+        - Changed references from `core` to `workers`.
+
 ## [0.5.0] - 22/01/2025 - Views Paths
 
 ### ADDED
