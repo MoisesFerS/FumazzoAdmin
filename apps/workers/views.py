@@ -11,11 +11,12 @@ def index(request):
             'worker_first_name': request.session.get('worker_first_name', ''),
             'worker_last_name': request.session.get('worker_last_name', ''),
             'worker_permisson': request.session.get('worker_permission', ''),
+            'worker_role': request.session.get('worker_role', ''),
         }
+        
         return render(request, 'workers/index.html', context)
     else:
         return redirect('workers:login')
-
 
 def login(request):
     form = forms.WorkerLogin()
@@ -30,13 +31,16 @@ def login(request):
 
                 worker = models.Worker.objects.get(id=id_)
                 role = worker.role
-                permission = role.permission
+                worker_permission = role.permission
+                worker_role = role.name
 
                 if bcrypt.checkpw(password.encode('UTF-8'), worker.password.encode('UTF-8')):
                     request.session['workerID'] = worker.id
                     request.session['worker_first_name'] = worker.first_name
                     request.session['worker_last_name'] = worker.last_name
-                    request.session['worker_permission'] = permission
+                    request.session['worker_permission'] = worker_permission
+                    request.session['worker_role'] = worker_role                    
+
                     return redirect('workers:index')  
                 else:
 

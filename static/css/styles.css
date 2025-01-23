@@ -12,6 +12,14 @@
     font-style: normal;
 
   }
+  @font-face {
+
+    font-family: 'DMSans';
+    src: url('/static/fonts/DMSans.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+
+  }
 
 /* ##### GLOBAL VARIABLES ##### */
 
@@ -24,10 +32,11 @@
   --color-detail2: #FFEBD8; /* Cream */
 
   /* FONTS CONFIGS */
-  --font-family: 'Oswald', sans-serif;
+  --font-family1: 'Oswald', sans-serif;
+  --font-family2: 'DMSans', sans-serif;
   --size-title: 3.25rem;
   --size-subtitle: 2.25rem;
-  --size-text: 1.25rem;
+  --size-text: 1rem;
   --size-caption: 1rem;
   --weight-title: 700;
   --weight-subtitle: 600;
@@ -35,10 +44,10 @@
   --weight-caption: 300;
 
   /* FONTS */
-  --font-title: normal normal var(--weight-title) var(--size-title) var(--font-family);
-  --font-subtitle: normal normal var(--weight-subtitle) var(--size-subtitle) var(--font-family);
-  --font-text: normal normal var(--weight-text) var(--size-text) var(--font-family);
-  --font-caption: normal normal var(--weight-caption) var(--size-caption) var(--font-family);
+  --font-title: normal normal var(--weight-title) var(--size-title) var(--font-family1);
+  --font-subtitle: normal normal var(--weight-subtitle) var(--size-subtitle) var(--font-family1);
+  --font-text: normal normal var(--weight-text) var(--size-text) var(--font-family2);
+  --font-caption: normal normal var(--weight-caption) var(--size-caption) var(--font-family2);
 
 }
 
@@ -181,6 +190,23 @@ nav{
 
 }
 
+/* IDENTIFYER */
+
+.identifyer-nav{
+
+  display: flex;
+  flex-direction: column;
+
+}
+
+.worker-nav{
+
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+
+}
+
 /* DROPDOWN */
 
 /* Dropdown Icon */
@@ -196,6 +222,7 @@ nav{
   display: none; /* Hidden */
   position: absolute;
   background-color: #333;
+  border-radius: 0px 0px 10px 10px;
   width: 6.25rem;
   z-index: 1;
 
@@ -295,6 +322,8 @@ footer{
 .button-nav:hover{
 
   background-color: #333;
+  color: var(--color-secundary);
+  border-radius: 3px;
   cursor: pointer;
 
 }
