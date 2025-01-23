@@ -10,12 +10,18 @@ The format is based on:
 ## [0.5.1] -23/01/2025 - Fixing URLS
 
 ### CHANGED
-- Changed the urls at `Fumazzo/urls.py`:
-    - Authentication app should be `workers`, so changed the start path to it.
-    - The `core` app should be the manager, so changed the secondary path to it.
-- Swapped the templates from `template/core` to `template/workers` and vice-versa.
-- Swapped the `views.py` and adjusted the paths to the according app. 
-- Updated the namespaces of the `header` from `core` to `workers`.
+- `URLs:`
+    - Updated `Fumazzo/urls.py`:
+        - Set the `authentication app` to `workers` by changing the primary path.
+        - Set the `core app` as the manager by assigning it the secondary path.
+- `Templates:`
+    - Swapped templates between `templates/core/` and `templates/workers/` to align with their respective app responsibilities.
+- `Views:`
+    - Reorganized `views.py` files:
+        - Adjusted views and paths to correspond to the correct app (`core` or `workers`).
+- `Header Namespaces:`
+    - Updated the `header` template namespaces:
+        - Changed references from `core` to `workers`.
 
 ## [0.5.0] - 22/01/2025 - Views Paths
 
