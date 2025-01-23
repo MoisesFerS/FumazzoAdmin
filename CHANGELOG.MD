@@ -7,7 +7,18 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
-## [0.5.1] -23/01/2025 - Fixing URLS
+## [0.6.0] - 23/01/2025 - Adding Font and Enhancing Header
+
+### ADDED
+- Added `DMSans.ttf` font to `static/fonts`.
+
+### CHANGED
+- Updated `header.html` to display worker information.
+- Enhanced the view logic to retrieve and display worker permissions.
+- Updated `styles.css` to reflect adjustments made to `header.html`.
+- Corrected typos in `CHANGELOG.MD`.
+
+## [0.5.1] - 23/01/2025 - Fixing URLS
 
 ### CHANGED
 - `URLs:`

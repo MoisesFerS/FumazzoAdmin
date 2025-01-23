@@ -3,7 +3,13 @@
 
   <nav>
     <a href="{% url 'workers:index' %}"><img class="logo" src="{% static 'images/logo.png' %}" alt="logo.png"></a>
-    <div><p>Administrativo</p></div>
+    <div class="identifyer-nav"><p>Administrativo</p>
+      {% if workerID %}
+        <div class="worker-nav">
+          <p>{{ worker_first_name }}</p><p> - </p><p>{{ worker_role }}</p>
+        </div>
+      {% endif %}
+    </div>
     {% if workerID %}
       <a class="button-nav" href="{% url 'workers:index' %}">Página Inicial</a>
         <ul class="dropdown-nav">
@@ -18,7 +24,7 @@
           </li>
         </ul>
       <a class="button-nav" href="">Promoções</a>
-      <a class="button-nav" href="">Comunicação</a>
+      <a class="button-nav" href="">Notificação</a>
     {% else %}
       <a href="{% url 'workers:login' %}" class="button-1">Fazer Log-in</a>
     {% endif %}
