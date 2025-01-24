@@ -1,6 +1,6 @@
 from django import forms
 from phonenumber_field.formfields import PhoneNumberField
-from .models import Supplier
+from .models import Supplier, Category
 from ..workers.models import Worker
 
 class SupplierRegister(forms.Form):
@@ -80,6 +80,11 @@ class ProductRegister(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'css class'}),
     )
 
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        widget=forms.Select(attrs={'class': 'css class'}),
+    )
+
     image = forms.ImageField(
         required=False,
         widget=forms.FileInput(attrs={'class': 'css class'}),
@@ -139,6 +144,11 @@ class MealRegister(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'css class'}),
     )
 
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        widget=forms.Select(attrs={'class': 'css class'}),
+    )
+
     description = forms.CharField(
         widget=forms.Textarea(attrs={'class': 'css class'})
     )
@@ -148,6 +158,7 @@ class MealRegister(forms.Form):
     )
 
     image = forms.ImageField(
+        required=False,
         widget=forms.FileInput(attrs={'class': 'css class'})
     )
     
@@ -164,41 +175,3 @@ class MealRegister(forms.Form):
         if calories < 0:
             raise forms.ValidationError('O valor deve ser positivo.')
         return calories
-
-class MealRegister(forms.Form):
-    name = forms.CharField(
-        max_length=50,
-        widget=forms.TextInput(attrs={'class': 'CLASSE DO CSS'}),
-    )
-
-    price = forms.DecimalField(
-        widget=forms.NumberInput(attrs={'class': 'CLASSE DO CSS'}),
-    )
-
-    description = forms.CharField(
-        widget=forms.Textarea(attrs={'class': 'CLASSE DO CSS'})
-    )
-
-    calories = forms.IntegerField(
-        widget=forms.NumberInput(attrs={'class': 'CLASSE DO CSS'})
-    )
-
-    image = forms.ImageField(
-        widget=forms.FileInput(attrs={'class': 'CLASSE DO CSS'})
-    )
-    
-    def clean_price(self):
-        price = self.cleaned_data.get('price')
-
-        if price < 0:
-            raise forms.ValidationError('O valor deve ser positivo.')
-        return price
-    
-    def clean_calories(self):
-        calories = self.cleaned_data.get('calories')
-
-        if calories < 0:
-            raise forms.ValidationError('O valor deve ser positivo.')
-        return calories
-    
-    

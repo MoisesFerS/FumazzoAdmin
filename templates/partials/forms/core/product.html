@@ -1,6 +1,6 @@
 {% load static %}
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
 
     {% csrf_token %}
 
@@ -26,12 +26,17 @@
         </div>
 
         <div>
+            <p><b>CATEGORIA</b></p>
+            {{form.category}}
+        </div>
+
+        <div>
             <p><b>IMAGEM</b></p>
             {{form.image}}
         </div>
 
         <div>
-            <button type="submit" class="button-1">FAZER LOG-IN</button>
+            <button type="submit" class="button-1">REGISTRAR</button>
         </div>
     </div>
 

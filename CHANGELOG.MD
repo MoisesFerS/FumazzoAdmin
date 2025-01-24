@@ -7,6 +7,22 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.8.0] - 24/01/2025 - Defs to Forms
+
+### ADDED
+- Added the following views in `core/views.py`:
+    - `supplier` - To render the form to register a supplier.
+    - `meal` - To render the form to register a meal.
+    - `product` - To render the form to register a product.
+    - `category` - To render the form to register a category.
+- Added the corresponding paths in `core/urls.py` for the new views.
+- Added a method to return the `name` of models that include a `name` field (applied to various models).
+
+### CHANGED
+- Updated all forms in `partials/forms/` to correct button functionality.
+- Fixed the `meal` and `product` models in `core/models.py` to correctly handle the upload path.
+- Updated the `MealRegister` and `ProductRegister` forms to include the `category` field.
+
 ## [0.7.0] - 23/01/2025 - Adding Simple Forms
 
 ### ADDED
