@@ -7,6 +7,34 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.7.0] - 23/01/2025 - Adding Simple Forms
+
+### ADDED
+- Created the following forms in `forms/core/`:
+    - `category` - Form to register categories for `products`, `meals`, and `drinks`.
+    - `meal` - Form to register a new meal.
+    - `product` - Form to register a product.
+    - `restock` - Form to register stock entries.
+    - `supplier` - Form to register a supplier.
+- Created the following forms in `forms/workers/`:
+    - `role` - Form to register roles for workers.
+    - `shift` - Form to register shifts for workers.
+    - `worker` - Form to register a worker.
+- Added `template.html` in `forms/` as a base template for importing forms.
+- Created directories:
+    - `css/core/` - To store CSS files for the `core` app pages.
+    - `css/workers/` - To store CSS files for the `workers` app pages.
+- Added `login.css` in `css/workers/`.
+
+### CHANGED
+- Moved the `login.html` form from `forms/core/` to `forms/workers/`.
+- Updated the `login` view in `workers/views.py` to support a dynamic form using `forms/template.html`.
+- Updated the `login` form in `forms/workers/` and adjusted styles to use the new `login.css`.
+- Replaced `logo.png` with a higher-resolution version.
+
+### REMOVED
+- Removed the `type` attribute from the `product` form, as `category` objects will now be used.
+
 ## [0.6.0] - 23/01/2025 - Adding Font and Enhancing Header
 
 ### ADDED
@@ -142,8 +170,6 @@ The format is based on:
 
 - Updated the `apps.py` in both apps to use the format `apps.<appname>` instead of `<appname>`, ensuring the correct import path.
 - Updated `FumazzoAdmin/settings.py` to include both apps in the `INSTALLED_APPS` configuration.
-
-
 
 ## [0.1.0] - 20/01/2025 -  Project Initialization
 

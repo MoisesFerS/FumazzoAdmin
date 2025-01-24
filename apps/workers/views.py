@@ -20,6 +20,7 @@ def index(request):
 
 def login(request):
     form = forms.WorkerLogin()
+    form_path = 'partials/forms/workers/login.html'
 
     if request.method == 'POST':
         form = forms.WorkerLogin(request.POST)  
@@ -53,7 +54,7 @@ def login(request):
             messages.error(request, 'Por favor, corrija os erros no formulário.')
 
 
-    return render(request, 'workers/login.html', {'form': form})
+    return render(request, 'workers/login.html', {'form': form, 'form_path': form_path})
 
 def logout(request):
     request.session.flush()

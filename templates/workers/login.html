@@ -3,14 +3,32 @@
 
 {% block title %}{% endblock %}
 
-{% block css %}{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/workers/login.css' %}">
+{% endblock %}
 
 {% block content %}
 
-<div>
+<div class="login-container">
 
-    {% include 'partials/forms/core/login.html' %}
+  <div class="brand-container">
 
+    <img src="{% static 'images/logo.png' %}" class="logo-login" alt="">
+
+    <h2>BEM VINDO</h2>
+
+    <p>Fumazzo Administrativo</p>
+
+  </div>
+
+  <div class="form-container">
+
+    <h2>LOG-IN</h2>
+
+    {% include form_path %}
+
+  </div>
+  
 </div>
 
 {% endblock %}

@@ -1,0 +1,64 @@
+/* --- WORKER/LOGIN CSS --- */
+
+/* ##### LOGIN ##### */
+
+/* CONTAINER */
+
+.login-container{
+
+    width: 1024px;
+    height: 600px; 
+    display: grid;
+        grid-template-columns: 1fr 1fr;
+    background-color: var(--color-primary);
+
+
+}
+
+/* BRAND */
+
+.brand-container{
+
+    margin: auto; 
+
+}
+
+.logo-login{
+
+    height: 200px;
+
+}
+
+/* LOGIN */
+
+.form-container{
+
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+
+}
+
+/* ##### FORM/LOGIN ##### */
+
+/* INPUTS */
+
+form input{
+
+    width: 350px;
+    height: 40px;
+    background-color: var(--color-detail3);
+    color: var(--color-detail2);
+
+}
+
+.form{
+
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+
+}

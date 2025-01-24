@@ -1,0 +1,33 @@
+{% load static %}
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <div class="form">
+        <div>
+            <p><b>FORNECEDOR</b></p>
+            {{form.name}}
+        </div>
+
+        <div>
+            <p><b>DATA</b></p>
+            {{form.date}}
+        </div>
+
+        <div>
+            <p><b>PREÇO TOTAL</b></p>
+            {{form.name}}
+        </div>
+
+        <div>
+            <p><b>RECEPTOR</b></p>
+            {{form.name}}
+        </div>
+
+        <div>
+            <button type="submit" class="button-1">FAZER LOG-IN</button>
+        </div>
+    </div>
+
+</form>
