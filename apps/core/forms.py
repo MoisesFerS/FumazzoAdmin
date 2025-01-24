@@ -85,18 +85,6 @@ class ProductRegister(forms.Form):
         widget=forms.FileInput(attrs={'class': 'css class'}),
     )
 
-    type = forms.ChoiceField(
-        choices=[
-            (1, 'Ingrediente'),
-            (2, 'Limpeza'),
-            (3, 'Higiene'),
-            (4, 'Molho'),
-            (5, 'Bebida'),
-            (6, 'Sorvete'),
-        ],
-        widget=forms.RadioSelect(attrs={'class': 'css class'}),
-    )
-
     def clean_quantity(self):
         quantity = self.cleaned_data.get('quantity')
         if quantity is not None and quantity < 0:
@@ -177,3 +165,40 @@ class MealRegister(forms.Form):
             raise forms.ValidationError('O valor deve ser positivo.')
         return calories
 
+class MealRegister(forms.Form):
+    name = forms.CharField(
+        max_length=50,
+        widget=forms.TextInput(attrs={'class': 'CLASSE DO CSS'}),
+    )
+
+    price = forms.DecimalField(
+        widget=forms.NumberInput(attrs={'class': 'CLASSE DO CSS'}),
+    )
+
+    description = forms.CharField(
+        widget=forms.Textarea(attrs={'class': 'CLASSE DO CSS'})
+    )
+
+    calories = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'CLASSE DO CSS'})
+    )
+
+    image = forms.ImageField(
+        widget=forms.FileInput(attrs={'class': 'CLASSE DO CSS'})
+    )
+    
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+
+        if price < 0:
+            raise forms.ValidationError('O valor deve ser positivo.')
+        return price
+    
+    def clean_calories(self):
+        calories = self.cleaned_data.get('calories')
+
+        if calories < 0:
+            raise forms.ValidationError('O valor deve ser positivo.')
+        return calories
+    
+    

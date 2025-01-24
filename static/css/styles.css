@@ -30,6 +30,7 @@
   --color-secundary: #F6872C; /* Orange */
   --color-detail1: #1B1B1B; /* Dark Gray */
   --color-detail2: #FFEBD8; /* Cream */
+  --color-detail3: #333333; /* Gray */
 
   /* FONTS CONFIGS */
   --font-family1: 'Oswald', sans-serif;
@@ -221,7 +222,7 @@ nav{
   
   display: none; /* Hidden */
   position: absolute;
-  background-color: #333;
+  background-color: var(--color-detail3);
   border-radius: 0px 0px 10px 10px;
   width: 6.25rem;
   z-index: 1;
@@ -321,7 +322,7 @@ footer{
 
 .button-nav:hover{
 
-  background-color: #333;
+  background-color: var(--color-detail3);
   color: var(--color-secundary);
   border-radius: 3px;
   cursor: pointer;
