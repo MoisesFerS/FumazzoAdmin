@@ -9,16 +9,22 @@ class Supplier(models.Model):
     phone = PhoneNumberField(max_length=15)
     email = models.EmailField(max_length=150)
 
+    def __str__(self):
+        return self.name
+
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
 
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     quantity = models.IntegerField()
     individual_price = models.IntegerField()
-    image = models.ImageField(upload_to='media/products', null=True, blank=True)
+    image = models.ImageField(upload_to='core/products', null=True, blank=True)
     status_choices = [
         (1, 'Cheio(100%)'),
         (2, 'Metade(50%)'),
@@ -36,6 +42,9 @@ class Product(models.Model):
         (6, 'Pacote'),
     ]
     measurement = models.IntegerField(choices=measurement_choices, default=1)
+
+    def __str__(self):
+        return self.name
 
 class Restock(models.Model):
     id = models.AutoField(primary_key=True)
@@ -58,8 +67,11 @@ class Meal(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2)
     description = models.TextField()
     calories = models.IntegerField()
-    image = models.ImageField(upload_to='media/meals', null=True, blank=True)
+    image = models.ImageField(upload_to='core/meals', null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 class Product_meal(models.Model):
     id = models.AutoField(primary_key=True)
