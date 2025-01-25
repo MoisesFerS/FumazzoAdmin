@@ -9,26 +9,30 @@
 
 {% block content %}
 
-<div class="login-container">
+  <div class="content">
 
-  <div class="brand-container">
+    <div class="login-container">
 
-    <img src="{% static 'images/logo.png' %}" class="logo-login" alt="">
+      <div class="brand-container">
 
-    <h2>BEM VINDO</h2>
+        <img src="{% static 'images/logo.png' %}" class="logo-login" alt="">
+ 
+        <h2>BEM VINDO</h2>
 
-    <p>Fumazzo Administrativo</p>
+        <p>Fumazzo Administrativo</p>
+
+      </div>
+
+      <div class="form-container">
+
+        <h2>LOG-IN</h2>
+
+        {% include form_path %}
+
+      </div>
+      
+    </div>
 
   </div>
-
-  <div class="form-container">
-
-    <h2>LOG-IN</h2>
-
-    {% include form_path %}
-
-  </div>
-  
-</div>
 
 {% endblock %}

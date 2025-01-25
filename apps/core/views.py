@@ -34,9 +34,11 @@ def category(request):
 
             if form.is_valid():
                 name = form.cleaned_data.get('name')
+                type = form.cleaned_data.get('type')
 
                 category = models.Category(
                     name = name,
+                    type = type,
                 )
 
                 try:

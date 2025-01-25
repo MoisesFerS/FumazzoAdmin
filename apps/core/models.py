@@ -15,6 +15,14 @@ class Supplier(models.Model):
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
+    type_choices = [
+        (1, 'Lanches'),
+        (2, 'Sobremesa'),
+        (3, 'Porção'),
+        (4, 'Bebida'),
+        (5, 'Produtos'),
+    ]
+    type = models.IntegerField(choices=type_choices, default=1)
 
     def __str__(self):
         return self.name
