@@ -2,27 +2,28 @@ from django import forms
 from phonenumber_field.formfields import PhoneNumberField
 from .models import Supplier, Category
 from ..workers.models import Worker
+from django.db.models import Q
 
 class SupplierRegister(forms.Form):
     name = forms.CharField(
         max_length=50, 
-        widget=forms.TextInput(attrs={'class': 'css class'})
+        widget=forms.TextInput(attrs={'class': 'form-input-name'})
     )
 
     address = forms.CharField(
         max_length=150, 
-        widget=forms.TextInput(attrs={'class': 'css class'})
+        widget=forms.TextInput(attrs={'class': 'form-input-address'})
     )
 
     phone = PhoneNumberField(
         required=False,
-        widget=forms.TextInput(attrs={'class': 'css class'})
+        widget=forms.TextInput(attrs={'class': 'form-input-phone'})
     )
 
     email = forms.CharField(
         required=False,
         max_length=150, 
-        widget=forms.TextInput(attrs={'class': 'css class'})
+        widget=forms.TextInput(attrs={'class': 'form-input-email'})
     )
 
     def clean(self):
@@ -52,12 +53,12 @@ class SupplierRegister(forms.Form):
 class ProductRegister(forms.Form):
     name = forms.CharField(
         max_length=50,
-        widget=forms.TextInput(attrs={'class': 'css class'}),
+        widget=forms.TextInput(attrs={'class': 'form-input-name'}),
     )
 
     quantity = forms.IntegerField(
         min_value=1,
-        widget=forms.NumberInput(attrs={'class': 'css class'}),
+        widget=forms.NumberInput(attrs={'class': 'form-input-quantity'}),
         
     )
 
@@ -70,24 +71,24 @@ class ProductRegister(forms.Form):
             (5, 'Unidade'),
             (6, 'Pacote'),
         ],
-        widget=forms.RadioSelect(attrs={'class': 'css class'}),
+        widget=forms.RadioSelect(attrs={'class': 'form-input-measurement'}),
     )
 
     individual_price = forms.DecimalField(
         min_value=0.01,
         max_digits=10,
         decimal_places=2,
-        widget=forms.NumberInput(attrs={'class': 'css class'}),
+        widget=forms.NumberInput(attrs={'class': 'form-input-individual_price'}),
     )
 
     category = forms.ModelChoiceField(
-        queryset=Category.objects.all(),
-        widget=forms.Select(attrs={'class': 'css class'}),
+        queryset=Category.objects.filter(Q(type=4) | Q(type=5)),
+        widget=forms.Select(attrs={'class': 'form-input-category'}),
     )
 
     image = forms.ImageField(
         required=False,
-        widget=forms.FileInput(attrs={'class': 'css class'}),
+        widget=forms.FileInput(attrs={'class': 'form-input-image'}),
     )
 
     def clean_quantity(self):
@@ -105,7 +106,18 @@ class ProductRegister(forms.Form):
 class CategoryRegister(forms.Form):
     name = forms.CharField(
         max_length=50,
-        widget=forms.TextInput(attrs={'class': 'css class'}),
+        widget=forms.TextInput(attrs={'class': 'form-input-name'}),
+    )
+
+    type = forms.ChoiceField(
+        choices=[
+            (1, 'Lanches'),
+            (2, 'Sobremesa'),
+            (3, 'Porção'),
+            (4, 'Bebida'),
+            (5, 'Produtos'),
+        ],
+        widget=forms.RadioSelect(attrs={'class': 'form-input-type'}),
     )
 
     def clean_name(self):
@@ -117,49 +129,49 @@ class CategoryRegister(forms.Form):
     
 class RestockRegister(forms.Form):
     date = forms.DateField(
-        widget=forms.DateInput(attrs={'class': 'css class', 'type': 'date'}),
+        widget=forms.DateInput(attrs={'class': 'form-input-date', 'type': 'date'}),
     )
 
     total_price = forms.DecimalField(
-        widget=forms.NumberInput(attrs={'class': 'css class'}),
+        widget=forms.NumberInput(attrs={'class': 'form-input-total_price'}),
     )
 
     supplier = forms.ModelChoiceField(
         queryset=Supplier.objects.all(),
-        widget=forms.Select(attrs={'class': 'css class'}),
+        widget=forms.Select(attrs={'class': 'form-input-supplier'}),
     )
 
     receiver = forms.ModelChoiceField(
         queryset=Worker.objects.all(),
-        widget=forms.Select(attrs={'class': 'css class'}),
+        widget=forms.Select(attrs={'class': 'form-input-receiver'}),
     )
 
 class MealRegister(forms.Form):
     name = forms.CharField(
         max_length=50,
-        widget=forms.TextInput(attrs={'class': 'css class'}),
+        widget=forms.TextInput(attrs={'class': 'form-input-name'}),
     )
 
     price = forms.DecimalField(
-        widget=forms.NumberInput(attrs={'class': 'css class'}),
+        widget=forms.NumberInput(attrs={'class': 'form-input-price'}),
     )
 
     category = forms.ModelChoiceField(
-        queryset=Category.objects.all(),
-        widget=forms.Select(attrs={'class': 'css class'}),
+        queryset=Category.objects.filter(type=1),
+        widget=forms.Select(attrs={'class': 'form-input-category'}),
     )
 
     description = forms.CharField(
-        widget=forms.Textarea(attrs={'class': 'css class'})
+        widget=forms.Textarea(attrs={'class': 'form-input-description'})
     )
 
     calories = forms.IntegerField(
-        widget=forms.NumberInput(attrs={'class': 'css class'})
+        widget=forms.NumberInput(attrs={'class': 'form-input-calories'})
     )
 
     image = forms.ImageField(
         required=False,
-        widget=forms.FileInput(attrs={'class': 'css class'})
+        widget=forms.FileInput(attrs={'class': 'form-input-image'})
     )
     
     def clean_price(self):

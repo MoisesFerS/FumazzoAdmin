@@ -7,6 +7,20 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.8.1] - 25/01/2025 - Fixing Login Template
+
+### ADDED
+- Added a field and input type to the `Category` model, `forms.py`, and the corresponding form template.
+
+### CHANGED
+- Updated the login button in the header:
+    - It no longer appears on the login page.
+    - It now changes to a log-out button when a user is in session.
+- Updated `styles.css` to include the `main` tag for better structure and styling.
+- Modified templates to include a `div` with the `content` class for organizing page layout.
+- Updated the CSS for radial inputs to improve their appearance.
+
+
 ## [0.8.0] - 24/01/2025 - Defs to Forms
 
 ### ADDED
