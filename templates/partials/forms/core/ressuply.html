@@ -1,0 +1,33 @@
+{% load static %}
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <div class="form">
+        <div>
+            <p><b>PRODUTO</b></p>
+            {{form.product}}
+        </div>
+
+        <div>
+            <p><b>QUANTIDADE</b></p>
+            {{form.quantity}}
+        </div>
+
+        <div>
+            <p><b>PREÇO TOTAL</b></p>
+            {{form.batch_price}}
+        </div>
+
+        <div>
+            <p><b>DATA DE VENCIMENTO</b></p>
+            {{form.expiration_date}}
+        </div>
+
+        <div>
+            <button type="submit" class="button-1">REGISTRAR</button>
+        </div>
+    </div>
+
+</form>

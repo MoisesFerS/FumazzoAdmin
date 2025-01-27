@@ -49,8 +49,8 @@ form input{
 
     width: 350px;
     height: 40px;
-    background-color: var(--color-detail3);
-    color: var(--color-detail2);
+    background-color: var(--color-detail2);
+    color: var(--color-detail3);
 
 }
 

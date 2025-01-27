@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Estoque
+{% endblock %}
+
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/core/stock.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="content">
+
+  <h1>REGISTROS DO ESTOQUE</h1>
+
+  <div class="container">
+
+    <div class="add-restock">
+
+      <button class="button-2" name="add" onclick="openModal(this)">Adicionar</button>
+
+    </div>
+
+    <div class="accordion-container">
+
+      {% for restock in restocks %}
+      <div class="accordion-row">
+        <div>
+          <div class="accordion-row-labels">
+            <p class="row-supplier-label">FORENEDOR: </p>
+            <p class="row-supplier">{{ restock.supplier }}</p>
+          </div>
+          <div class="accordion-row-labels">
+            <p class="row-receiver-label">RECEPTOR: </p>
+            <p class="row-receiver">{{ restock.receiver }}</p>
+          </div>
+        </div>
+        <div>
+          <div class="accordion-row-labels">
+            <p class="row-date-label">DATA: </p>
+            <p class="row-date">{{ restock.date | date:"d/m/Y" }}</p>
+          </div>
+          <div class="accordion-row-labels">
+            <p class="row-price-label">PREÇO TOTAL: </p>
+            <p class="row-price">{{ restock.total_price }}</p>
+          </div>
+        </div>
+        <div class="accordion-buttons">
+          <button class="button-edit" id="{{ restock.id }}" name="edit" onclick="openModal(this)">
+            <img src="{% static 'icons/edit.ico' %}" class="accordion-icon" alt="">
+          </button>
+          <button class="button-remove" id="{{ restock.id }}" name="remove" onclick="openModal(this)">
+            <img src="{% static 'icons/trash-can.ico' %}" class="accordion-icon" alt="">
+          </button>
+        </div>
+      </div>
+      <div class="panel" id="panel-{{ restock.id }}">
+        {% for resupply in restock.resuply_set.all %}
+        <div class="accordion-list">
+          <p class="list-item">PRODUTO: {{ resupply.product.name }}</p>
+          <p class="list-item">QUANTIDADE: {{ resupply.quantity }}</p>
+          <p class="list-item">PREÇO: {{ resupply.batch_price }}</p>
+          <p class="list-item">DATA DE VALIDADE: {{ resupply.expiration_date }}</p>
+        </div>
+        {% empty %}
+        <div class="accordion-list">
+          <p>Não há produtos neste registro.</p>
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Modals -->
+<div id="add-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-close">
+      <span class="close-button" id="close-add-modal">&times;</span>
+    </div>
+    <div class="modal-header">
+      <h2>ADICIONAR REGISTRO</h2>
+    </div>
+    <div class="modal-body">
+      {% include form_path %}
+    </div>
+  </div>
+</div>
+
+<div id="edit-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-close">
+      <span class="close-button" id="close-edit-modal">&times;</span>
+    </div>
+    <div class="modal-header">
+      <h2>EDITAR REGISTRO</h2>
+    </div>
+    <div class="modal-body">
+      <div>
+        <input type="text" id="edit-supplier" />
+        <input type="text" id="edit-receiver" />
+        <input type="date" id="edit-date" />
+        <input type="number" id="edit-price" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="remove-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-close">
+      <span class="close-button" id="close-remove-modal">&times;</span>
+    </div>
+    <div class="modal-header">
+      <h2>REMOVER REGISTRO</h2>
+    </div>
+    <div class="modal-body">
+      <p>Você tem certeza que deseja remover o registro?</p>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'js/core/stock.js' %}"></script>
+
+{% endblock %}

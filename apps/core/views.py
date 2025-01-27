@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 from . import models
 from . import forms
 from django.contrib import messages 
@@ -12,19 +13,77 @@ def index(request):
             'worker_permisson': request.session.get('worker_permission', ''),
             'worker_role': request.session.get('worker_role', ''),
         }
-        return render(request, context, 'core/index.html')
+        return render(request, 'core/index.html', context)
     else:
         return redirect('workers:login')
-
-def category(request):
+    
+def stock(request):
     if 'workerID' in request.session:
+
+        form = forms.RestockRegister()
+        form_path = 'partials/forms/core/restock.html'
+
+        restocks = models.Restock.objects.all().order_by('date')
+
         context = {
             'workerID': request.session['workerID'],
             'worker_first_name': request.session.get('worker_first_name', ''),
             'worker_last_name': request.session.get('worker_last_name', ''),
             'worker_permisson': request.session.get('worker_permission', ''),
             'worker_role': request.session.get('worker_role', ''),
+            'restocks': restocks,
+            'form' : form,
+            'form_path' : form_path,
         }
+
+        return render(request, 'core/stock.html', context)
+    else:
+        return redirect('workers:login')
+
+def restock_delete(request, id):
+    if request.method == 'POST':
+        if 'workerID' in request.session:
+            if request.session.get('worker_permission', 0) >= 4:
+                restock = get_object_or_404(models.Restock, id=id)
+                restock.delete()
+                return JsonResponse({'status': 'success', 'message': 'Item deletado com sucesso!'})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Usuário não autenticado.'}, status=403)
+    return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=405)
+
+def restock(request):
+        if 'workerID' in request.session:
+            if request.method == 'POST':
+                form = forms.RestockRegister(request.POST)
+
+                if form.is_valid():
+                    date_ = form.cleaned_data.get('date')
+                    total_price_ = form.cleaned_data.get('total_price')
+                    supplier_ = form.cleaned_data.get('supplier')
+                    receiver_ = form.cleaned_data.get('receiver')
+
+                    restock = models.Restock(
+                        date = date_,
+                        total_price = total_price_,
+                        supplier = supplier_,
+                        receiver = receiver_,
+                    )
+
+                    try:
+                        restock.save()
+                        messages.success(request, "Categoria registrada com sucesso!")
+                        return redirect('worker:index') 
+                    except Exception as e:
+                        messages.error(request, f"Erro ao fazer o registro: {e}")
+
+                return redirect('core:stock')
+        else:
+            return redirect('workers:login')
+
+def category(request):
+    if 'workerID' in request.session:
 
         form = forms.CategoryRegister()
         form_path = 'partials/forms/core/category.html'
@@ -33,12 +92,12 @@ def category(request):
             form = forms.CategoryRegister(request.POST)
 
             if form.is_valid():
-                name = form.cleaned_data.get('name')
-                type = form.cleaned_data.get('type')
+                name_ = form.cleaned_data.get('name')
+                type_ = form.cleaned_data.get('type')
 
                 category = models.Category(
-                    name = name,
-                    type = type,
+                    name = name_,
+                    type = type_,
                 )
 
                 try:
@@ -48,20 +107,22 @@ def category(request):
                 except Exception as e:
                     messages.error(request, f"Erro ao fazer o registro: {e}")
 
-        return render(request,'partials/forms/template.html', {**context , 'form': form, 'form_path' : form_path})
-    else:
-        return redirect('workers:login')
-
-
-def supplier(request):
-    if 'workerID' in request.session:
         context = {
             'workerID': request.session['workerID'],
             'worker_first_name': request.session.get('worker_first_name', ''),
             'worker_last_name': request.session.get('worker_last_name', ''),
             'worker_permisson': request.session.get('worker_permission', ''),
             'worker_role': request.session.get('worker_role', ''),
+            'form': form,
+            'form_path' : form_path,
         }
+
+        return render(request,'partials/forms/template.html', context)
+    else:
+        return redirect('workers:login')
+
+def supplier(request):
+    if 'workerID' in request.session:
 
         form = forms.SupplierRegister()
         form_path = 'partials/forms/core/supplier.html'
@@ -70,16 +131,16 @@ def supplier(request):
             form = forms.SupplierRegister(request.POST)
 
             if form.is_valid():
-                name = form.cleaned_data.get('name')
-                quantity = form.cleaned_data.get('quantity')
-                measurement = form.cleaned_data.get('measurement')
-                image = form.cleaned_data.get('image')
+                name_ = form.cleaned_data.get('name')
+                quantity_ = form.cleaned_data.get('quantity')
+                measurement_ = form.cleaned_data.get('measurement')
+                image_ = form.cleaned_data.get('image')
 
                 supplier = models.Supplier(
-                    name = name,
-                    quantity = quantity,
-                    measurement = measurement,
-                    image = image,
+                    name = name_,
+                    quantity = quantity_,
+                    measurement = measurement_,
+                    image = image_,
                 )
 
                 try:
@@ -89,20 +150,23 @@ def supplier(request):
                 except Exception as e:
                     messages.error(request, f"Erro ao fazer o registro: {e}")
 
-        return render(request, 'partials/forms/template.html', {**context, 'form': form, 'form_path' : form_path})
-    else:
-        return redirect('workers:login')
-
-
-def product(request):
-    if 'workerID' in request.session:
         context = {
             'workerID': request.session['workerID'],
             'worker_first_name': request.session.get('worker_first_name', ''),
             'worker_last_name': request.session.get('worker_last_name', ''),
             'worker_permisson': request.session.get('worker_permission', ''),
             'worker_role': request.session.get('worker_role', ''),
+            'form': form, 
+            'form_path' : form_path
         }
+
+        return render(request, 'partials/forms/template.html', context)
+    else:
+        return redirect('workers:login')
+
+def product(request):
+    if 'workerID' in request.session:
+
         form = forms.ProductRegister()
         form_path = 'partials/forms/core/product.html'
 
@@ -110,20 +174,20 @@ def product(request):
             form = forms.ProductRegister(request.POST, request.FILES)
 
             if form.is_valid():
-                name = form.cleaned_data.get('name')
-                quantity = form.cleaned_data.get('quantity')
-                measurement = form.cleaned_data.get('measurement')
-                individual_price = form.cleaned_data.get('individual_price')
-                category = form.cleaned_data.get('category')
-                image = form.cleaned_data.get('image')
+                name_ = form.cleaned_data.get('name')
+                quantity_ = form.cleaned_data.get('quantity')
+                measurement_ = form.cleaned_data.get('measurement')
+                individual_price_ = form.cleaned_data.get('individual_price')
+                category_ = form.cleaned_data.get('category')
+                image_ = form.cleaned_data.get('image')
 
                 product = models.Product(
-                    name = name,
-                    quantity = quantity,
-                    measurement = measurement,
-                    individual_price = individual_price,
-                    category = category,
-                    image = image,
+                    name = name_,
+                    quantity = quantity_,
+                    measurement = measurement_,
+                    individual_price = individual_price_,
+                    category = category_,
+                    image = image_,
                 )
 
                 try:
@@ -133,20 +197,22 @@ def product(request):
                 except Exception as e:
                     messages.error(request, f"Erro ao fazer o registro: {e}")
 
-        return render(request, 'partials/forms/template.html', {**context, 'form': form, 'form_path' : form_path})
-    else:
-        return redirect('workers:login')
-
-    
-def meal(request):
-    if 'workerID' in request.session:
         context = {
             'workerID': request.session['workerID'],
             'worker_first_name': request.session.get('worker_first_name', ''),
             'worker_last_name': request.session.get('worker_last_name', ''),
             'worker_permisson': request.session.get('worker_permission', ''),
             'worker_role': request.session.get('worker_role', ''),
+            'form': form, 
+            'form_path' : form_path
         }
+
+        return render(request, 'partials/forms/template.html', context)
+    else:
+        return redirect('workers:login')
+ 
+def meal(request):
+    if 'workerID' in request.session:
 
         form = forms.MealRegister()
         form_path = 'partials/forms/core/meal.html'
@@ -155,20 +221,20 @@ def meal(request):
             form = forms.MealRegister(request.POST, request.FILES)
 
             if form.is_valid():
-                name = form.cleaned_data.get('name')
-                price = form.cleaned_data.get('price')
-                category = form.cleaned_data.get('category')
-                description = form.cleaned_data.get('description')
-                calories = form.cleaned_data.get('calories')
-                image = form.cleaned_data.get('image')
+                name_ = form.cleaned_data.get('name')
+                price_ = form.cleaned_data.get('price')
+                category_ = form.cleaned_data.get('category')
+                description_ = form.cleaned_data.get('description')
+                calories_ = form.cleaned_data.get('calories')
+                image_ = form.cleaned_data.get('image')
 
                 meal = models.Meal(
-                    name = name,
-                    price = price,
-                    category = category,
-                    description = description,
-                    calories = calories,
-                    image = image,
+                    name = name_,
+                    price = price_,
+                    category = category_,
+                    description = description_,
+                    calories = calories_,
+                    image = image_,
                 )
 
                 try:
@@ -178,6 +244,17 @@ def meal(request):
                 except Exception as e:
                     messages.error(request, f"Erro ao fazer o registro: {e}")
 
-        return render(request, 'partials/forms/template.html', {**context, 'form': form, 'form_path' : form_path})
+        context = {
+            'workerID': request.session['workerID'],
+            'worker_first_name': request.session.get('worker_first_name', ''),
+            'worker_last_name': request.session.get('worker_last_name', ''),
+            'worker_permisson': request.session.get('worker_permission', ''),
+            'worker_role': request.session.get('worker_role', ''),
+            'form': form,
+            'form_path' : form_path
+        }
+
+
+        return render(request, 'partials/forms/template.html', context)
     else:
         return redirect('workers:login')

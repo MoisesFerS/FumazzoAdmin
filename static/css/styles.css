@@ -29,8 +29,12 @@
   --color-primary: #000000; /* Black */
   --color-secundary: #F6872C; /* Orange */
   --color-detail1: #1B1B1B; /* Dark Gray */
-  --color-detail2: #FFEBD8; /* Cream */
-  --color-detail3: #333333; /* Gray */
+  --color-detail2: #333333; /* Gray */
+  --color-detail3: #FFEBD8; /* Cream */
+  --color-detail4: #0C871A; /* Green */
+  --color-detail5: #DCB61D; /* Mustard */
+  --color-detail6: #A81414; /* Red */
+
 
   /* FONTS CONFIGS */
   --font-family1: 'Oswald', sans-serif;
@@ -92,56 +96,56 @@ body{
 p{
 
   font: var(--font-text);
-  color: var(--color-detail2);
+  color: var(--color-detail3);
 
 }
 
 h1{
 
   font: var(--font-title);
-  color: var(--color-detail2);
+  color: var(--color-detail3);
 
 }
 
 h2{
 
   font: var(--font-subtitle);
-  color: var(--color-detail2);
+  color: var(--color-detail3);
 
 }
 
 label{
 
   font: var(--font-text);
-  color: var(--color-detail2);
+  color: var(--color-detail3);
 
 }
 
 .title{
 
   font: var(--font-title);
-  color: var(--color-detail2);
+  color: var(--color-detail3);
 
 }
 
 .subtitle{
 
   font: var(--font-subtitle);
-  color: var(--color-detail2);
+  color: var(--color-detail3);
 
 }
 
 .text{
 
   font: var(--font-text);
-  color: var(--color-detail2);
+  color: var(--color-detail3);
 
 }
 
 .caption{
 
   font: var(--font-caption);
-  color: var(--color-detail2);
+  color: var(--color-detail3);
 
 }
 
@@ -151,16 +155,26 @@ label{
 
 }
 
-input{
+input, select{
 
   border-radius: 3px;
   padding-left: 15px;
+  box-sizing: border-box;
   font: var(--font-text);
   width: 350px;
   height: 40px;
-  background-color: var(--color-detail3);
-  color: var(--color-detail2);
+  background-color: var(--color-detail2);
+  color: var(--color-detail3);
 
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield; /* Remove spinners no Firefox */
 }
 
 .form{
@@ -231,7 +245,7 @@ nav{
   
   display: none; /* Hidden */
   position: absolute;
-  background-color: var(--color-detail3);
+  background-color: var(--color-detail2);
   border-radius: 0px 0px 10px 10px;
   width: 6.25rem;
   z-index: 1;
@@ -283,6 +297,10 @@ main{
   .content{
   
     width: 1024px;
+    display: flex;
+    flex-direction: column;
+    gap: 100px;
+    align-items: center;
   
   }
 
@@ -340,7 +358,7 @@ footer{
 .button-nav{
 
   font: var(--font-text);
-  color: var(--color-detail2);
+  color: var(--color-detail3);
   width: 6.25rem;
   height: 2.5rem;
   text-align: center;
@@ -351,7 +369,7 @@ footer{
 
 .button-nav:hover{
 
-  background-color: var(--color-detail3);
+  background-color: var(--color-detail2);
   color: var(--color-secundary);
   border-radius: 3px;
   cursor: pointer;
@@ -361,7 +379,7 @@ footer{
 .button-1{
 
   font: var(--font-text);
-  color: var(--color-detail2);
+  color: var(--color-detail3);
   width: 11.5rem;
   height: 3.25rem;
   text-align: center;
@@ -380,9 +398,37 @@ footer{
 
 }
 
+.button-2{
+
+  font: var(--font-text);
+  color: var(--color-detail3);
+  width: 180px;
+  height: 50px;
+  text-align: center;
+  align-content: center;
+  background-color: var(--color-detail4);
+  border: 3px solid var(--color-detail4);
+  border-radius: 3px;
+
+}
+
+.button-2:hover{
+
+  background-color: var(--color-primary);
+  color: var(--color-detail4);
+  cursor: pointer;
+
+}
+
 /* ##### FORMS GLOBAL ##### */
 
 /* RADIALS INPUTS */
+
+form{
+
+  margin-bottom: 50px;
+
+}
 
 form ul{
 
@@ -404,5 +450,12 @@ form label input{
 
   width: 25px;
   height: 25px;
+
+}
+
+.form-button{
+
+  display: flex;
+  justify-content: center;
 
 }

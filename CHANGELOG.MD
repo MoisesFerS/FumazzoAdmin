@@ -7,6 +7,38 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.9.0] - 25/01/2025 - Adding the Stock System
+
+### ADDED
+- Added to styles.css:
+    - Color variable detail 4 - Green.
+    - Color variable detail 5 - Mustard.
+    - Color variable detail 6 - Red.
+    - Button-2 - Green background.
+- Added the defs at core/views.py:
+    - stock - Render the stock page.
+    - restock 
+- Added the icons:
+    - edit.ico
+    - trash-can.ico
+- Created the templates at templates/core/:
+    - stock.html
+    - restock.html
+- Created the form at forms/core/:
+    - ressuply.html
+- Created the css at css/core/:
+    - stock.css
+- Created the js at js/core/:
+    - stock.js
+
+### CHANGED
+- Adjusted all defs:
+    - Corrected the use of context function of render.
+    - Added a uderscore after all local variables.
+- Changed the variables colors ids.
+- Added the link to storage button at navbar.
+
+
 ## [0.8.1] - 25/01/2025 - Fixing Login Template
 
 ### ADDED

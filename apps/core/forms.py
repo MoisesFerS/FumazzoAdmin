@@ -1,6 +1,6 @@
 from django import forms
 from phonenumber_field.formfields import PhoneNumberField
-from .models import Supplier, Category
+from .models import Supplier, Category, Product, Restock
 from ..workers.models import Worker
 from django.db.models import Q
 
@@ -129,21 +129,45 @@ class CategoryRegister(forms.Form):
     
 class RestockRegister(forms.Form):
     date = forms.DateField(
-        widget=forms.DateInput(attrs={'class': 'form-input-date', 'type': 'date'}),
+        widget=forms.DateInput(attrs={'id' : 'restock-date', 'class': 'form-input-date', 'type': 'date'}),
     )
 
     total_price = forms.DecimalField(
-        widget=forms.NumberInput(attrs={'class': 'form-input-total_price'}),
+        widget=forms.NumberInput(attrs={'id' : 'restock-price', 'class': 'form-input-total_price'}),
     )
 
     supplier = forms.ModelChoiceField(
         queryset=Supplier.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-input-supplier'}),
+        widget=forms.Select(attrs={'id' : 'restock-supplier', 'class': 'form-input-supplier'}),
     )
 
     receiver = forms.ModelChoiceField(
         queryset=Worker.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-input-receiver'}),
+        widget=forms.Select(attrs={'id' : 'restock-receiver', 'class': 'form-input-receiver'}),
+    )
+
+class RessuplyRegister(forms.Form):
+    quantity = forms.IntegerField(
+        min_value=1,
+        widget=forms.NumberInput(attrs={'class': 'form-input-quantity'}),
+    )
+
+    product = forms.ModelChoiceField(
+        queryset=Product.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-input-product'}),
+    )
+
+    restock = forms.ModelChoiceField(
+        queryset=Restock.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-input-restock'}),
+    )
+
+    batch_price = forms.DecimalField(
+        widget=forms.NumberInput(attrs={'class': 'form-input-price'}),
+    )
+
+    expiration_date= forms.DateField(
+        widget=forms.DateInput(attrs={'class': 'form-input-date', 'type': 'date'}),
     )
 
 class MealRegister(forms.Form):
