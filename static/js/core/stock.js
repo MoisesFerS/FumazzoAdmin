@@ -1,23 +1,20 @@
 /* ##### ACCORDION ##### */
 
-  /* VARIABLES */
+var acc = document.getElementsByClassName("accordion-row");
+var i;
 
-    var acc = document.getElementsByClassName("accordion-row");
-    var i;
-
-  /* EXPAND ACCORDION */
-
-    for (i = 0; i < acc.length; i++) {
-      acc[i].addEventListener("click", function() {
+for (i = 0; i < acc.length; i++) {
+    acc[i].onclick = function(){
         this.classList.toggle("active");
         var panel = this.nextElementSibling;
-        if (panel.style.maxHeight) {
-          panel.style.maxHeight = null;
+        if (panel.style.display === "block") {
+            panel.style.display = "none";
         } else {
-          panel.style.maxHeight = panel.scrollHeight + "px";
+            panel.style.display = "block";
         }
-      });
     }
+}
+
 
 /* ##### MODAL ##### */
 
@@ -43,11 +40,6 @@
       
       }
 
-      const closeButton = document.getElementById('close-' + button.name + '-modal');
-      closeButton.onclick = function() {
-        modal.style.display = 'none';
-      };
-
       window.onclick = function(event) {
         if (event.target == modal) {
           modal.style.display = "none";
@@ -59,14 +51,24 @@
   /* ADD MODAL */ 
 
     function add() {
-      console.log('Função Add chamada');
+
+      const date = document.getElementById('restock-date').value;
+      const supplier = document.getElementById('restock-price').value;
+      const reveiver = document.getElementById('restock-supplier').value;
+      const total_cost = document.getElementById('restock-receiver').value;
+
+      console.log(date)
+      console.log(supplier)
+      console.log(reveiver)
+      console.log(total_cost)
+
     }
   
   /* EDIT MODAL */
 
     function edit(button) {
 
-      const accordionRow = button.closest('.accordion')
+      const accordionRow = button.closest('.accordion-row')
 
       const supplier = accordionRow.querySelector(".row-supplier").textContent;
       const receiver = accordionRow.querySelector(".row-receiver").textContent;
@@ -81,7 +83,7 @@
       document.getElementById('edit-date').value = date;
       document.getElementById('edit-price').value = price;
 
-      console.log(supplier)
+
 
     }
 
@@ -96,33 +98,38 @@
           'X-CSRFToken': csrfToken,
         },
       })
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error('Erro ao deletar o restock');
-          }
-        })
-        .then(data => {
-          console.log(data.message);
-    
-          const accordionRow = button.closest('.accordion-row');
-          if (accordionRow) {
-            accordionRow.remove();
-            console.log('Accordion-row removido com sucesso.');
-          }
-    
-          const panel = document.getElementById(`panel-${button.id}`);
-          if (panel) {
-            panel.remove();
-            console.log('Panel removido com sucesso.');
-          } else {
-            console.error('Panel relacionado não encontrado.');
-          }
-        })
-        .catch(error => {
-          console.error('Erro:', error);
-        });
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Erro ao deletar o restock');
+        }
+      })
+      .then(data => {
+        console.log(data.message);
+  
+        const accordionRow = button.closest('.accordion-row');
+        if (accordionRow) {
+          accordionRow.remove();
+          console.log('Accordion-row removido com sucesso.');
+        }
+  
+        const panel = document.getElementById(`panel-${button.id}`);
+        if (panel) {
+          panel.remove();
+          console.log('Panel removido com sucesso.');
+        }
+
+        const accordionDivision = document.getElementById(`accordion-division-${button.id}`);
+        if (accordionDivision) {
+          accordionDivision.remove();
+          console.log('Accordion-division removido com sucesso.');
+        }
+
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+      });
     }
     
     
