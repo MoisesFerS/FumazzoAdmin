@@ -62,38 +62,24 @@ def restock_add(request):
                 receiver_ = request.POST.get('receiver')
                 total_price_ = request.POST.get('total_price')
 
-                # Obtendo o fornecedor e receptor
                 supplier_ = get_object_or_404(models.Supplier, id=supplier_)
                 receiver_ = get_object_or_404(models.Worker, id=receiver_)
 
-                # Criando o registro de reposição
-                restock = models.Restock.objects.create(
+                models.Restock.objects.create(
                     date=date_,
                     supplier=supplier_,
                     receiver=receiver_,
                     total_price=total_price_,
                 )
 
-                # Verifica se date_ está em formato string ou datetime
-                if isinstance(restock.date, str):
-                    # Se for string, já está formatada, então não usamos strftime
-                    formatted_date = restock.date
-                else:
-                    # Se for datetime, formatamos
-                    formatted_date = restock.date.strftime('%d/%m/%Y')
+                restocks = models.Restock.objects.all().order_by('date')
 
-                # Retornando o objeto restock na resposta JSON
                 return JsonResponse({
                     'status': 'success',
                     'message': 'Registro adicionado com sucesso!',
-                    'restock': {
-                        'id': restock.id,
-                        'date': formatted_date,
-                        'supplier': restock.supplier.name,  # Nome do fornecedor
-                        'receiver': restock.receiver.first_name,  # Nome do receptor
-                        'total_price': restock.total_price
-                    }
+                    'restocks': list(restocks.values( 'date', 'id', 'receiver', 'supplier', 'total_price')),            
                 })
+            
             else:
                 return JsonResponse({'status': 'error', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
         else:

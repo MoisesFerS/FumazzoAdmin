@@ -74,38 +74,64 @@ for (i = 0; i < acc.length; i++) {
 
             if (data.status === "success") {
                 msgDiv.innerHTML = `<p style="color: green;">${data.message}</p>`;
-            
-                let newRestock = data.restock; 
+        
+                let refresh = data.restocks; 
 
-                let newAccordionRow = document.createElement("div");
-                newAccordionRow.classList.add("accordion-row");
+                const container = document.getElementById("accordion-container");
+                console.log(container)
+                container.remove();
 
-                newAccordionRow.innerHTML = `
-                    <div class="accordion-row-labels">
-                        <p class="row-date-label">DATA: </p>
-                        <p class="row-supplier-label">FORNECEDOR: </p>
-                        <p class="row-receiver-label">RECEPTOR: </p>
-                        <p class="row-price-label">PREÇO TOTAL: </p>
-                    </div>
-                    <div class="accordion-row-data">
-                        <p class="row-date">${newRestock.date}</p>
-                        <p class="row-supplier">${newRestock.supplier}</p>
-                        <p class="row-receiver">${newRestock.receiver}</p>
-                        <p class="row-price">${newRestock.total_price}</p>
-                    </div>
-                    <div class="accordion-row-buttons">
-                        <button class="button-edit" id="${newRestock.id}" name="edit" onclick="openModal(this)">
-                            <img src="{% static 'icons/edit.ico' %}" class="accordion-icon" alt="">
-                        </button>
-                        <button class="button-remove" id="${newRestock.id}" name="remove" onclick="openModal(this)">
-                            <img src="{% static 'icons/trash-can.ico' %}" class="accordion-icon" alt="">
-                        </button>
-                    </div>
+                const newContainer = document.createElement("div");
+                newContainer.classList.add('accordion-container')
+
+                newContainer.innerHTML = `
+                
+                   {% for restock in restocks %}
+          <div class="accordion-row">
+            <div class="accordion-row-labels">
+              <p class="row-date-label">DATA: </p>
+              <p class="row-supplier-label">FORENEDOR: </p>
+              <p class="row-receiver-label">RECEPTOR: </p>
+              <p class="row-price-label">PREÇO TOTAL: </p>
+            </div>
+            <div class="accordion-row-data">
+              <p class="row-date">{{ restock.date | date:"d/m/Y" }}</p>
+              <p class="row-supplier">{{ restock.supplier }}</p>
+              <p class="row-receiver">{{ restock.receiver }}</p>
+              <p class="row-price">{{ restock.total_price }}</p>
+            </div>
+            <div class="accordion-row-buttons">
+              <button class="button-edit" id="{{ restock.id }}" name="edit" onclick="openModal(this)">
+                <img src="{% static 'icons/edit.ico' %}" class="accordion-icon" alt="">
+              </button>
+              <button class="button-remove" id="{{ restock.id }}" name="remove" onclick="openModal(this)">
+                <img src="{% static 'icons/trash-can.ico' %}" class="accordion-icon" alt="">
+              </button>
+            </div>
+          </div>
+          <div class="panel" id="panel-{{ restock.id }}">
+            {% for resupply in restock.resuply_set.all %}
+              <div class="accordion-row accordion-item">
+                <p class="list-item">{{ resupply.product.name }}</p>
+              </div>
+              <div class="panel">
+                <div class="detail-list">
+                  <p class="list-item">QUANTIDADE: {{ resupply.quantity }}</p>
+                  <p class="list-item">PREÇO: {{ resupply.batch_price }}</p>
+                  <p class="list-item">DATA DE VALIDADE: {{ resupply.expiration_date }}</p>
+                </div> 
+              </div>
+              {% empty %}
+              <p>Não há produtos neste registro.</p>
+            {% endfor %}
+          </div>
+          <hr class="accordion-division" id="accordion-division-{{ restock.id }}">
+        {% endfor %}
+
                 `;
 
-                document.querySelector(".accordion-container").prepend(newAccordionRow);
+                document.querySelector(".accordions ").prepend(newContainer);
 
-                form.reset(); 
                 document.getElementById("add-modal").style.display = "none";
 
             } else {
