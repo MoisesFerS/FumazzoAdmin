@@ -46,6 +46,7 @@
 
       display: grid;
         grid-template-columns: repeat(4, 1fr);
+      justify-items: center; 
 
     }
 
@@ -86,13 +87,8 @@
 
     }
 
-    .panel {
-
-      
+    .panel {  
       overflow: hidden;
-      
-      
-      
       display: flex;
       flex-direction: column;
     } */
@@ -104,10 +100,28 @@
     .panel {
       
       border-radius: 0px 0px 3px 3px;
-      width: 98%;
+      width: 96%;
       background-color: var(--color-detail1);
       display: none;
       transition: max-height 0.2s ease-out;
+
+    }
+
+    .accordion-item{
+
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+    }
+
+    .detail-list{
+
+      display: grid;
+        grid-template-columns: repeat(3, 1fr);
+      justify-items: center; 
+
     }
 
     .accordion-division{

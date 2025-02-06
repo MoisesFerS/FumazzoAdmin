@@ -43,20 +43,22 @@ Estoque
             <button class="button-edit" id="{{ restock.id }}" name="edit" onclick="openModal(this)">
               <img src="{% static 'icons/edit.ico' %}" class="accordion-icon" alt="">
             </button>
-            <button class="button-remove" name="remove" onclick="openModal(this)">
+            <button class="button-remove" id="{{ restock.id }}" name="remove" onclick="openModal(this)">
               <img src="{% static 'icons/trash-can.ico' %}" class="accordion-icon" alt="">
             </button>
           </div>
         </div>
         <div class="panel" id="panel-{{ restock.id }}">
           {% for resupply in restock.resuply_set.all %}
-            <div class="accordion-row">
+            <div class="accordion-row accordion-item">
               <p class="list-item">{{ resupply.product.name }}</p>
             </div>
             <div class="panel">
-              <p class="list-item">QUANTIDADE: {{ resupply.quantity }}</p>
-              <p class="list-item">PREÇO: {{ resupply.batch_price }}</p>
-              <p class="list-item">DATA DE VALIDADE: {{ resupply.expiration_date }}</p>
+              <div class="detail-list">
+                <p class="list-item">QUANTIDADE: {{ resupply.quantity }}</p>
+                <p class="list-item">PREÇO: {{ resupply.batch_price }}</p>
+                <p class="list-item">DATA DE VALIDADE: {{ resupply.expiration_date }}</p>
+              </div> 
             </div>
             {% empty %}
             <p>Não há produtos neste registro.</p>
@@ -100,16 +102,14 @@ Estoque
 
 <div id="remove-modal" class="modal">
   <div class="modal-content">
-    <div class="modal-close">
-      <span class="close-button" id="close-remove-modal">&times;</span>
-    </div>
     <div class="modal-header">
       <h2>REMOVER REGISTRO</h2>
     </div>
     <div class="modal-body">
       <p>Você tem certeza que deseja remover o registro?</p>
     </div>
-    <button class="button-1" onclick="remove(this)" id="{{ restock.id }}">CONFIRMAR</button>
+    <button class="button-1" id="confirm-remove">CONFIRMAR</button>
+    <div><p id="message"></p></div>
   </div>
 </div>
 

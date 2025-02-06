@@ -53,34 +53,52 @@ def restock_delete(request, id):
             return JsonResponse({'status': 'error', 'message': 'Usuário não autenticado.'}, status=403)
     return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=405)
 
-def restock(request):
+def restock_add(request):
+    if request.method == 'POST':
         if 'workerID' in request.session:
-            if request.method == 'POST':
-                form = forms.RestockRegister(request.POST)
+            if request.session.get('worker_permission', 0) >= 4:
+                date_ = request.POST.get('date')
+                supplier_ = request.POST.get('supplier')
+                receiver_ = request.POST.get('receiver')
+                total_price_ = request.POST.get('total_price')
 
-                if form.is_valid():
-                    date_ = form.cleaned_data.get('date')
-                    total_price_ = form.cleaned_data.get('total_price')
-                    supplier_ = form.cleaned_data.get('supplier')
-                    receiver_ = form.cleaned_data.get('receiver')
+                # Obtendo o fornecedor e receptor
+                supplier_ = get_object_or_404(models.Supplier, id=supplier_)
+                receiver_ = get_object_or_404(models.Worker, id=receiver_)
 
-                    restock = models.Restock(
-                        date = date_,
-                        total_price = total_price_,
-                        supplier = supplier_,
-                        receiver = receiver_,
-                    )
+                # Criando o registro de reposição
+                restock = models.Restock.objects.create(
+                    date=date_,
+                    supplier=supplier_,
+                    receiver=receiver_,
+                    total_price=total_price_,
+                )
 
-                    try:
-                        restock.save()
-                        messages.success(request, "Categoria registrada com sucesso!")
-                        return redirect('worker:index') 
-                    except Exception as e:
-                        messages.error(request, f"Erro ao fazer o registro: {e}")
+                # Verifica se date_ está em formato string ou datetime
+                if isinstance(restock.date, str):
+                    # Se for string, já está formatada, então não usamos strftime
+                    formatted_date = restock.date
+                else:
+                    # Se for datetime, formatamos
+                    formatted_date = restock.date.strftime('%d/%m/%Y')
 
-                return redirect('core:stock')
+                # Retornando o objeto restock na resposta JSON
+                return JsonResponse({
+                    'status': 'success',
+                    'message': 'Registro adicionado com sucesso!',
+                    'restock': {
+                        'id': restock.id,
+                        'date': formatted_date,
+                        'supplier': restock.supplier.name,  # Nome do fornecedor
+                        'receiver': restock.receiver.first_name,  # Nome do receptor
+                        'total_price': restock.total_price
+                    }
+                })
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
         else:
-            return redirect('workers:login')
+            return JsonResponse({'status': 'error', 'message': 'Usuário não autenticado.'}, status=403)
+    return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=405)
 
 def category(request):
     if 'workerID' in request.session:

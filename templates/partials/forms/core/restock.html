@@ -1,24 +1,26 @@
-<form method="post" action="{% url 'core:restock' %}">
+<form id="restock_add_form" method="post">
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
     <div class="form">
-        <div>
-            <p><b>FORNECEDOR</b></p>
-            {{ form.supplier }}
-        </div>
         <div>
             <p><b>DATA</b></p>
             {{ form.date }}
         </div>
         <div>
-            <p><b>PREÇO TOTAL</b></p>
-            {{ form.total_price }}
+            <p><b>FORNECEDOR</b></p>
+            {{ form.supplier }}
         </div>
         <div>
             <p><b>RECEPTOR</b></p>
             {{ form.receiver }}
         </div>
+        <div>
+            <p><b>PREÇO TOTAL</b></p>
+            {{ form.total_price }}
+        </div>
         <div class="form-button">
-            <button class="button-1" id="submit-restock" onclick="">REGISTRAR</button>
+            <button class="button-1" id="confirm-add" type="submit">REGISTRAR</button>
         </div>
     </div>
 </form>
+
+<div id="mensagem"></div>
