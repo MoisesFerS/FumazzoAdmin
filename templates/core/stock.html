@@ -35,10 +35,10 @@ Estoque
               <p class="row-price-label">PREÇO TOTAL: </p>
             </div>
             <div class="accordion-row-data">
-              <p class="row-date">{{ restock.date | date:"d/m/Y" }}</p>
-              <p class="row-supplier">{{ restock.supplier }}</p>
-              <p class="row-receiver">{{ restock.receiver }}</p>
-              <p class="row-price">{{ restock.total_price }}</p>
+              <p class="row-date" id="restock.date">{{ restock.date | date:"d/m/Y" }}</p>
+              <p class="row-supplier" id="{{ restock.supplier_id }}">{{ restock.supplier }}</p>
+              <p class="row-receiver" id="{{ restock.receiver_id }}">{{ restock.receiver }}</p>
+              <p class="row-price" id="{{ restock.total_price }}">{{ restock.total_price }}</p>
             </div>
             <div class="accordion-row-buttons">
               <button class="button-edit" id="{{ restock.id }}" name="edit" onclick="openModal(this)">
@@ -92,12 +92,24 @@ Estoque
     </div>
     <div class="modal-body">
       <div>
-        <input type="text" id="edit-supplier"/>
+        <select name="supplier" id="supplier">
+          {% for supplier in suppliers %}
+            <option value="{{ supplier.id }}" 
+                    {% if supplier.id == selected_supplier_id %} selected {% endif %}>
+              {{ supplier.name }}
+            </option>
+          {% endfor %}
+        </select>
+        <select name="" id="">
+          {% for receiver in receivers %}
+            <option value="{{ receiver.id }}">{{ receiver.first_name }}</option>
+          {% endfor %}
+        </select>
+        <input type="sele" id="edit-supplier"/>
         <input type="text" id="edit-receiver"/>
         <input type="date" id="edit-date"/>
         <input type="number" id="edit-price"/>
       </div>
-      {% include formEdit_path %}
     </div>
     <button class="button-1" id="confirm-edit">CONFIRMAR</button>
   </div>

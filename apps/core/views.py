@@ -27,6 +27,8 @@ def stock(request):
         formEdit_path = 'partials/forms/core/stock-edit.html'
 
         restocks = models.Restock.objects.all().order_by('date')
+        suppliers = models.Supplier.objects.all()
+        receivers = models.Worker.objects.all()
 
         context = {
             'workerID': request.session['workerID'],
@@ -35,6 +37,8 @@ def stock(request):
             'worker_permisson': request.session.get('worker_permission', ''),
             'worker_role': request.session.get('worker_role', ''),
             'restocks': restocks,
+            'suppliers': suppliers,
+            'receivers' : receivers,
             'formAdd' : formAdd,
             'formAdd_path' : formAdd_path,
             'formEdit' : formEdit,
@@ -84,8 +88,7 @@ def restock_add(request):
 
                 return JsonResponse({
                     'status': 'success',
-                    'message': 'Registro adicionado com sucesso!',
-                    'restocks': list(restocks.values( 'date', 'id', 'receiver', 'supplier', 'total_price')),            
+                    'message': 'Registro adicionado com sucesso!',       
                 })
             
             else:
@@ -232,6 +235,7 @@ def meal(request):
         if request.method == 'POST':
             form = forms.MealRegister(request.POST, request.FILES)
 
+
             if form.is_valid():
                 name_ = form.cleaned_data.get('name')
                 price_ = form.cleaned_data.get('price')
@@ -263,7 +267,7 @@ def meal(request):
             'worker_permisson': request.session.get('worker_permission', ''),
             'worker_role': request.session.get('worker_role', ''),
             'form': form,
-            'form_path' : form_path
+            'form_path' : form_path,
         }
 
 

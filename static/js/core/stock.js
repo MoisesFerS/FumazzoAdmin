@@ -91,11 +91,11 @@ for (i = 0; i < acc.length; i++) {
     function edit(button) {
 
       const accordionRow = button.closest('.accordion-row')
-      const supplier = accordionRow.querySelector(".row-supplier").textContent;
-      const receiver = accordionRow.querySelector(".row-receiver").textContent;
-      const price = accordionRow.querySelector(".row-price").textContent.replace(',', '.');
+      const supplier = accordionRow.querySelector(".row-supplier").id;
+      const receiver = accordionRow.querySelector(".row-receiver").id;
+      const price = accordionRow.querySelector(".row-price").id.replace(',', '.');
 
-      const rawDate = accordionRow.querySelector(".row-date").textContent;
+      const rawDate = accordionRow.querySelector(".row-date").id;
       const [day, month, year] = rawDate.split('/');
       const date = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
