@@ -129,21 +129,40 @@ class CategoryRegister(forms.Form):
     
 class RestockRegister(forms.Form):
     date = forms.DateField(
-        widget=forms.DateInput(attrs={'id' : 'restock-date', 'class': 'form-input-date', 'type': 'date'}),
+        widget=forms.DateInput(attrs={'id' : 'add-date', 'class': 'form-input-date', 'type': 'date'}),
     )
 
     total_price = forms.DecimalField(
-        widget=forms.NumberInput(attrs={'id' : 'restock-price', 'class': 'form-input-total_price'}),
+        widget=forms.NumberInput(attrs={'id' : 'add-price', 'class': 'form-input-total_price'}),
     )
 
     supplier = forms.ModelChoiceField(
         queryset=Supplier.objects.all(),
-        widget=forms.Select(attrs={'id' : 'restock-supplier', 'class': 'form-input-supplier'}),
+        widget=forms.Select(attrs={'id' : 'add-supplier', 'class': 'form-input-supplier'}),
     )
 
     receiver = forms.ModelChoiceField(
         queryset=Worker.objects.all(),
-        widget=forms.Select(attrs={'id' : 'restock-receiver', 'class': 'form-input-receiver'}),
+        widget=forms.Select(attrs={'id' : 'add-receiver', 'class': 'form-input-receiver'}),
+    )
+
+class RestockEdit(forms.Form):
+    date = forms.DateField(
+        widget=forms.DateInput(attrs={'id' : 'edit-date', 'class': 'form-input-date', 'type': 'date'}),
+    )
+
+    total_price = forms.DecimalField(
+        widget=forms.NumberInput(attrs={'id' : 'edit-price', 'class': 'form-input-total_price'}),
+    )
+
+    supplier = forms.ModelChoiceField(
+        queryset=Supplier.objects.all(),
+        widget=forms.Select(attrs={'id' : 'edit-supplier', 'class': 'form-input-supplier'}),
+    )
+
+    receiver = forms.ModelChoiceField(
+        queryset=Worker.objects.all(),
+        widget=forms.Select(attrs={'id' : 'edit-receiver', 'class': 'form-input-receiver'}),
     )
 
 class RessuplyRegister(forms.Form):

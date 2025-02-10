@@ -20,8 +20,11 @@ def index(request):
 def stock(request):
     if 'workerID' in request.session:
 
-        form = forms.RestockRegister()
-        form_path = 'partials/forms/core/restock.html'
+        formAdd = forms.RestockRegister()
+        formAdd_path = 'partials/forms/core/stock-add.html'
+
+        formEdit = forms.RestockEdit()
+        formEdit_path = 'partials/forms/core/stock-edit.html'
 
         restocks = models.Restock.objects.all().order_by('date')
 
@@ -32,8 +35,10 @@ def stock(request):
             'worker_permisson': request.session.get('worker_permission', ''),
             'worker_role': request.session.get('worker_role', ''),
             'restocks': restocks,
-            'form' : form,
-            'form_path' : form_path,
+            'formAdd' : formAdd,
+            'formAdd_path' : formAdd_path,
+            'formEdit' : formEdit,
+            'formEdit_path' : formEdit_path,
         }
 
         return render(request, 'core/stock.html', context)
@@ -46,12 +51,15 @@ def restock_delete(request, id):
             if request.session.get('worker_permission', 0) >= 4:
                 restock = get_object_or_404(models.Restock, id=id)
                 restock.delete()
-                return JsonResponse({'status': 'success', 'message': 'Item deletado com sucesso!'})
-            else:
-                return JsonResponse({'status': 'error', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
-        else:
-            return JsonResponse({'status': 'error', 'message': 'Usuário não autenticado.'}, status=403)
+                
+                return JsonResponse({'status': 'success', 'message': 'Registro deletado com sucesso!'})
+
+            return JsonResponse({'status': 'error', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+        return JsonResponse({'status': 'error', 'message': 'Usuário não autenticado.'}, status=403)
+
     return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=405)
+
 
 def restock_add(request):
     if request.method == 'POST':

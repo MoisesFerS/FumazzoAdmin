@@ -80,7 +80,7 @@ Estoque
       <h2>ADICIONAR REGISTRO</h2>
     </div>
     <div class="modal-body">
-      {% include form_path %}
+      {% include formAdd_path %}
     </div>
   </div>
 </div>
@@ -97,7 +97,9 @@ Estoque
         <input type="date" id="edit-date"/>
         <input type="number" id="edit-price"/>
       </div>
+      {% include formEdit_path %}
     </div>
+    <button class="button-1" id="confirm-edit">CONFIRMAR</button>
   </div>
 </div>
 
@@ -110,7 +112,6 @@ Estoque
       <p>Você tem certeza que deseja remover o registro?</p>
     </div>
     <button class="button-1" id="confirm-remove">CONFIRMAR</button>
-    <div><p id="message"></p></div>
   </div>
 </div>
 
