@@ -19,51 +19,101 @@ for (i = 0; i < acc.length; i++) {
 
   /* OPEN */ 
 
-  function openModal(button) {
-    console.log(button);
+    /* Function to open a modal based on ID */
+    function openModal(button) {
 
-    const modal = document.getElementById(button.name + '-modal');
-    modal.style.display = 'block';
+        /* Get the ID of the button clicked, the ID is used to open modals dynamically */
+        const modal = document.getElementById(button.name + '-modal');
 
-    if (button.name === 'edit') {
-      setTimeout(() => edit(button), 100);
+        /* Bring the modal to front of the page */
+        modal.style.display = 'block';
+
+        /* If the modal is Edit, get the information from the accordion row */
+        if (button.name === 'edit') {
+
+            /* Get the accordion row where the edit button is located */
+            const accordionRow = button.closest('.accordion-row');
+
+            /* Get each information from the row */
+            const supplier = accordionRow.querySelector(".row-supplier").id;
+            const receiver = accordionRow.querySelector(".row-receiver").id;
+            const price = accordionRow.querySelector(".row-price").textContent.replace(',', '.');
+            const rawDate = accordionRow.querySelector(".row-date").textContent;
+
+            /* Format the date */
+            const [day, month, year] = rawDate.split('/');
+            const date = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+            /* Set the inputs with the information from the accordion row */
+            document.getElementById('edit-supplier').value = supplier;
+            document.getElementById('edit-receiver').value = receiver;
+            document.getElementById('edit-date').value = date;
+            document.getElementById('edit-price').value = price;
+
+        }
+
+        /* Get the 'confirm' button from each modal to call the respective function */
+        document.getElementById('confirm-' + button.name).addEventListener('click', function () {
+
+        /* According with the button's name, call a function, pass the button to use it's ID */
+            switch (button.name) {
+
+                /* If the function is */
+                case 'add' || 'edit':
+                submit(button);
+                break;
+
+                case 'remove':
+                remove(button);
+                break;
+
+            }
+
+        });
+
+        /* When the user click's out of the modal, it closes */
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        };
+
     }
 
-    document.getElementById('confirm-' + button.name).addEventListener('click', function () {
+    /* Function to prevents multiple submitions */
+    function submit(button) {
+    
+        /* Get the form from the modal */
+        let form = document.getElementById(`restock_${button.name}_form`);
+
+        
         switch (button.name) {
+
             case 'add':
-                add();
+
+                form.removeEventListener("submit", submitAddForm);
+                form.addEventListener("submit", submitAddForm);
+                
                 break;
 
             case 'edit':
-                submitEditForm();
+                
+                form.removeEventListener("submit", submitEditForm);
+                form.addEventListener("submit", submitEditForm);
+
                 break;
-
-            case 'remove':
-                remove(button);
-                break;
+        
         }
-    });
 
-    window.onclick = function (event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    };
-}
-
-
-  /* ADD MODAL */ 
-
-    function add() {
-      
-      let form = document.getElementById("restock_add_form");
-
-      form.removeEventListener("submit", submitAddForm);
-      form.addEventListener("submit", submitAddForm);
+        
 
     }
 
+  /* ADD MODAL */ 
+
+
+
+    /* Function that subimits the form to the Django URL */
     function submitAddForm(event) {
 
       event.preventDefault(); 
@@ -88,55 +138,55 @@ for (i = 0; i < acc.length; i++) {
 
   /* EDIT MODAL */
 
-  function edit(button) {
-    
-    const accordionRow = button.closest('.accordion-row');
+    /* Function that is called when the confirm of the EDIT modal is clicked */
+    function edit(event) {
 
-    const supplier = accordionRow.querySelector(".row-supplier").id;
-    const receiver = accordionRow.querySelector(".row-receiver").id;
-    const price = accordionRow.querySelector(".row-price").textContent.replace(',', '.');
-
-    const rawDate = accordionRow.querySelector(".row-date").textContent;
-    const [day, month, year] = rawDate.split('/');
-    const date = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-
-    document.getElementById('edit-supplier').value = supplier;
-    document.getElementById('edit-receiver').value = receiver;
-    document.getElementById('edit-date').value = date;
-    document.getElementById('edit-price').value = price;
-
-    const selectSupplier = document.getElementById('edit-supplier');
-    for (let option of selectSupplier.options) {
-        if (option.value === supplier) {
-            option.selected = true;
-            break;
-        }
-    }
-}
+        event.preventDefault(); 
+  
+        let formData = new FormData(this);
+  
+        fetch(`restock/edit/${button.id}/`, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            window.location.reload();
+        })
+        .catch(error => console.error("Erro:", error));
+  
+      }
 
 
 
   /* REMOVE MODAL */
     
+    /* Function called after the confirm button from the REMOVE modal is clicked */
     function remove(button) {
 
-      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        /* Gets the token fron the form and uses to make a requisition */
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-      fetch(`restock/delete/${button.id}/`, {
-          method: 'POST',
-          headers: {
-              'X-CSRFToken': csrfToken,
-          },
-      })
-      .then(response => response.json())
-      .then(data => {
-          alert(data.message);
-          window.location.reload();
-      })
-      .catch(error => {
-          console.error('Erro:', error);
-      });
-      
+        /* Uses the fetch function to do a requisition to the URL of Django that does the logic */
+        fetch(`restock/delete/${button.id}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+        });
+        
     }
 
       

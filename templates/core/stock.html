@@ -91,22 +91,27 @@ Estoque
       <h2>EDITAR REGISTRO</h2>
     </div>
     <div class="modal-body">
-      <div>
-        <select name="supplier" id="edit-supplier">
-          {% for supplier in suppliers %}
-            <option value="{{ supplier.id }}">{{ supplier.name }}</option>
-          {% endfor %}
-        </select>        
-        <select name="receiver" id="edit-receiver">
-          {% for receiver in receivers %}
-            <option value="{{ receiver.id }}">{{ receiver.first_name }}</option>
-          {% endfor %}
-        </select>  
-        <input type="date" id="edit-date"/>
-        <input type="number" id="edit-price"/>
+      <div class="edit-form">
+        <form id="restock_edit_form">
+          <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+          <select name="supplier" id="edit-supplier">
+            {% for supplier in suppliers %}
+              <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+            {% endfor %}
+          </select>        
+          <select name="receiver" id="edit-receiver">
+            {% for receiver in receivers %}
+              <option value="{{ receiver.id }}">{{ receiver.first_name }}</option>
+            {% endfor %}
+          </select>  
+          <input type="date" id="edit-date"/>
+          <input type="number" id="edit-price"/>
+          <div class="formEdit-button">
+            <button class="button-1" id="confirm-edit" type="submit">CONFIRMAR</button>
+          </div>
+        </form>
       </div>
     </div>
-    <button class="button-1" id="confirm-edit">CONFIRMAR</button>
   </div>
 </div>
 
