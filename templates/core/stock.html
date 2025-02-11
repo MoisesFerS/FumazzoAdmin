@@ -92,21 +92,16 @@ Estoque
     </div>
     <div class="modal-body">
       <div>
-        <select name="supplier" id="supplier">
+        <select name="supplier" id="edit-supplier">
           {% for supplier in suppliers %}
-            <option value="{{ supplier.id }}" 
-                    {% if supplier.id == selected_supplier_id %} selected {% endif %}>
-              {{ supplier.name }}
-            </option>
+            <option value="{{ supplier.id }}">{{ supplier.name }}</option>
           {% endfor %}
-        </select>
-        <select name="" id="">
+        </select>        
+        <select name="receiver" id="edit-receiver">
           {% for receiver in receivers %}
             <option value="{{ receiver.id }}">{{ receiver.first_name }}</option>
           {% endfor %}
-        </select>
-        <input type="sele" id="edit-supplier"/>
-        <input type="text" id="edit-receiver"/>
+        </select>  
         <input type="date" id="edit-date"/>
         <input type="number" id="edit-price"/>
       </div>

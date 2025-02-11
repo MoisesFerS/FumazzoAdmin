@@ -88,23 +88,32 @@ for (i = 0; i < acc.length; i++) {
 
   /* EDIT MODAL */
 
-    function edit(button) {
+  function edit(button) {
+    
+    const accordionRow = button.closest('.accordion-row');
 
-      const accordionRow = button.closest('.accordion-row')
-      const supplier = accordionRow.querySelector(".row-supplier").id;
-      const receiver = accordionRow.querySelector(".row-receiver").id;
-      const price = accordionRow.querySelector(".row-price").id.replace(',', '.');
+    const supplier = accordionRow.querySelector(".row-supplier").id;
+    const receiver = accordionRow.querySelector(".row-receiver").id;
+    const price = accordionRow.querySelector(".row-price").textContent.replace(',', '.');
 
-      const rawDate = accordionRow.querySelector(".row-date").id;
-      const [day, month, year] = rawDate.split('/');
-      const date = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    const rawDate = accordionRow.querySelector(".row-date").textContent;
+    const [day, month, year] = rawDate.split('/');
+    const date = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
-      document.getElementById('edit-supplier').value = supplier;
-      document.getElementById('edit-receiver').value = receiver;
-      document.getElementById('edit-date').value = date;
-      document.getElementById('edit-price').value = price;
+    document.getElementById('edit-supplier').value = supplier;
+    document.getElementById('edit-receiver').value = receiver;
+    document.getElementById('edit-date').value = date;
+    document.getElementById('edit-price').value = price;
 
+    const selectSupplier = document.getElementById('edit-supplier');
+    for (let option of selectSupplier.options) {
+        if (option.value === supplier) {
+            option.selected = true;
+            break;
+        }
     }
+}
+
 
 
   /* REMOVE MODAL */
