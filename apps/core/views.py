@@ -49,7 +49,7 @@ def stock(request):
     else:
         return redirect('workers:login')
 
-def restock_delete(request, id):
+def restock_remove(request, id):
     if request.method == 'POST':
         if 'workerID' in request.session:
             if request.session.get('worker_permission', 0) >= 4:
