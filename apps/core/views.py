@@ -29,6 +29,8 @@ def stock(request):
         restocks = models.Restock.objects.all().order_by('date')
         suppliers = models.Supplier.objects.all()
         receivers = models.Worker.objects.all()
+        categories = models.Category.objects.filter(type=5)
+        products = models.Product.objects.all()
 
         context = {
             'workerID': request.session['workerID'],
@@ -39,6 +41,8 @@ def stock(request):
             'restocks': restocks,
             'suppliers': suppliers,
             'receivers' : receivers,
+            'categories' : categories,
+            'products' : products,
             'formAdd' : formAdd,
             'formAdd_path' : formAdd_path,
             'formEdit' : formEdit,

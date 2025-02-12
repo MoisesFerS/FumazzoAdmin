@@ -16,6 +16,18 @@ Estoque
 
   <h1>REGISTROS DO ESTOQUE</h1>
 
+<select name="" id="">
+  {% for category in categories %}
+  <optgroup label="{{ category.name }}">
+    {% for product in products %}
+      {% if product.category.id == category.id %}
+        <option value="{{ product.id }}">{{ product.name }}</option>
+      {% endif %}
+    {% endfor %}
+  </optgroup>
+  {% endfor %}
+</select>
+
   <div class="container">
 
     <div class="add-restock">
@@ -93,7 +105,6 @@ Estoque
     <div class="modal-body">
       <div class="edit-form">
         <form id="restock_edit_form">
-          <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
           <select name="supplier" id="edit-supplier">
             {% for supplier in suppliers %}
               <option value="{{ supplier.id }}">{{ supplier.name }}</option>
@@ -129,6 +140,8 @@ Estoque
     <button class="button-1" id="confirm-remove">CONFIRMAR</button>
   </div>
 </div>
+
+<input type="hidden" id="csrf_token" value="{{ csrf_token }}">
 
 <script src="{% static 'js/core/stock.js' %}"></script>
 

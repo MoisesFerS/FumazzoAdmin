@@ -51,9 +51,9 @@ function openModal(button) {
     }
 
     /* Get the 'confirm' button from each modal to call the respective function */
-    document.getElementById('confirm-' + button.name).addEventListener('click', function () {
+    document.getElementById('confirm-' + button.name).onclick = function () {
         submit(button);
-    });
+    };
 
     /* When the user click's out of the modal, it closes */
     window.onclick = function (event) {
@@ -65,82 +65,36 @@ function openModal(button) {
 }
 
 function submit(button) {
+    const form = document.getElementById(`restock_${button.name}_form`);
+    const path = `restock/${button.name}${button.id ? '/' + button.id : ''}/`;
 
-    let form = document.getElementById(`restock_${button.name}_form`);
+    const csrfToken = document.getElementById("csrf_token").value;
 
-    let options = {
-        
+    const options = {
         method: "POST",
         headers: {
-            "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+            "X-CSRFToken": csrfToken
         }
-
     };
 
-    let path;
-
-    switch (button.name) {
-
-        case 'add':
-            path = `restock/add/`;
-            options.body = new FormData(form);
-            break;
-
-        case 'edit':
-            path = `restock/edit/${button.id}/`;
-            options.body = new FormData(form);
-            break;
-
-        case 'remove':
-            path = `restock/remove/${button.id}/`;
-            break;
-
+    if (button.name !== 'remove') {
+        options.body = new FormData(form);
     }
 
-    console.log("Enviando requisição para:", path);
-
     fetch(path, options)
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-        location.reload();
-    })
-    .catch(error => console.error("Erro:", error));
-
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            alert(data.message);
+            location.reload();
+        })
+        .catch(error => console.error("Erro:", error));
 }
 
-document.getElementById('add-item').addEventListener('click', function () {
-    // Criação de uma nova div para o item
-    const itemDiv = document.createElement('div');
-    itemDiv.classList.add('edit-item');
-    
-    // Campos para o novo item (por exemplo, nome do item e quantidade)
-    const itemNameInput = document.createElement('input');
-    itemNameInput.type = 'text';
-    itemNameInput.name = 'item_name[]';
-    itemNameInput.placeholder = 'Nome do Item';
-    
-    const itemQuantityInput = document.createElement('input');
-    itemQuantityInput.type = 'number';
-    itemQuantityInput.name = 'item_quantity[]';
-    itemQuantityInput.placeholder = 'Quantidade';
-    
-    // Botão para remover o item
-    const removeButton = document.createElement('button');
-    removeButton.textContent = 'Remover Item';
-    removeButton.type = 'button';
-    removeButton.classList.add('remove-item');
-    
-    // Adicionando os campos e o botão à nova div
-    itemDiv.appendChild(itemNameInput);
-    itemDiv.appendChild(itemQuantityInput);
-    itemDiv.appendChild(removeButton);
-    
-    // Adicionando a nova div dentro de edit-items
-    document.querySelector('.edit-items').appendChild(itemDiv);
-    
-    // Lógica para remover o item
-    removeButton.addEventListener('click', function() {
-        itemDiv.remove();
-    });
-});
+
+
+
+
+/* teste */
+
+
