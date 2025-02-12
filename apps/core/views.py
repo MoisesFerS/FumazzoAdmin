@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from . import models
 from . import forms
 from django.contrib import messages 
+from django.middleware.csrf import get_token
 
 def index(request):
     if 'workerID' in request.session:
@@ -59,7 +60,7 @@ def restock_remove(request, id):
             if request.session.get('worker_permission', 0) >= 4:
                 restock = get_object_or_404(models.Restock, id=id)
                 restock.delete()
-                
+                                
                 return JsonResponse({'status': 'success', 'message': 'Registro deletado com sucesso!'})
 
             return JsonResponse({'status': 'error', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)

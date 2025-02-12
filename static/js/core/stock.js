@@ -17,8 +17,15 @@ for (i = 0; i < acc.length; i++) {
 
 /* ##### MODAL ##### */
 
+/* Define csrfToken como uma variável global */
+let csrfToken = null;
+
 /* Function to open a modal based on ID */
 function openModal(button) {
+
+    // Chama a função getToken e atribui o valor ao csrfToken
+    csrfToken = getToken();  // Armazena o token globalmente
+    console.log(csrfToken);
 
     /* Get the ID of the button clicked, the ID is used to open modals dynamically */
     const modal = document.getElementById(button.name + '-modal');
@@ -64,16 +71,26 @@ function openModal(button) {
 
 }
 
+function getToken() {
+    let csrfToken = null;
+    const cookies = document.cookie.split(';');
+    cookies.forEach(cookie => {
+        const [name, value] = cookie.trim().split('=');
+        if (name === 'csrftoken') {
+            csrfToken = decodeURIComponent(value);
+        }
+    });
+    return csrfToken; // Retorna o token
+}
+
 function submit(button) {
     const form = document.getElementById(`restock_${button.name}_form`);
     const path = `restock/${button.name}${button.id ? '/' + button.id : ''}/`;
 
-    const csrfToken = document.getElementById("csrf_token").value;
-
     const options = {
         method: "POST",
         headers: {
-            "X-CSRFToken": csrfToken
+            "X-CSRFToken": csrfToken  // Usa o csrfToken que foi atribuído globalmente
         }
     };
 
@@ -92,9 +109,37 @@ function submit(button) {
 }
 
 
-
-
-
 /* teste */
 
 
+document.getElementById('add-item').addEventListener('click', function () {
+
+    const itemDiv = document.createElement('div');
+    itemDiv.classList.add('edit-item');
+    
+    const itemNameInput = document.createElement('input');
+    itemNameInput.type = 'text';
+    itemNameInput.name = 'item_name[]';
+    itemNameInput.placeholder = 'Nome do Item';
+    
+    const itemQuantityInput = document.createElement('input');
+    itemQuantityInput.type = 'number';
+    itemQuantityInput.name = 'item_quantity[]';
+    itemQuantityInput.placeholder = 'Quantidade';
+    
+    const removeButton = document.createElement('button');
+    removeButton.textContent = 'Remover Item';
+    removeButton.type = 'button';
+    removeButton.classList.add('remove-item');
+    
+    itemDiv.appendChild(itemNameInput);
+    itemDiv.appendChild(itemQuantityInput);
+    itemDiv.appendChild(removeButton);
+    
+    document.querySelector('.edit-items').appendChild(itemDiv);
+    
+    removeButton.addEventListener('click', function() {
+        itemDiv.remove();
+    });
+
+});
