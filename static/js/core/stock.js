@@ -122,10 +122,13 @@ document.getElementById('add-product').onclick = function () {
     fetch('restock/edit/add-product/')
     .then(response => response.json())
     .then(data => {
+
         const container = document.getElementById('products-container')
         const productRow = document.createElement('div');
         productRow.classList.add('productRow')
         container.appendChild(productRow) 
+        const productQuantity = document.createElement('input')
+        const productPrice = document.createElement('input')
 
         const select = document.createElement('select'); 
 
@@ -143,8 +146,10 @@ document.getElementById('add-product').onclick = function () {
 
             select.appendChild(optgroup);
             });
-
+        
         productRow.appendChild(select)
+        productRow.appendChild(productQuantity)
+        productRow.appendChild(productPrice)
 
     })
     .catch(error => console.error('Erro ao carregar categorias e produtos:', error));

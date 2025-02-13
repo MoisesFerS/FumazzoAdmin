@@ -15,19 +15,7 @@ Estoque
 <div class="content">
 
   <h1>REGISTROS DO ESTOQUE</h1>
-
-<select name="" id="">
-  {% for category in categories %}
-  <optgroup label="{{ category.name }}">
-    {% for product in products %}
-      {% if product.category.id == category.id %}
-        <option value="{{ product.id }}">{{ product.name }}</option>
-      {% endif %}
-    {% endfor %}
-  </optgroup>
-  {% endfor %}
-</select>
-
+  
   <div class="container">
 
     <div class="add-restock">
@@ -122,6 +110,7 @@ Estoque
           </div>
         </form>
       </div>
+      <h2>PRODUTOS:</h2>
       <div class="products-container" id="products-container">
       </div>
       <button class="button-1" id="add-product"></button>

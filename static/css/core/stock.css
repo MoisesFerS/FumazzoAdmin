@@ -76,16 +76,6 @@
       background-color: var(--color-primary);
     }
 
-    /* .panel {
-      
-      border-radius: 0px 0px 3px 3px;
-      width: 96%;
-      background-color: var(--color-detail1);
-      display: none;
-      transition: max-height 0.2s ease-out;
-
-    } */
-
     .panel {
       border-radius: 0px 0px 3px 3px;
       width: 96%;
@@ -210,7 +200,9 @@
       position: relative;
       background-color: var(--color-primary);
       margin: auto;
-      width: 600px;
+      width: 1024px;
+      height: 750px;
+      overflow-y: scroll;
       display: flex;
       flex-direction: column;
       box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
@@ -274,3 +266,32 @@
     }
   
   
+/* ##### EDIT-MODAL ##### */
+
+  /* Container */
+
+    .products-container{
+
+      gap: 10px;
+      display: flex;
+      flex-direction: column;
+
+    }
+
+  /* Product Row */
+
+    .productRow{
+
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+
+    }
+
+/* ==========================================================
+   CONTEXTO
+   ========================================================== */
+
+/* ===== ELEMENTO ===== */
+
+/* VARIAÇÃO */
