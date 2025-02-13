@@ -4,16 +4,24 @@ var acc = document.getElementsByClassName("accordion-row");
 var i;
 
 for (i = 0; i < acc.length; i++) {
-    acc[i].onclick = function(){
+    acc[i].onclick = function() {
         this.classList.toggle("active");
         var panel = this.nextElementSibling;
-        if (panel.style.display === "block") {
-            panel.style.display = "none";
+        
+        if (panel.style.maxHeight) {
+            panel.style.maxHeight = null;
         } else {
-            panel.style.display = "block";
+            panel.style.maxHeight = panel.scrollHeight + "px";
+            
+            var parentPanel = this.closest('.panel');
+            if (parentPanel) {
+                parentPanel.style.maxHeight = parentPanel.scrollHeight + panel.scrollHeight + "px";
+            }
         }
     }
 }
+
+
 
 /* ##### MODAL ##### */
 
@@ -110,12 +118,19 @@ function submit(button) {
 /* teste */
 
 
-document.getElementById('add-item').onclick = function () {
-    fetch('restock/edit/add-ingredient/')
+document.getElementById('add-product').onclick = function () {
+    fetch('restock/edit/add-product/')
     .then(response => response.json())
     .then(data => {
-        const select = document.getElementById('product-select'); 
+        const container = document.getElementById('products-container')
+        const productRow = document.createElement('div');
+        productRow.classList.add('productRow')
+        container.appendChild(productRow) 
+
+        const select = document.createElement('select'); 
+
         data.forEach(category => {
+            
             const optgroup = document.createElement('optgroup');
             optgroup.label = category.name;
 
@@ -127,7 +142,10 @@ document.getElementById('add-item').onclick = function () {
             });
 
             select.appendChild(optgroup);
-        });
+            });
+
+        productRow.appendChild(select)
+
     })
     .catch(error => console.error('Erro ao carregar categorias e produtos:', error));
 };

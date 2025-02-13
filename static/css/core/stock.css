@@ -71,33 +71,12 @@
 
 
     }
-/* 
-    .accordion-list{
-
-      display: grid;
-      grid-template-rows: 1fr 1fr;
-      grid-template-columns: 1fr 1fr;
-      padding: 5px 15px 5px 15px;
-
-    }
-
-    .accordion-list:hover{
-
-      background-color: var(--color-primary);
-
-    }
-
-    .panel {  
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    } */
 
     .active, .accordion-row:hover {
       background-color: var(--color-primary);
     }
 
-    .panel {
+    /* .panel {
       
       border-radius: 0px 0px 3px 3px;
       width: 96%;
@@ -105,8 +84,17 @@
       display: none;
       transition: max-height 0.2s ease-out;
 
-    }
+    } */
 
+    .panel {
+      border-radius: 0px 0px 3px 3px;
+      width: 96%;
+      background-color: var(--color-detail1);
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.2s ease;
+    }
+ 
     .accordion-item{
 
       height: 35px;
@@ -223,6 +211,8 @@
       background-color: var(--color-primary);
       margin: auto;
       width: 600px;
+      display: flex;
+      flex-direction: column;
       box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
       -webkit-animation-name: animatetop;
       -webkit-animation-duration: 0.4s;
@@ -250,7 +240,9 @@
     .modal-body {
       
       display: flex;
+      flex-direction: column;
       justify-content: center;
+      align-self: center;
 
     }
 

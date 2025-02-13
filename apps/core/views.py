@@ -50,7 +50,7 @@ def stock(request):
     else:
         return redirect('workers:login')
     
-def add_ingredient(request):
+def add_product(request):
   categories = models.Category.objects.filter(type=5)
   products = models.Product.objects.all()
   data = []
