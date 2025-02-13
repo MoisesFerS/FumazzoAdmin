@@ -6,17 +6,17 @@ from django.contrib import messages
 from django.middleware.csrf import get_token
 
 def index(request):
-    if 'workerID' in request.session:
-        context = {
-            'workerID': request.session['workerID'],
-            'worker_first_name': request.session.get('worker_first_name', ''),
-            'worker_last_name': request.session.get('worker_last_name', ''),
-            'worker_permisson': request.session.get('worker_permission', ''),
-            'worker_role': request.session.get('worker_role', ''),
-        }
-        return render(request, 'core/index.html', context)
-    else:
-        return redirect('workers:login')
+  if 'workerID' in request.session:
+    context = {
+      'workerID': request.session['workerID'],
+      'worker_first_name': request.session.get('worker_first_name', ''),
+      'worker_last_name': request.session.get('worker_last_name', ''),
+      'worker_permisson': request.session.get('worker_permission', ''),
+      'worker_role': request.session.get('worker_role', ''),
+    }
+    return render(request, 'core/index.html', context)
+  else:
+    return redirect('workers:login')
     
 def stock(request):
     if 'workerID' in request.session:
@@ -30,8 +30,6 @@ def stock(request):
         restocks = models.Restock.objects.all().order_by('date')
         suppliers = models.Supplier.objects.all()
         receivers = models.Worker.objects.all()
-        categories = models.Category.objects.filter(type=5)
-        products = models.Product.objects.all()
 
         context = {
             'workerID': request.session['workerID'],
@@ -42,8 +40,6 @@ def stock(request):
             'restocks': restocks,
             'suppliers': suppliers,
             'receivers' : receivers,
-            'categories' : categories,
-            'products' : products,
             'formAdd' : formAdd,
             'formAdd_path' : formAdd_path,
             'formEdit' : formEdit,
@@ -53,6 +49,24 @@ def stock(request):
         return render(request, 'core/stock.html', context)
     else:
         return redirect('workers:login')
+    
+def add_ingredient(request):
+  categories = models.Category.objects.filter(type=5)
+  products = models.Product.objects.all()
+  data = []
+  for category in categories:
+    products_in_category = [
+        {'id': product.id, 'name': product.name}
+        for product in products if product.category.id == category.id
+    ]
+    data.append({
+        'name': category.name,
+        'products': products_in_category
+    })
+    
+  return JsonResponse(data, safe=False)
+
+
 
 def restock_remove(request, id):
     if request.method == 'POST':
@@ -62,11 +76,8 @@ def restock_remove(request, id):
                 restock.delete()
                                 
                 return JsonResponse({'status': 'success', 'message': 'Registro deletado com sucesso!'})
-
             return JsonResponse({'status': 'error', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
-
         return JsonResponse({'status': 'error', 'message': 'Usuário não autenticado.'}, status=403)
-
     return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=405)
 
 
@@ -88,8 +99,6 @@ def restock_add(request):
                     receiver=receiver_,
                     total_price=total_price_,
                 )
-
-                restocks = models.Restock.objects.all().order_by('date')
 
                 return JsonResponse({
                     'status': 'success',

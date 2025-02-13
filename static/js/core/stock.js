@@ -23,9 +23,7 @@ let csrfToken = null;
 /* Function to open a modal based on ID */
 function openModal(button) {
 
-    // Chama a função getToken e atribui o valor ao csrfToken
-    csrfToken = getToken();  // Armazena o token globalmente
-    console.log(csrfToken);
+    csrfToken = getToken(); 
 
     /* Get the ID of the button clicked, the ID is used to open modals dynamically */
     const modal = document.getElementById(button.name + '-modal');
@@ -80,7 +78,7 @@ function getToken() {
             csrfToken = decodeURIComponent(value);
         }
     });
-    return csrfToken; // Retorna o token
+    return csrfToken;
 }
 
 function submit(button) {
@@ -90,7 +88,7 @@ function submit(button) {
     const options = {
         method: "POST",
         headers: {
-            "X-CSRFToken": csrfToken  // Usa o csrfToken que foi atribuído globalmente
+            "X-CSRFToken": csrfToken  
         }
     };
 
@@ -112,34 +110,24 @@ function submit(button) {
 /* teste */
 
 
-document.getElementById('add-item').addEventListener('click', function () {
+document.getElementById('add-item').onclick = function () {
+    fetch('restock/edit/add-ingredient/')
+    .then(response => response.json())
+    .then(data => {
+        const select = document.getElementById('product-select'); 
+        data.forEach(category => {
+            const optgroup = document.createElement('optgroup');
+            optgroup.label = category.name;
 
-    const itemDiv = document.createElement('div');
-    itemDiv.classList.add('edit-item');
-    
-    const itemNameInput = document.createElement('input');
-    itemNameInput.type = 'text';
-    itemNameInput.name = 'item_name[]';
-    itemNameInput.placeholder = 'Nome do Item';
-    
-    const itemQuantityInput = document.createElement('input');
-    itemQuantityInput.type = 'number';
-    itemQuantityInput.name = 'item_quantity[]';
-    itemQuantityInput.placeholder = 'Quantidade';
-    
-    const removeButton = document.createElement('button');
-    removeButton.textContent = 'Remover Item';
-    removeButton.type = 'button';
-    removeButton.classList.add('remove-item');
-    
-    itemDiv.appendChild(itemNameInput);
-    itemDiv.appendChild(itemQuantityInput);
-    itemDiv.appendChild(removeButton);
-    
-    document.querySelector('.edit-items').appendChild(itemDiv);
-    
-    removeButton.addEventListener('click', function() {
-        itemDiv.remove();
-    });
+            category.products.forEach(product => {
+                const option = document.createElement('option');
+                option.value = product.id;
+                option.textContent = product.name;
+                optgroup.appendChild(option);
+            });
 
-});
+            select.appendChild(optgroup);
+        });
+    })
+    .catch(error => console.error('Erro ao carregar categorias e produtos:', error));
+};
