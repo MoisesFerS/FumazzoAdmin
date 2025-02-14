@@ -1,9 +1,8 @@
 /* ##### ACCORDION ##### */
 
-var accordionRows = document.getElementsByClassName("stock-accordion");
-var i;
+var accordionRows = document.querySelectorAll(".stock-accordion, .stock-product-accordion");
 
-for (i = 0; i < accordionRows.length; i++) {
+for (var i = 0; i < accordionRows.length; i++) {
     accordionRows[i].onclick = function() {
         this.classList.toggle("active");
         var panel = this.nextElementSibling;

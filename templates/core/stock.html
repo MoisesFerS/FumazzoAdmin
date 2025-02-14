@@ -13,14 +13,14 @@ Estoque
 {% block content %}
 <div class="content-main">
   <h1 class="content-main-title">REGISTROS DO ESTOQUE</h1>
-  
+
   <section class="stock-container">
     <div class="stock-container-button-add">
       <button class="button-secondary" name="add" onclick="openModal(this)">Adicionar</button>
     </div>
     <section class="stock-accordions-container" id="accordion-container">
       {% for restock in restocks %}
-        <div class="stock-accordion" id="restock-{{ restock.id }}">
+        <div class="stock-accordion" id="accordion">
           <div class="stock-accordion-data">
             <div class="stock-accordion-data-date">
               <p class="stock-accordion-data-label" for="">DATA:</p>
@@ -51,7 +51,7 @@ Estoque
         <div class="stock-accordion-panel" id="panel-{{ restock.id }}">
           {% for resupply in restock.resupply_set.all %}
             <div class="stock-accordion stock-accordion-item">
-              <p class="stock-product-accordion">{{ resupply.product.name }}</p>
+              <p class="stock-product-accordion" id="">{{ resupply.product.name }}</p>
             </div>
             <div class="stock-product-accordion-item-panel">
               <div class="accordion-item-detail-list">

@@ -61,7 +61,7 @@ class Restock(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
     receiver = models.ForeignKey(Worker, on_delete=models.CASCADE)
 
-class Resuply(models.Model):
+class Resupply(models.Model):
     id = models.AutoField(primary_key=True)
     quantity = models.IntegerField()
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
