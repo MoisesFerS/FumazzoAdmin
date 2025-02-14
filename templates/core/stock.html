@@ -7,61 +7,56 @@ Estoque
 {% load static %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/core/stock.css' %}">
+  <link rel="stylesheet" href="{% static 'css/core/stock.css' %}">
 {% endblock %}
 
 {% block content %}
-
-<div class="content">
-
-  <h1>REGISTROS DO ESTOQUE</h1>
+<div class="content-main">
+  <h1 class="content-main-title">REGISTROS DO ESTOQUE</h1>
   
-  <div class="container">
-
-    <div class="add-restock">
-
-      <button class="button-2" name="add" onclick="openModal(this)">Adicionar</button>
-
+  <div class="content-main-container">
+    <div class="content-add-restock">
+      <button class="button-main-secundary" name="add" onclick="openModal(this)">Adicionar</button>
     </div>
 
-    <div class="accordions">
+    <div class="content-accordions">
       <div class="accordion-container" id="accordion-container">
         {% for restock in restocks %}
           <div class="accordion-row">
             <div class="accordion-row-labels">
-              <p class="row-date-label">DATA: </p>
-              <p class="row-supplier-label">FORENEDOR: </p>
-              <p class="row-receiver-label">RECEPTOR: </p>
-              <p class="row-price-label">PREÇO TOTAL: </p>
+              <p class="accordion-row-date-label">DATA: </p>
+              <p class="accordion-row-supplier-label">FORNECEDOR: </p>
+              <p class="accordion-row-receiver-label">RECEPTOR: </p>
+              <p class="accordion-row-price-label">PREÇO TOTAL: </p>
             </div>
             <div class="accordion-row-data">
-              <p class="row-date" id="restock.date">{{ restock.date | date:"d/m/Y" }}</p>
-              <p class="row-supplier" id="{{ restock.supplier_id }}">{{ restock.supplier }}</p>
-              <p class="row-receiver" id="{{ restock.receiver_id }}">{{ restock.receiver }}</p>
-              <p class="row-price" id="{{ restock.total_price }}">{{ restock.total_price }}</p>
+              <p class="accordion-row-date" id="restock.date">{{ restock.date | date:"d/m/Y" }}</p>
+              <p class="accordion-row-supplier" id="{{ restock.supplier_id }}">{{ restock.supplier }}</p>
+              <p class="accordion-row-receiver" id="{{ restock.receiver_id }}">{{ restock.receiver }}</p>
+              <p class="accordion-row-price" id="{{ restock.total_price }}">{{ restock.total_price }}</p>
             </div>
             <div class="accordion-row-buttons">
               <button class="button-edit" id="{{ restock.id }}" name="edit" onclick="openModal(this)">
-                <img src="{% static 'icons/edit.ico' %}" class="accordion-icon" alt="">
+                <img src="{% static 'icons/edit.ico' %}" class="accordion-icon" alt="edit-icon">
               </button>
               <button class="button-remove" id="{{ restock.id }}" name="remove" onclick="openModal(this)">
-                <img src="{% static 'icons/trash-can.ico' %}" class="accordion-icon" alt="">
+                <img src="{% static 'icons/trash-can.ico' %}" class="accordion-icon" alt="remove-icon">
               </button>
             </div>
           </div>
-          <div class="panel" id="panel-{{ restock.id }}">
-            {% for resupply in restock.resuply_set.all %}
+          <div class="accordion-panel" id="panel-{{ restock.id }}">
+            {% for resupply in restock.resupply_set.all %}
               <div class="accordion-row accordion-item">
-                <p class="list-item">{{ resupply.product.name }}</p>
+                <p class="accordion-item-list-item">{{ resupply.product.name }}</p>
               </div>
-              <div class="panel">
-                <div class="detail-list">
-                  <p class="list-item">QUANTIDADE: {{ resupply.quantity }}</p>
-                  <p class="list-item">PREÇO: {{ resupply.batch_price }}</p>
-                  <p class="list-item">DATA DE VALIDADE: {{ resupply.expiration_date }}</p>
-                </div> 
+              <div class="accordion-item-panel">
+                <div class="accordion-item-detail-list">
+                  <p class="accordion-item-detail-list-item">QUANTIDADE: {{ resupply.quantity }}</p>
+                  <p class="accordion-item-detail-list-item">PREÇO: {{ resupply.batch_price }}</p>
+                  <p class="accordion-item-detail-list-item">DATA DE VALIDADE: {{ resupply.expiration_date }}</p>
+                </div>
               </div>
-              {% empty %}
+            {% empty %}
               <p>Não há produtos neste registro.</p>
             {% endfor %}
           </div>
@@ -70,63 +65,61 @@ Estoque
       </div>
     </div>
   </div>
-
 </div>
 
 <!-- Modals -->
-<div id="add-modal" class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>ADICIONAR REGISTRO</h2>
+<div id="add-modal" class="modal-main">
+  <div class="modal-content-main">
+    <div class="modal-header-main">
+      <h2 class="modal-header-title">ADICIONAR REGISTRO</h2>
     </div>
-    <div class="modal-body">
+    <div class="modal-body-main">
       {% include formAdd_path %}
     </div>
   </div>
 </div>
 
-<div id="edit-modal" class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>EDITAR REGISTRO</h2>
+<div id="edit-modal" class="modal-main">
+  <div class="modal-content-main">
+    <div class="modal-header-main">
+      <h2 class="modal-header-title">EDITAR REGISTRO</h2>
     </div>
-    <div class="modal-body">
-      <div class="edit-form">
+    <div class="modal-body-main">
+      <div class="modal-edit-form">
         <form id="restock_edit_form">
-          <select name="supplier" id="edit-supplier">
+          <select name="supplier" id="edit-supplier" class="form-input-select">
             {% for supplier in suppliers %}
               <option value="{{ supplier.id }}">{{ supplier.name }}</option>
             {% endfor %}
           </select>        
-          <select name="receiver" id="edit-receiver">
+          <select name="receiver" id="edit-receiver" class="form-input-select">
             {% for receiver in receivers %}
               <option value="{{ receiver.id }}">{{ receiver.first_name }}</option>
             {% endfor %}
           </select>  
-          <input type="date" id="edit-date"/>
-          <input type="number" id="edit-price"/>
+          <input type="date" id="edit-date" class="form-input-text"/>
+          <input type="number" id="edit-price" class="form-input-number"/>
           <div class="formEdit-button">
-            <button class="button-1" id="confirm-edit" type="submit">CONFIRMAR</button>
+            <button class="button-main-primary" id="confirm-edit" type="submit">CONFIRMAR</button>
           </div>
         </form>
       </div>
-      <h2>PRODUTOS:</h2>
-      <div class="products-container" id="products-container">
-      </div>
-      <button class="button-1" id="add-product"></button>
-      </div>
+      <h2 class="modal-header-title">PRODUTOS:</h2>
+      <div class="modal-products-container" id="products-container"></div>
+      <button class="button-main-secundary" id="add-product">ADICIONAR PRODUTO</button>
+    </div>
   </div>
 </div>
 
-<div id="remove-modal" class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>REMOVER REGISTRO</h2>
+<div id="remove-modal" class="modal-main">
+  <div class="modal-content-main">
+    <div class="modal-header-main">
+      <h2 class="modal-header-title">REMOVER REGISTRO</h2>
     </div>
-    <div class="modal-body">
-      <p>Você tem certeza que deseja remover o registro?</p>
+    <div class="modal-body-main">
+      <p class="modal-body-text">Você tem certeza que deseja remover o registro?</p>
     </div>
-    <button class="button-1" id="confirm-remove">CONFIRMAR</button>
+    <button class="button-main-primary" id="confirm-remove">CONFIRMAR</button>
   </div>
 </div>
 

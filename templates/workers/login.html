@@ -4,35 +4,26 @@
 {% block title %}{% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/workers/login.css' %}">
+  <link rel="stylesheet" href="{% static 'css/workers/login.css' %}">
 {% endblock %}
 
 {% block content %}
 
-  <div class="content">
+<div class="main-content">
+  <div class="login-section">
 
-    <div class="login-container">
-
-      <div class="brand-container">
-
-        <img src="{% static 'images/logo.png' %}" class="logo-login" alt="">
- 
-        <h2>BEM VINDO</h2>
-
-        <p>Fumazzo Administrativo</p>
-
-      </div>
-
-      <div class="form-container">
-
-        <h2>LOG-IN</h2>
-
-        {% include form_path %}
-
-      </div>
-      
+    <div class="login-brand">
+      <img src="{% static 'images/logo.png' %}" class="login-logo" alt="">
+      <h2 class="login-welcome">BEM VINDO</h2>
+      <p class="login-caption caption">Fumazzo Administrativo</p>
     </div>
 
+    <div class="login-form">
+      <h2 class="login-title title">LOG-IN</h2>
+      {% include form_path %}
+    </div>
+    
   </div>
+</div>
 
 {% endblock %}
