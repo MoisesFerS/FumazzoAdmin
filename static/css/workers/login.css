@@ -4,9 +4,9 @@
     LOGIN - Container with log-in function
     ========================================================== */ 
 
-/* ===== CONTAINER ===== */
+/* ===== LOGIN CONTAINER ===== */
 
-.login-section{
+.login-container{
   width: 1024px;
   height: 600px; 
   display: grid;
@@ -14,17 +14,21 @@
   background-color: var(--color-primary);
 }
 
-/* ===== CONTENT ===== */
+/* ===== BRAND CONTAINER ===== */
 
-.login-brand{
+.login-brand-container{
   margin: auto; 
 }
 
-.login-logo{
+/* ===== BRAND CONTENT ===== */
+
+.login-brand-logo{
   height: 200px;
 }
 
-.login-form{
+/* ===== FORM CONTAINER ===== */
+
+.login-form-container{
   margin: auto;
   display: flex;
   flex-direction: column;

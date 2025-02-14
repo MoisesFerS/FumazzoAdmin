@@ -1,39 +1,38 @@
 {% load static %}
 <header>
-
   <nav>
-    <a href="{% url 'workers:index' %}"><img class="logo" src="{% static 'images/logo.png' %}" alt="logo.png"></a>
-    <div class="navbar-identity">
-      <p>Administrativo</p>
+    <a class="navbar-brand" href="{% url 'workers:index' %}">
+      <img class="navbar-brand-logo" src="{% static 'images/logo.png' %}" alt="Logo da Fumazzo">
+    </a>
+    <section class="identity-container">
+      <p class="identity-title">Administrativo</p>
       {% if workerID %}
-      <div class="navbar-identity-worker">
-        <p class="navbar-identity-worker-name">{{ worker_first_name }}</p>
-        <p> - </p>
-        <p class="navbar-identity-worker-role">{{ worker_role }}</p>
-      </div>
+      <section class="identity-worker-container">
+        <p class="identity-worker-text">{{ worker_first_name }}</p>
+        <p class="identity-worker-separator"> - </p>
+        <p class="identity-worker-text">{{ worker_role }}</p>
+      </section>
       {% endif %}
-    </div>
+    </section>
     {% if workerID %}
     <a class="navbar-link" href="{% url 'workers:index' %}">Página Inicial</a>
     <ul class="navbar-dropdown">
-      <li class="navbar-dropdown-item">
-        <a class="navbar-link navbar-dropdown-toggle" href="#">
+      <li class="navbar-dropdown-container">
+        <a class="navbar-dropdown-toggle" href="#">
           Gerenciar
-          <img class="navbar-dropdown-icon" src="{% static 'icons/down-arrow.ico' %}" alt="down-arrow.ico">
+          <img class="navbar-dropdown-toggle-icon" src="{% static 'icons/down-arrow.ico' %}" alt="Ícone de seta para baixo">
         </a>
         <ul class="navbar-dropdown-menu">
-          <li class="navbar-dropdown-option"><a class="navbar-dropdown-link" href="#">Refeições</a></li>
-          <li class="navbar-dropdown-option"><a class="navbar-dropdown-link" href="#">Categorias</a></li>
-          <li class="navbar-dropdown-option"><a class="navbar-dropdown-link" href="{% url 'core:stock' %}">Estoque</a>
-          </li>
-          <li class="navbar-dropdown-option"><a class="navbar-dropdown-link" href="#">Produtos</a></li>
+          <li class="navbar-dropdown-item"><a class="navbar-dropdown-item-link" href="#">Refeições</a></li>
+          <li class="navbar-dropdown-item"><a class="navbar-dropdown-item-link" href="#">Categorias</a></li>
+          <li class="navbar-dropdown-item"><a class="navbar-dropdown-item-link" href="{% url 'core:stock' %}">Estoque</a></li>
+          <li class="navbar-dropdown-item"><a class="navbar-dropdown-item-link" href="#">Produtos</a></li>
         </ul>
       </li>
     </ul>
     <a class="navbar-link" href="#">Promoções</a>
     <a class="navbar-link" href="#">Notificação</a>
-    <a href="{% url 'workers:logout' %}" class="button-main-primary">Sair</a>
+    <a href="{% url 'workers:logout' %}" class="button-primary">Sair</a>
     {% endif %}
   </nav>
-
 </header>

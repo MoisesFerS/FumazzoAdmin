@@ -10,6 +10,7 @@ The format is based on:
 ## [0.9.0] - 25/01/2025 - Adding the Stock System
 
 ### ADDED
+- Added the NAME_PATTERNS.md file.
 - Added to styles.css:
     - Color variable detail 4 - Green.
     - Color variable detail 5 - Mustard.

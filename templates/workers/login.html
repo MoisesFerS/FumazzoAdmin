@@ -1,29 +1,29 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{% endblock %}
+{% block title %}
+  Login
+{% endblock %}
 
 {% block css %}
   <link rel="stylesheet" href="{% static 'css/workers/login.css' %}">
 {% endblock %}
 
 {% block content %}
-
 <div class="main-content">
-  <div class="login-section">
+  <div class="login-container">
 
-    <div class="login-brand">
-      <img src="{% static 'images/logo.png' %}" class="login-logo" alt="">
-      <h2 class="login-welcome">BEM VINDO</h2>
-      <p class="login-caption caption">Fumazzo Administrativo</p>
-    </div>
+    <section class="login-brand-container">
+      <img src="{% static 'images/logo.png' %}" class="login-brand-logo" alt="Fumazzo logo.png">
+      <h2 class="login-brand-subtitle">BEM VINDO</h2>
+      <p class="login-brand-text caption">Fumazzo Administrativo</p>
+    </section>
 
-    <div class="login-form">
-      <h2 class="login-title title">LOG-IN</h2>
+    <section class="login-form-container">
+      <h1 class="login-form-title">LOG-IN</h1>
       {% include form_path %}
-    </div>
+    </section>
     
   </div>
 </div>
-
 {% endblock %}

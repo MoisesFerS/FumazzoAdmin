@@ -8,7 +8,7 @@
 
 /* Oswald */
 
-@font-face {
+@font-face{
   font-family: 'Oswald';
   src: url('/static/fonts/Oswald.ttf') format('truetype');
   font-weight: 100 900;
@@ -16,7 +16,7 @@
 }
 
 /* DMSans */
-@font-face {
+@font-face{
   font-family: 'DMSans';
   src: url('/static/fonts/DMSans.ttf') format('truetype');
   font-weight: 100 900;
@@ -44,8 +44,8 @@
   /* ===== FONTS CONFIGURATIONS ===== */
 
   /* Fonts */
-  --font-family1: 'Oswald', sans-serif;
-  --font-family2: 'DMSans', sans-serif;
+  --font-oswald: 'Oswald', sans-serif;
+  --font-dmsans: 'DMSans', sans-serif;
 
   /* Size */
   --size-title: 3.25rem;
@@ -61,10 +61,10 @@
 
   /* ===== FONTS SETS ===== */
 
-  --font-title: normal normal var(--weight-title) var(--size-title) var(--font-family1);
-  --font-subtitle: normal normal var(--weight-subtitle) var(--size-subtitle) var(--font-family1);
-  --font-text: normal normal var(--weight-text) var(--size-text) var(--font-family2);
-  --font-caption: normal normal var(--weight-caption) var(--size-caption) var(--font-family2);
+  --font-title: normal normal var(--weight-title) var(--size-title) var(--font-oswald);
+  --font-subtitle: normal normal var(--weight-subtitle) var(--size-subtitle) var(--font-oswald);
+  --font-text: normal normal var(--weight-text) var(--size-text) var(--font-dmsans);
+  --font-caption: normal normal var(--weight-caption) var(--size-caption) var(--font-dmsans);
 
 }
 
@@ -90,7 +90,7 @@ button, input{
 /* ===== SPINNERS REMOVER ===== */
 
 input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
+input[type="number"]::-webkit-outer-spin-button{
     display: none;
 }
 
@@ -236,18 +236,18 @@ nav{
 }
 
 /* Logo */
-.logo{
+.navbar-brand-logo{
   height: 125px;
 }
 
 /* Identifyer */
-.navbar-identity{
+.identity-container{
   display: flex;
   flex-direction: column;
 }
 
 /* Worker Data */
-.navbar-identity-worker{
+.identity-worker-container{
   display: flex;
   flex-direction: row;
   gap: 5px;
@@ -256,16 +256,16 @@ nav{
 /* ===== DROPDOWN ===== */
 
 /* Navbar link */
-.navbar-link{
+.navbar-link, .navbar-dropdown-toggle{
   width: 6.25rem;
-  height: 2.5rem;
+  height: 1.75rem;
   text-align: center;
   align-content: center;
   display: block;
 }
 
-/* Navbar link hover effect*/
-.navbar-link:hover{
+/* Navbar link hover effect */
+.navbar-link:hover, .navbar-dropdown-toggle:hover{
   background-color: var(--color-detail2);
   color: var(--color-secundary);
   border-radius: 3px;
@@ -273,8 +273,9 @@ nav{
 }
 
 /* Dropdown icon */
-.navbar-dropdown-icon{
+.navbar-dropdown-toggle-icon{
   width: 12px;
+  transition: transform 0.3s ease; 
 }
 
 /* Dropdown choices */
@@ -292,21 +293,31 @@ nav{
   display: block;
 }
 
+.navbar-dropdown-item-link{
+  display: flex;
+  width: 100%;
+}
+
 /* Dropdown options hover effect */
-.navbar-dropdown-option a:hover{
+.navbar-dropdown-item-link:hover{
   background-color: var(--color-detail1);
 }
 
-/* Keep the dropdown selected as the user hover over the options */
-.navbar-dropdown-item:hover > .navbar-link{
-  background-color: var(--color-detail1);
+/* Efeito de hover no "Gerenciar" quando o menu estiver ativo */
+.navbar-dropdown:hover .navbar-dropdown-toggle{
+  background-color: var(--color-detail1);  /* Aplica o efeito de hover no "Gerenciar" */
+  color: var(--color-secundary);  /* Altera a cor do texto, se necessário */
+}
+
+/* Rotate the down arrow to an up arrow when the user hovers over the dropdown */
+.navbar-dropdown:hover .navbar-dropdown-toggle-icon{
+  transform: rotate(180deg); /* Rotaciona a seta */
 }
 
 /* Change the down arrow to an up arrow when the user hovers over the dropdown */
-.navbar-dropdown:hover .navbar-dropdown-icon {
+.navbar-dropdown:hover .navbar-dropdown-toggle-icon{
   content: url("../icons/up-arrow.ico");
 }
-
 
 /*  ==========================================================
     MAIN - Middle element of the page structure 
@@ -348,7 +359,7 @@ footer{
 
 /* ===== FOOTER CONTENT ===== */
 
-.footer-content{
+.footer-container{
   width: 1024px;
   height: 25.5rem;
   grid-template-areas: footer;
@@ -358,7 +369,7 @@ footer{
 }
 
 /* Brand */
-.footer-brand{
+.footer-brand-content{
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto auto;
@@ -366,8 +377,12 @@ footer{
   margin: auto;
 }
 
+.footer-brand-logo{
+  height: 125px;
+}
+
 /* Rights */
-.footer-rights{
+.footer-rights-content{
   grid-column: 1 /span 2;
   height: 100px;
   display: flex;
@@ -375,7 +390,7 @@ footer{
   gap: 20px;
 }
 
-.footer-caption{
+.footer-rights-caption{
   align-self: end;
 }
 
@@ -384,7 +399,7 @@ footer{
     ========================================================== */
 
 /* Primary */
-.button-main-primary {
+.button-primary{
   display: flex;
   align-items: center;
   justify-content: center;
@@ -398,14 +413,14 @@ footer{
   transition: background-color 0.3s, color 0.3s;
 }
 
-.button-main-primary:hover {
+.button-primary:hover{
   background-color: var(--color-primary);
   color: var(--color-secundary);
   cursor: pointer;
 }
 
 /* Secondary */
-.button-main-secondary {
+.button-secondary{
   display: flex;
   align-items: center;
   justify-content: center;
@@ -419,7 +434,7 @@ footer{
   transition: background-color 0.3s, color 0.3s;
 }
 
-.button-main-secondary:hover {
+.button-secondary:hover{
   background-color: var(--color-primary);
   color: var(--color-detail4);
   cursor: pointer;
@@ -429,7 +444,7 @@ footer{
     INPUTS - Inputs styles
     ========================================================== */
 
-.input-main-primary{
+.input-primary{
   width: 350px;
   height: 40px;
   background-color: var(--color-detail2);

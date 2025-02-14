@@ -1,6 +1,6 @@
 /* ##### ACCORDION ##### */
 
-var accordionRows = document.getElementsByClassName("accordion-row");
+var accordionRows = document.getElementsByClassName("stock-accordion");
 var i;
 
 for (i = 0; i < accordionRows.length; i++) {
@@ -13,7 +13,7 @@ for (i = 0; i < accordionRows.length; i++) {
         } else {
             panel.style.maxHeight = panel.scrollHeight + "px";
             
-            var parentPanel = this.closest('.panel');
+            var parentPanel = this.closest('.stock-accordion-panel');
             if (parentPanel) {
                 parentPanel.style.maxHeight = parentPanel.scrollHeight + panel.scrollHeight + "px";
             }
