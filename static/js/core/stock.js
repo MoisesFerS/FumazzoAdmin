@@ -1,13 +1,13 @@
 /* ##### ACCORDION ##### */
 
-document.querySelector('.stock-accordions-container').addEventListener('click', function(event) {
+document.querySelector('.stock-accordion-container').addEventListener('click', function(event){
 
-    if (event.target.closest('.stock-accordion')) {
+    if (event.target.closest('.stock-accordion')){
         let stockAccordion = event.target.closest('.stock-accordion');
         expand(stockAccordion);
     }
 
-    if (event.target.closest('.stock-product-accordion')) {
+    if (event.target.closest('.stock-product-accordion')){
         let productAccordion = event.target.closest('.stock-product-accordion');
         let maxHeight = expand(productAccordion); 
         
@@ -17,13 +17,13 @@ document.querySelector('.stock-accordions-container').addEventListener('click', 
 
 });
 
-function expand(accordion) {
+function expand(accordion){
 
     accordion.classList.toggle('active');
     let panel = accordion.nextElementSibling;
-    if (panel.style.maxHeight) {
+    if(panel.style.maxHeight){
         panel.style.maxHeight = null;
-    } else {
+    }else{
         panel.style.maxHeight = panel.scrollHeight + "px";
     }
 

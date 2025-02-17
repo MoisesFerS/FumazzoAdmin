@@ -18,7 +18,7 @@ Estoque
     <div class="stock-container-button-add">
       <button class="button-secondary" name="add" onclick="openModal(this)">Adicionar</button>
     </div>
-    <section class="stock-accordions-container" id="accordion-container">
+    <section class="stock-accordion-container" id="accordion-container">
       {% for restock in restocks %}
         <div class="stock-accordion" id="accordion">
           <div class="stock-accordion-data">
@@ -64,7 +64,7 @@ Estoque
             <p>Não há produtos neste registro.</p>
           {% endfor %}
         </div>
-        <hr class="accordion-division" id="accordion-division-{{ restock.id }}">
+        <hr class="accordion-division">
       {% endfor %}
       </section>
   </section>
