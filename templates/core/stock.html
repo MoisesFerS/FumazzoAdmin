@@ -71,59 +71,53 @@ Estoque
 </div>
 
 <!-- Modals -->
-<div id="add-modal" class="modal-main">
-  <div class="modal-content-main">
-    <div class="modal-header-main">
-      <h2 class="modal-header-title">ADICIONAR REGISTRO</h2>
-    </div>
-    <div class="modal-body-main">
-      {% include formAdd_path %}
-    </div>
+<div class="stock-modal-container-add">
+  <div class="stock-modal-header-add">
+    <h2 class="stock-modal-title-add">ADICIONAR REGISTRO</h2>
+  </div>
+  <div class="stock-modal-body-add">
+    {% include formAdd_path %}
   </div>
 </div>
 
-<div id="edit-modal" class="modal-main">
-  <div class="modal-content-main">
-    <div class="modal-header-main">
-      <h2 class="modal-header-title">EDITAR REGISTRO</h2>
+<div class="stock-modal-container-edit">
+  <div class="stock-modal-header-edit">
+    <h2 class="stock-modal-title-edit">EDITAR REGISTRO</h2>
+  </div>
+  <div class="stock-modal-body-edit">
+    <div class="modal-edit-form">
+      <form id="restock_edit_form">
+        <select name="supplier" id="edit-supplier" class="form-input-select">
+          {% for supplier in suppliers %}
+            <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+          {% endfor %}
+        </select>        
+        <select name="receiver" id="edit-receiver" class="form-input-select">
+          {% for receiver in receivers %}
+            <option value="{{ receiver.id }}">{{ receiver.first_name }}</option>
+          {% endfor %}
+        </select>  
+        <input type="date" id="edit-date" class="form-input-text"/>
+        <input type="number" id="edit-price" class="form-input-number"/>
+        <div class="formEdit-button">
+          <button class="button-primary" id="confirm-edit" type="submit">CONFIRMAR</button>
+        </div>
+      </form>
     </div>
-    <div class="modal-body-main">
-      <div class="modal-edit-form">
-        <form id="restock_edit_form">
-          <select name="supplier" id="edit-supplier" class="form-input-select">
-            {% for supplier in suppliers %}
-              <option value="{{ supplier.id }}">{{ supplier.name }}</option>
-            {% endfor %}
-          </select>        
-          <select name="receiver" id="edit-receiver" class="form-input-select">
-            {% for receiver in receivers %}
-              <option value="{{ receiver.id }}">{{ receiver.first_name }}</option>
-            {% endfor %}
-          </select>  
-          <input type="date" id="edit-date" class="form-input-text"/>
-          <input type="number" id="edit-price" class="form-input-number"/>
-          <div class="formEdit-button">
-            <button class="button-primary" id="confirm-edit" type="submit">CONFIRMAR</button>
-          </div>
-        </form>
-      </div>
-      <h2 class="modal-header-title">PRODUTOS:</h2>
-      <div class="modal-products-container" id="products-container"></div>
-      <button class="button-main-secundary" id="add-product">ADICIONAR PRODUTO</button>
-    </div>
+    <h2 class="modal-header-title">PRODUTOS:</h2>
+    <div class="modal-products-container" id="products-container"></div>
+    <button class="button-main-secundary" id="add-product">ADICIONAR PRODUTO</button>
   </div>
 </div>
 
-<div id="remove-modal" class="modal-main">
-  <div class="modal-content-main">
-    <div class="modal-header-main">
-      <h2 class="modal-header-title">REMOVER REGISTRO</h2>
-    </div>
-    <div class="modal-body-main">
-      <p class="modal-body-text">Você tem certeza que deseja remover o registro?</p>
-    </div>
-    <button class="button-primary" id="confirm-remove">CONFIRMAR</button>
+<div class="stock-modal-container-remove">
+  <div class="stock-modal-header-remove">
+    <h2 class="stock-modal-title-remove">REMOVER REGISTRO</h2>
   </div>
+  <div class="stock-modal-body-remove">
+    <p class="stock-modal-remove-text">Você tem certeza que deseja remover o registro?</p>
+  </div>
+  <button class="button-primary" id="confirm-remove">CONFIRMAR</button>
 </div>
 
 <script src="{% static 'js/core/stock.js' %}"></script>
