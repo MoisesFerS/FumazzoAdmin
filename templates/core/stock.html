@@ -50,10 +50,10 @@ Estoque
         </div>
         <div class="stock-accordion-panel" id="panel-{{ restock.id }}">
           {% for resupply in restock.resupply_set.all %}
-            <div class="stock-accordion stock-accordion-item">
-              <p class="stock-product-accordion" id="">{{ resupply.product.name }}</p>
+            <div class="stock-product-accordion">
+              <p class="" id="">{{ resupply.product.name }}</p>
             </div>
-            <div class="stock-product-accordion-item-panel">
+            <div class="stock-product-accordion-panel">
               <div class="accordion-item-detail-list">
                 <p class="accordion-item-detail-list-item">QUANTIDADE: {{ resupply.quantity }}</p>
                 <p class="accordion-item-detail-list-item">PREÇO: {{ resupply.batch_price }}</p>

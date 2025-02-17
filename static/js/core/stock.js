@@ -1,24 +1,99 @@
 /* ##### ACCORDION ##### */
 
-var accordionRows = document.querySelectorAll(".stock-accordion, .stock-product-accordion");
+document.querySelector('.stock-accordions-container').addEventListener('click', function(event) {
 
-for (var i = 0; i < accordionRows.length; i++) {
-    accordionRows[i].onclick = function() {
-        this.classList.toggle("active");
-        var panel = this.nextElementSibling;
-        
-        if (panel.style.maxHeight) {
-            panel.style.maxHeight = null;
-        } else {
-            panel.style.maxHeight = panel.scrollHeight + "px";
-            
-            var parentPanel = this.closest('.stock-accordion-panel');
-            if (parentPanel) {
-                parentPanel.style.maxHeight = parentPanel.scrollHeight + panel.scrollHeight + "px";
-            }
-        }
+    if (event.target.closest('.stock-accordion')) {
+        let stockAccordion = event.target.closest('.stock-accordion');
+        expand(stockAccordion);
     }
+
+    if (event.target.closest('.stock-product-accordion')) {
+        let productAccordion = event.target.closest('.stock-product-accordion');
+        let maxHeight = expand(productAccordion); 
+        
+        let stockAccordionPanel = productAccordion.closest('.stock-accordion-panel');
+        stockAccordionPanel.style.maxHeight = stockAccordionPanel.scrollHeight + maxHeight;
+    }
+
+});
+
+function expand(accordion) {
+
+    accordion.classList.toggle('active');
+    let panel = accordion.nextElementSibling;
+    if (panel.style.maxHeight) {
+        panel.style.maxHeight = null;
+    } else {
+        panel.style.maxHeight = panel.scrollHeight + "px";
+    }
+
+    return panel.style.maxHeight
+
 }
+
+// ===== [refactored] =====
+// var stockAccordions = document.querySelectorAll(".stock-accordion");
+
+// for (var i = 0; i < stockAccordions.length; i++) {
+
+//     stockAccordions[i].onclick = function() {
+//         this.classList.toggle("active");
+//         var stockAccordionPanel = this.nextElementSibling;
+        
+//         if (stockAccordionPanel.style.maxHeight) {
+//             stockAccordionPanel.style.maxHeight = null;
+//         } else {
+            
+//             stockAccordionPanel.style.maxHeight = stockAccordionPanel.scrollHeight + "px";
+            
+//             var productAccordions = stockAccordionPanel.querySelectorAll(".stock-product-accordion");
+            
+//             for (var j = 0; j < productAccordions.length; j++) {
+//                 productAccordions[j].onclick = function() {
+//                     this.classList.toggle("active");
+//                     var productAccordionPanel = this.nextElementSibling;
+                    
+//                     if (productAccordionPanel.style.maxHeight) {
+//                         productAccordionPanel.style.maxHeight = null;
+//                     } else {
+//                         productAccordionPanel.style.maxHeight = productAccordionPanel.scrollHeight + "px";
+//                     }
+
+//                     stockAccordionPanel.style.maxHeight = stockAccordionPanel.scrollHeight + productAccordionPanel.scrollHeight + "px";
+                    
+//                 }
+//             }
+//         }
+//     }
+// }
+
+// ===== [functional] =====
+
+// function expandStock(stockAccordion) {
+//     stockAccordion.classList.toggle('active');
+//     var stockAccordionPanel = stockAccordion.nextElementSibling;
+
+//     if (stockAccordionPanel.style.maxHeight) {
+//         stockAccordionPanel.style.maxHeight = null;
+//     } else {
+//         stockAccordionPanel.style.maxHeight = stockAccordionPanel.scrollHeight + "px";
+//     }
+// }
+
+// function expandProduct(productAccordion) {
+//     productAccordion.classList.toggle('active');
+//     var productAccordionPanel = productAccordion.nextElementSibling;
+
+//     if (productAccordionPanel.style.maxHeight) {
+//         productAccordionPanel.style.maxHeight = null;
+//     } else {
+//         productAccordionPanel.style.maxHeight = productAccordionPanel.scrollHeight + "px";
+//     }
+
+//     var stockAccordionPanel = productAccordion.closest('.stock-accordion-panel')
+//     stockAccordionPanel.style.maxHeight = stockAccordionPanel.scrollHeight + productAccordionPanel.scrollHeight + "px";
+
+// }
 
 /* ##### MODAL ##### */
 
