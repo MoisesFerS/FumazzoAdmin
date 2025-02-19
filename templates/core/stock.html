@@ -15,16 +15,18 @@ Estoque
   <h1 class="content-main-title">REGISTROS DO ESTOQUE</h1>
 
   <section class="stock-container">
-    <div class="stock-container-button-add">
-      <button class="button-secondary" name="add" onclick="openModal(this)">Adicionar</button>
-    </div>
+    {% if worker_permisson >= 4 %}
+      <div class="stock-container-button-add">
+        <button class="button-secondary" name="add" onclick="openModal(this)">Adicionar</button>
+      </div>
+    {% endif %}
     <section class="stock-accordion-container" id="accordion-container">
       {% for restock in restocks %}
         <div class="stock-accordion" id="accordion">
           <div class="stock-accordion-data">
             <div class="stock-accordion-data-date">
               <p class="stock-accordion-data-label" for="">DATA:</p>
-              <p class="stock-accordion-text" id="restock.date">{{ restock.date | date:"d/m/Y" }}</p>
+              <p class="stock-accordion-text" id="{{ restock.date | date:"Y-m-d" }}">{{ restock.date | date:"d/m/Y" }}</p>
             </div>
             <div class="stock-accordion-data-supplier">
               <p class="stock-accordion-data-label" for="">FORNECEDOR:</p>
@@ -39,14 +41,16 @@ Estoque
               <p class="stock-accordion-text" id="{{ restock.total_price }}">{{ restock.total_price }}</p>
             </div>
           </div>
-          <div class="stock-accordion-buttons">
-            <button class="stock-button-edit" id="{{ restock.id }}" name="edit" onclick="openModal(this)">
-              <img src="{% static 'icons/edit.ico' %}" class="stock-accordion-icon" alt="edit-icon">
-            </button>
-            <button class="stock-button-remove" id="{{ restock.id }}" name="remove" onclick="openModal(this)">
-              <img src="{% static 'icons/trash-can.ico' %}" class="stock-accordion-icon" alt="remove-icon">
-            </button>
-          </div>
+          {% if worker_permisson >= 4 %}
+            <div class="stock-accordion-buttons">
+              <button class="stock-button-edit" id="{{ restock.id }}" name="edit" onclick="openModal(this)">
+                <img src="{% static 'icons/edit.ico' %}" class="stock-accordion-icon" alt="edit-icon">
+              </button>
+              <button class="stock-button-remove" id="{{ restock.id }}" name="remove" onclick="openModal(this)">
+                <img src="{% static 'icons/trash-can.ico' %}" class="stock-accordion-icon" alt="remove-icon">
+              </button>
+            </div>
+          {% endif %}
         </div>
         <div class="stock-accordion-panel" id="panel-{{ restock.id }}">
           {% for resupply in restock.resupply_set.all %}
@@ -70,55 +74,86 @@ Estoque
   </section>
 </div>
 
-<!-- Modals -->
-<div class="stock-modal-container-add">
-  <div class="stock-modal-header-add">
-    <h2 class="stock-modal-title-add">ADICIONAR REGISTRO</h2>
-  </div>
-  <div class="stock-modal-body-add">
-    {% include formAdd_path %}
-  </div>
-</div>
-
-<div class="stock-modal-container-edit">
-  <div class="stock-modal-header-edit">
-    <h2 class="stock-modal-title-edit">EDITAR REGISTRO</h2>
-  </div>
-  <div class="stock-modal-body-edit">
-    <div class="modal-edit-form">
-      <form id="restock_edit_form">
-        <select name="supplier" id="edit-supplier" class="form-input-select">
-          {% for supplier in suppliers %}
-            <option value="{{ supplier.id }}">{{ supplier.name }}</option>
-          {% endfor %}
-        </select>        
-        <select name="receiver" id="edit-receiver" class="form-input-select">
-          {% for receiver in receivers %}
-            <option value="{{ receiver.id }}">{{ receiver.first_name }}</option>
-          {% endfor %}
-        </select>  
-        <input type="date" id="edit-date" class="form-input-text"/>
-        <input type="number" id="edit-price" class="form-input-number"/>
-        <div class="formEdit-button">
-          <button class="button-primary" id="confirm-edit" type="submit">CONFIRMAR</button>
-        </div>
-      </form>
+{% if worker_permisson >= 4 %}
+  <!-- Modals -->
+  <div class="stock-modal-container" id="modal-add">
+    <div class="stock-modal-content">
+      <div class="stock-modal-header">
+        <h1 class="stock-modal-title-add">ADICIONAR REGISTRO</h1>
+      </div>
+      <div class="stock-modal-body">
+        <form id="restock_add_form" method="post">
+          <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+          <div class="stock-form-add">
+              <div class="stock-form-data">
+                <h2 class="stock-form-label">DATA: </h2>
+                {{ formAdd.date }}
+              </div>
+              <div class="stock-form-data">
+                <h2 class="stock-form-label">FORNECEDOR: </h2>
+                {{ formAdd.supplier }}
+              </div>
+              <div class="stock-form-data">
+                <h2 class="stock-form-label">RECEPTOR: </h2>
+                {{ formAdd.receiver }}
+              </div>
+              <div class="stock-form-data"> 
+                <h2 class="stock-form-label">PREÇO TOTAL: </h2>
+                {{ formAdd.total_price }}
+              </div>
+              <div class="formAdd-button">
+                  <button class="button-primary" id="confirm-add" type="submit">REGISTRAR</button>
+              </div>
+          </div>
+        </form>    
+      </div>
     </div>
-    <h2 class="modal-header-title">PRODUTOS:</h2>
-    <div class="modal-products-container" id="products-container"></div>
-    <button class="button-main-secundary" id="add-product">ADICIONAR PRODUTO</button>
   </div>
-</div>
 
-<div class="stock-modal-container-remove">
-  <div class="stock-modal-header-remove">
-    <h2 class="stock-modal-title-remove">REMOVER REGISTRO</h2>
+  <div class="stock-modal-container" id="modal-edit">
+    <div class="stock-modal-content">
+      <div class="stock-modal-header">
+        <h2 class="stock-modal-title-edit">EDITAR REGISTRO</h2>
+      </div>
+      <div class="stock-modal-body">
+        <div class="modal-edit-form">
+          <form id="restock_edit_form">
+            <select id="stock-edit-supplier" class="form-input-select">
+              {% for supplier in suppliers %}
+                <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+              {% endfor %}
+            </select>        
+            <select id="stock-edit-receiver" class="form-input-select">
+              {% for receiver in receivers %}
+                <option value="{{ receiver.id }}">{{ receiver.first_name }}</option>
+              {% endfor %}
+            </select>  
+            <input type="date" id="stock-edit-date" class="form-input-text"/>
+            <input type="number" id="stock-edit-price" class="form-input-number"/>
+            <div class="formEdit-button">
+              <button class="button-primary" id="confirm-edit" type="submit">CONFIRMAR</button>
+            </div>
+          </form>
+        </div>
+        <h2 class="products-title">PRODUTOS:</h2>
+        <div class="products-container" id="products-container"></div>
+        <button class="button-secundary" id="add-product">ADICIONAR PRODUTO</button>
+      </div>
+    </div>
   </div>
-  <div class="stock-modal-body-remove">
-    <p class="stock-modal-remove-text">Você tem certeza que deseja remover o registro?</p>
+
+  <div class="stock-modal-container" id="modal-remove">
+    <div class="stock-modal-content">
+      <div class="stock-modal-header">
+        <h2 class="stock-modal-title-remove">REMOVER REGISTRO</h2>
+      </div>
+      <div class="stock-modal-body">
+        <p class="stock-modal-remove-text">Você tem certeza que deseja remover o registro?</p>
+      </div>
+      <button class="button-primary" id="confirm-remove">CONFIRMAR</button>
+    </div>
   </div>
-  <button class="button-primary" id="confirm-remove">CONFIRMAR</button>
-</div>
+{% endif %}
 
 <script src="{% static 'js/core/stock.js' %}"></script>
 

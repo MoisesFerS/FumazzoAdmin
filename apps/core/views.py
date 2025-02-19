@@ -60,12 +60,38 @@ def add_product(request):
         for product in products if product.category.id == category.id
     ]
     data.append({
-        'name': category.name,
-        'products': products_in_category
+        'categoryNames': category.name,
+        'categoryProducts': products_in_category
     })
     
   return JsonResponse(data, safe=False)
 
+def load_product(request, id):
+    categories = models.Category.objects.filter(type=5)
+    products = models.Product.objects.all()
+    data = []
+    for category in categories:
+        products_in_category = [
+            {'id': product.id, 'name': product.name}
+            for product in products if product.category.id == category.id
+        ]
+
+    stock = get_object_or_404(models.Restock, id=id)
+    resupplies = stock.resupply_set.all()
+
+    data = []
+    
+    for resupply in resupplies:
+        current_product = resupply.product.id 
+        data.append({
+            'category': category.name,
+            'product': products_in_category,
+            'current_product': current_product, 
+            'quantity': resupply.quantity,
+            'batch_price': str(resupply.batch_price),
+        })
+    
+    return JsonResponse(data, safe=False)
 
 
 def restock_remove(request, id):
