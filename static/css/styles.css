@@ -450,3 +450,11 @@ footer{
   background-color: var(--color-detail2);
   color: var(--color-detail3);
 }
+
+.login-form{
+
+  gap:30px;
+  display: flex;
+  flex-direction: column;
+
+}

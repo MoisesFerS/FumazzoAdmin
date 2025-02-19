@@ -130,14 +130,14 @@ function submit(button) {
 }
 
 /* Function to add products at edit modal */
-document.getElementById('add-product').onclick = createProduct();
+document.getElementById('add-product').addEventListener("click", createProduct);
 
 function createProduct(data){
 
   fetch(`restock/edit/add-product/`)
   .then(response => response.json())
   .then(data => {
-    createProduct(data);
+    var categories_products = data
   })
   .catch(error => console.error('Erro ao carregar categorias e produtos:', error));
 
