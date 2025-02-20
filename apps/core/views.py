@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from . import models
 from . import forms
 from django.contrib import messages 
-from django.middleware.csrf import get_token
+from django.db.models import Q
 
 def index(request):
   if 'workerID' in request.session:
@@ -50,8 +50,8 @@ def stock(request):
     else:
         return redirect('workers:login')
     
-def add_product(request):
-  categories = models.Category.objects.filter(type=5)
+def get_products(request):
+  categories = models.Category.objects.filter(Q(type=5) | Q(type=4))
   products = models.Product.objects.all()
   data = []
   for category in categories:
@@ -60,21 +60,13 @@ def add_product(request):
         for product in products if product.category.id == category.id
     ]
     data.append({
-        'categoryNames': category.name,
-        'categoryProducts': products_in_category
+        'categories': category.name,
+        'products': products_in_category
     })
     
   return JsonResponse(data, safe=False)
 
 def load_product(request, id):
-    categories = models.Category.objects.filter(type=5)
-    products = models.Product.objects.all()
-    data = []
-    for category in categories:
-        products_in_category = [
-            {'id': product.id, 'name': product.name}
-            for product in products if product.category.id == category.id
-        ]
 
     stock = get_object_or_404(models.Restock, id=id)
     resupplies = stock.resupply_set.all()
@@ -84,8 +76,6 @@ def load_product(request, id):
     for resupply in resupplies:
         current_product = resupply.product.id 
         data.append({
-            'category': category.name,
-            'product': products_in_category,
             'current_product': current_product, 
             'quantity': resupply.quantity,
             'batch_price': str(resupply.batch_price),

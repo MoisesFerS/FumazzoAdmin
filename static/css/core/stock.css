@@ -121,6 +121,10 @@
   width: 25px;
 }
 
+.product-button-add{
+  width: ;
+}
+
 /* ##### MODAL ##### */
 
 /* BACKGROUND */
@@ -147,7 +151,6 @@
   margin: auto;
   width: 1024px;
   height: 750px;
-  overflow-y: scroll;
   display: flex;
   flex-direction: column;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
@@ -183,23 +186,18 @@ from {top:-300px; opacity:0}
 to {top:0; opacity:1}
 }
 
-/* BUTTONS */
-
-/* Close button */
-
-.close-button {
-  color: var(--color-detail3);
-  font: var(--font-title);
-}
-
-.close-button:hover, .close-button:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-
 /* ##### EDIT-MODAL ##### */
+
+.modal-confirm-button{
+
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: end;
+  height: 150px;
+
+}
 
 /* Container */
 
@@ -207,6 +205,9 @@ to {top:0; opacity:1}
   gap: 10px;
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
+  max-height: 198px;
+
 }
 
 /* Product Row */

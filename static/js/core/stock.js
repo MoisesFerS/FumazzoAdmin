@@ -40,6 +40,7 @@ function expand(accordion){
   ========================================================== */ 
 
 /* Function to open the modals dynamically */
+document.querySelector('stock-accordion-buttons').addEventListener('click', function (event){})
 function openModal(button) {
 
   const modal = document.getElementById(`modal-${button.name}`);
@@ -82,7 +83,7 @@ function editData(button){
   fetch(`restock/edit/load-product/${button.id}/`)
   .then(response => response.json())
   .then(data => {
-    createProduct(data);
+    data.forEach(data => createProduct(data));
   })
   .catch(error => console.error('Erro ao carregar categorias e produtos:', error));
   
@@ -122,7 +123,6 @@ function submit(button) {
   fetch(path, options)
     .then(response => response.json())
     .then(data => {
-      console.log(data);
       alert(data.message);
       location.reload();
     })
@@ -132,49 +132,57 @@ function submit(button) {
 /* Function to add products at edit modal */
 document.getElementById('add-product').addEventListener("click", createProduct);
 
-function createProduct(data){
+let selectItems = []
 
-  fetch(`restock/edit/add-product/`)
-  .then(response => response.json())
-  .then(data => {
-    var categories_products = data
-  })
-  .catch(error => console.error('Erro ao carregar categorias e produtos:', error));
+fetch(`restock/edit/get-products/`)
+.then(response => response.json())
+.then(data => {
+  selectItems = data
+})
+.catch(error => console.error('Erro ao carregar categorias e produtos:', error));
+
+function createProduct(data=null){
 
   const productsContainer = document.getElementById('products-container');
 
-  data.forEach(item => {
-    const product = document.createElement('div');
-    product.classList.add('product-content');
-    productsContainer.appendChild(product);
+  const product = document.createElement('div');
+  product.classList.add('product-content');
+  productsContainer.appendChild(product);
 
-    const select = document.createElement('select');
-    data.forEach(category => {
-      const optgroup = document.createElement('optgroup');
-      optgroup.label = category.name;
+  const select = document.createElement('select');
 
-      category.product.forEach(product => {
-        const option = document.createElement('option');
-        option.value = data.current_product;
-        option.textContent = product.name;
-        optgroup.appendChild(option);
-      });
-
-      select.appendChild(optgroup);
-    });
-
-    product.appendChild(select);
-
-    const productQuantity = document.createElement('input');
-    productQuantity.type = 'number';
-    productQuantity.value = item.quantity;
-    product.appendChild(productQuantity);
-
-    const productPrice = document.createElement('input');
-    productPrice.type = 'number';
-    productPrice.value = item.batch_price;
-    product.appendChild(productPrice);
-
-  });
+selectItems.forEach(item => {
   
+  const optgroup = document.createElement('optgroup');
+  optgroup.label = item.categories; 
+
+  item.products.forEach(product => {
+    const option = document.createElement('option');
+    option.value = product.id;
+    option.textContent = product.name; 
+
+    if (data.current_product == product.id) {
+      option.selected = true;
+      console.log('teste')
+    }
+
+    optgroup.appendChild(option);
+  });
+
+  select.appendChild(optgroup);
+  
+});
+
+  product.appendChild(select);
+
+  const productQuantity = document.createElement('input');
+  productQuantity.type = 'number';
+  productQuantity.value = data.quantity ? data.quantity : '';
+  product.appendChild(productQuantity);
+
+  const productPrice = document.createElement('input');
+  productPrice.type = 'number';
+  productPrice.value = data.batch_price ? data.batch_price : '';
+  product.appendChild(productPrice);
+
 }
