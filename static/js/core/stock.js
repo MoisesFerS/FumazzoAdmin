@@ -40,55 +40,54 @@ function expand(accordion){
   ========================================================== */ 
 
 /* Function to open the modals dynamically */
-document.querySelector('stock-accordion-buttons').addEventListener('click', function (event){})
-function openModal(button) {
+document.querySelectorAll("[name='add'], [name='edit'], [name='remove']")
+  .forEach(button => {
+    button.addEventListener('click', function (event) {
+        
+      const modal = document.getElementById(`modal-${button.name}`);
+      modal.style.display = 'block';
 
-  const modal = document.getElementById(`modal-${button.name}`);
-  modal.style.display = 'block';
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
 
-  if (button.name === 'edit') {
-    editData(button);
-  }
+      };
 
-  document.getElementById('confirm-' + button.name).onclick = function () {
-    submit(button);
-  };
+    });
+      
+  });
 
-  window.onclick = function (event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  };
+document.querySelectorAll("[name='edit']")
+  .forEach(edit => {
+    edit.addEventListener('click', function (event){
 
-}
+      const accordionData = edit.closest('.stock-accordion');
+      const stockData = accordionData.querySelectorAll(".stock-accordion-text");
 
-function editData(button){
+      var date = stockData[0] ? stockData[0].id : '';
+      var supplier = stockData[1] ? stockData[1].id : '';
+      var receiver = stockData[2] ? stockData[2].id : '';
+      var price = stockData[3] ? stockData[3].id.replace(",", ".") : '';
 
-  const accordionData = button.closest('.stock-accordion');
-  const stockData = accordionData.querySelectorAll(".stock-accordion-text");
+      document.getElementById('stock-edit-supplier').value = supplier;
+      document.getElementById('stock-edit-receiver').value = receiver;
+      document.getElementById('stock-edit-date').value = date;
+      document.getElementById('stock-edit-price').value = price;
 
-  var date = stockData[0] ? stockData[0].id : '';
-  var supplier = stockData[1] ? stockData[1].id : '';
-  var receiver = stockData[2] ? stockData[2].id : '';
-  var price = stockData[3] ? stockData[3].id.replace(",", ".") : '';
+      const productsContainer = document.getElementById('products-container');
+      productsContainer.innerHTML = '';
 
-  document.getElementById('stock-edit-supplier').value = supplier;
-  document.getElementById('stock-edit-receiver').value = receiver;
-  document.getElementById('stock-edit-date').value = date;
-  document.getElementById('stock-edit-price').value = price;
+      fetch(`restock/edit/load-product/${edit.id}/`)
+      .then(response => response.json())
+      .then(data => {
+        data.forEach(data => createProduct(data));
+      })
+      .catch(error => console.error('Erro ao carregar categorias e produtos:', error));
 
-  const productsContainer = document.getElementById('products-container');
-  productsContainer.innerHTML = '';
+    })
 
-  fetch(`restock/edit/load-product/${button.id}/`)
-  .then(response => response.json())
-  .then(data => {
-    data.forEach(data => createProduct(data));
   })
-  .catch(error => console.error('Erro ao carregar categorias e produtos:', error));
-  
-
-}
 
 /* Function that gets the csrf token from the cookies */
 function getToken() {
@@ -151,27 +150,26 @@ function createProduct(data=null){
 
   const select = document.createElement('select');
 
-selectItems.forEach(item => {
-  
-  const optgroup = document.createElement('optgroup');
-  optgroup.label = item.categories; 
+  selectItems.forEach(item => {
+    
+    const optgroup = document.createElement('optgroup');
+    optgroup.label = item.categories; 
 
-  item.products.forEach(product => {
-    const option = document.createElement('option');
-    option.value = product.id;
-    option.textContent = product.name; 
+    item.products.forEach(product => {
+      const option = document.createElement('option');
+      option.value = product.id;
+      option.textContent = product.name; 
 
-    if (data.current_product == product.id) {
-      option.selected = true;
-      console.log('teste')
-    }
+      if (data.current_product == product.id) {
+        option.selected = true;
+      }
 
-    optgroup.appendChild(option);
+      optgroup.appendChild(option);
+    });
+
+    select.appendChild(optgroup);
+    
   });
-
-  select.appendChild(optgroup);
-  
-});
 
   product.appendChild(select);
 
@@ -186,3 +184,17 @@ selectItems.forEach(item => {
   product.appendChild(productPrice);
 
 }
+
+document.getElementById("restock_edit_form").addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  let supplier = document.getElementById("stock-edit-supplier").value;
+  let receiver = document.getElementById("stock-edit-receiver").value;
+  let date = document.getElementById("stock-edit-date").value;
+  let price = document.getElementById("stock-edit-price").value;
+
+  let form = this;
+
+  console.log(form.select[0])
+
+});

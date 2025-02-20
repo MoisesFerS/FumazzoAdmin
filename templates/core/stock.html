@@ -17,7 +17,7 @@ Estoque
   <section class="stock-container">
     {% if worker_permisson >= 4 %}
       <div class="stock-container-button-add">
-        <button class="button-secondary" name="add" onclick="openModal(this)">Adicionar</button>
+        <button class="button-secondary" name="add">Adicionar</button>
       </div>
     {% endif %}
     <section class="stock-accordion-container" id="accordion-container">
@@ -43,10 +43,10 @@ Estoque
           </div>
           {% if worker_permisson >= 4 %}
             <div class="stock-accordion-buttons">
-              <button class="stock-button-edit" id="{{ restock.id }}" name="edit" onclick="openModal(this)">
+              <button class="stock-button-edit" id="{{ restock.id }}" name="edit">
                 <img src="{% static 'icons/edit.ico' %}" class="stock-accordion-icon" alt="edit-icon">
               </button>
-              <button class="stock-button-remove" id="{{ restock.id }}" name="remove" onclick="openModal(this)">
+              <button class="stock-button-remove" id="{{ restock.id }}" name="remove">
                 <img src="{% static 'icons/trash-can.ico' %}" class="stock-accordion-icon" alt="remove-icon">
               </button>
             </div>
@@ -130,15 +130,16 @@ Estoque
             </select>  
             <input type="date" id="stock-edit-date" class="form-input-text"/>
             <input type="number" id="stock-edit-price" class="form-input-number"/>
-          </form>
-        </div>
+          
         <h2 class="products-title">PRODUTOS:</h2>
         <div class="products-container" id="products-container"></div>
-        <button class="button-secundary" id="add-product">ADICIONAR PRODUTO</button>
+        <button class="button-secundary" id="add-product" type="button">ADICIONAR PRODUTO</button>
       </div>
       <div class="modal-confirm-button">
         <button class="button-primary" id="confirm-edit" type="submit">CONFIRMAR</button>
       </div>
+    </div>
+  </form>
     </div>
   </div>
 

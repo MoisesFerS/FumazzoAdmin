@@ -26,8 +26,8 @@ The names **_MUST_** be:
 
 The element class should be composed of:
 
-[context/local]-[context/local]*-[element/purpose]-[variant/state]-[action/behavior]*-[theme/style]*
-*only if needed
+[context/local]-[context/local]•-[element/purpose]-[variant/state]-[action/behavior]•-[theme/style]•
+•only if needed
 
 The classes **_MUST_** be:
 - Lowercase.
