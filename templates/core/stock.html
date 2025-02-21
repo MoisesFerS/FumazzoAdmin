@@ -7,7 +7,7 @@ Estoque
 {% load static %}
 
 {% block css %}
-  <link rel="stylesheet" href="{% static 'css/core/stock.css' %}">
+<link rel="stylesheet" href="{% static 'css/core/stock.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -16,144 +16,143 @@ Estoque
 
   <section class="stock-container">
     {% if worker_permisson >= 4 %}
-      <div class="stock-container-button-add">
-        <button class="button-secondary" name="add">Adicionar</button>
-      </div>
+    <div class="stock-container-button-add">
+      <button class="button-secondary" name="add">Adicionar</button>
+    </div>
     {% endif %}
     <section class="stock-accordion-container" id="accordion-container">
       {% for restock in restocks %}
-        <div class="stock-accordion" id="accordion">
-          <div class="stock-accordion-data">
-            <div class="stock-accordion-data-date">
-              <p class="stock-accordion-data-label" for="">DATA:</p>
-              <p class="stock-accordion-text" id="{{ restock.date | date:"Y-m-d" }}">{{ restock.date | date:"d/m/Y" }}</p>
-            </div>
-            <div class="stock-accordion-data-supplier">
-              <p class="stock-accordion-data-label" for="">FORNECEDOR:</p>
-              <p class="stock-accordion-text" id="{{ restock.supplier_id }}">{{ restock.supplier }}</p>
-            </div>
-            <div class="stock-accordion-data-receiver">
-              <p class="stock-accordion-data-label" for="">RECEPTOR:</p>
-              <p class="stock-accordion-text" id="{{ restock.receiver_id }}">{{ restock.receiver }}</p>
-            </div>  
-            <div class="stock-accordion-data-price">
-              <p class="stock-accordion-data-label" for="">PREÇO TOTAL:</p>
-              <p class="stock-accordion-text" id="{{ restock.total_price }}">{{ restock.total_price }}</p>
-            </div>
+      <div class="stock-accordion" id="accordion">
+        <div class="stock-accordion-data">
+          <div class="stock-accordion-data-date">
+            <p class="stock-accordion-data-label" for="">DATA:</p>
+            <p class="stock-accordion-text" id="{{ restock.date | date:'Y-m-d' }}">{{ restock.date | date:"d/m/Y" }}
+            </p>
           </div>
-          {% if worker_permisson >= 4 %}
-            <div class="stock-accordion-buttons">
-              <button class="stock-button-edit" id="{{ restock.id }}" name="edit">
-                <img src="{% static 'icons/edit.ico' %}" class="stock-accordion-icon" alt="edit-icon">
-              </button>
-              <button class="stock-button-remove" id="{{ restock.id }}" name="remove">
-                <img src="{% static 'icons/trash-can.ico' %}" class="stock-accordion-icon" alt="remove-icon">
-              </button>
-            </div>
-          {% endif %}
+          <div class="stock-accordion-data-supplier">
+            <p class="stock-accordion-data-label" for="">FORNECEDOR:</p>
+            <p class="stock-accordion-text" id="{{ restock.supplier_id }}">{{ restock.supplier }}</p>
+          </div>
+          <div class="stock-accordion-data-receiver">
+            <p class="stock-accordion-data-label" for="">RECEPTOR:</p>
+            <p class="stock-accordion-text" id="{{ restock.receiver_id }}">{{ restock.receiver }}</p>
+          </div>
+          <div class="stock-accordion-data-price">
+            <p class="stock-accordion-data-label" for="">PREÇO TOTAL:</p>
+            <p class="stock-accordion-text" id="{{ restock.total_price }}">{{ restock.total_price }}</p>
+          </div>
         </div>
-        <div class="stock-accordion-panel" id="panel-{{ restock.id }}">
-          {% for resupply in restock.resupply_set.all %}
-            <div class="stock-product-accordion">
-              <p class="" id="">{{ resupply.product.name }}</p>
-            </div>
-            <div class="stock-product-accordion-panel">
-              <div class="accordion-item-detail-list">
-                <p class="accordion-item-detail-list-item">QUANTIDADE: {{ resupply.quantity }}</p>
-                <p class="accordion-item-detail-list-item">PREÇO: {{ resupply.batch_price }}</p>
-                <p class="accordion-item-detail-list-item">DATA DE VALIDADE: {{ resupply.expiration_date }}</p>
-              </div>
-            </div>
-          {% empty %}
-            <p>Não há produtos neste registro.</p>
-          {% endfor %}
+        {% if worker_permisson >= 4 %}
+        <div class="stock-accordion-buttons">
+          <button class="stock-button-edit" id="{{ restock.id }}" name="edit">
+            <img src="{% static 'icons/edit.ico' %}" class="stock-accordion-icon" alt="edit-icon">
+          </button>
+          <button class="stock-button-remove" id="{{ restock.id }}" name="remove">
+            <img src="{% static 'icons/trash-can.ico' %}" class="stock-accordion-icon" alt="remove-icon">
+          </button>
         </div>
-        <hr class="accordion-division">
+        {% endif %}
+      </div>
+      <div class="stock-accordion-panel" id="panel-{{ restock.id }}">
+        {% for resupply in restock.resupply_set.all %}
+        <div class="stock-product-accordion">
+          <p class="" id="">{{ resupply.product.name }}</p>
+        </div>
+        <div class="stock-product-accordion-panel">
+          <div class="accordion-item-detail-list">
+            <p class="accordion-item-detail-list-item">QUANTIDADE: {{ resupply.quantity }}</p>
+            <p class="accordion-item-detail-list-item">PREÇO: {{ resupply.batch_price }}</p>
+            <p class="accordion-item-detail-list-item">DATA DE VALIDADE: {{ resupply.expiration_date }}</p>
+          </div>
+        </div>
+        {% empty %}
+        <p>Não há produtos neste registro.</p>
+        {% endfor %}
+      </div>
+      <hr class="accordion-division">
       {% endfor %}
-      </section>
+    </section>
   </section>
 </div>
 
 {% if worker_permisson >= 4 %}
-  <!-- Modals -->
-  <div class="stock-modal-container" id="modal-add">
-    <div class="stock-modal-content">
-      <div class="stock-modal-header">
-        <h1 class="stock-modal-title-add">ADICIONAR REGISTRO</h1>
-      </div>
-      <div class="stock-modal-body">
-        <form id="restock_add_form" method="post">
-          <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-          <div class="stock-form-add">
-              <div class="stock-form-data">
-                <h2 class="stock-form-label">DATA: </h2>
-                {{ formAdd.date }}
-              </div>
-              <div class="stock-form-data">
-                <h2 class="stock-form-label">FORNECEDOR: </h2>
-                {{ formAdd.supplier }}
-              </div>
-              <div class="stock-form-data">
-                <h2 class="stock-form-label">RECEPTOR: </h2>
-                {{ formAdd.receiver }}
-              </div>
-              <div class="stock-form-data"> 
-                <h2 class="stock-form-label">PREÇO TOTAL: </h2>
-                {{ formAdd.total_price }}
-              </div>
-              <div class="formAdd-button">
-                  <button class="button-primary" id="confirm-add" type="submit">REGISTRAR</button>
-              </div>
+<!-- Modals -->
+<div class="stock-modal-container" id="modal-add">
+  <div class="stock-modal-content">
+    <div class="stock-modal-header">
+      <h1 class="stock-modal-title-add">ADICIONAR REGISTRO</h1>
+    </div>
+    <div class="stock-modal-body">
+      <form id="restock_add_form" method="post">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        <div class="stock-form-add">
+          <div class="stock-form-data">
+            <h2 class="stock-form-label">DATA: </h2>
+            {{ formAdd.date }}
           </div>
-        </form>    
-      </div>
+          <div class="stock-form-data">
+            <h2 class="stock-form-label">FORNECEDOR: </h2>
+            {{ formAdd.supplier }}
+          </div>
+          <div class="stock-form-data">
+            <h2 class="stock-form-label">RECEPTOR: </h2>
+            {{ formAdd.receiver }}
+          </div>
+          <div class="stock-form-data">
+            <h2 class="stock-form-label">PREÇO TOTAL: </h2>
+            {{ formAdd.total_price }}
+          </div>
+          <div class="formAdd-button">
+            <button class="button-primary" id="confirm-add" type="submit">REGISTRAR</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
+</div>
 
-  <div class="stock-modal-container" id="modal-edit">
-    <div class="stock-modal-content">
-      <div class="stock-modal-header">
-        <h2 class="stock-modal-title-edit">EDITAR REGISTRO</h2>
-      </div>
-      <div class="stock-modal-body">
-        <div class="modal-edit-form">
-          <form id="restock_edit_form">
-            <select id="stock-edit-supplier" class="form-input-select">
-              {% for supplier in suppliers %}
-                <option value="{{ supplier.id }}">{{ supplier.name }}</option>
-              {% endfor %}
-            </select>        
-            <select id="stock-edit-receiver" class="form-input-select">
-              {% for receiver in receivers %}
-                <option value="{{ receiver.id }}">{{ receiver.first_name }}</option>
-              {% endfor %}
-            </select>  
-            <input type="date" id="stock-edit-date" class="form-input-text"/>
-            <input type="number" id="stock-edit-price" class="form-input-number"/>
-          
+<div class="stock-modal-container" id="modal-edit">
+  <div class="stock-modal-content">
+    <div class="stock-modal-header">
+      <h2 class="stock-modal-title-edit">EDITAR REGISTRO</h2>
+    </div>
+    <div class="stock-modal-body">
+      <div class="modal-edit-form" id="modal-edit-form">
+        <select id="stock-edit-supplier" class="form-input-select">
+          {% for supplier in suppliers %}
+          <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+          {% endfor %}
+        </select>
+        <select id="stock-edit-receiver" class="form-input-select">
+          {% for receiver in receivers %}
+          <option value="{{ receiver.id }}">{{ receiver.first_name }}</option>
+          {% endfor %}
+        </select>
+        <input type="date" id="stock-edit-date" class="form-input-text" />
+        <input type="number" id="stock-edit-price" class="form-input-number" />
         <h2 class="products-title">PRODUTOS:</h2>
         <div class="products-container" id="products-container"></div>
         <button class="button-secundary" id="add-product" type="button">ADICIONAR PRODUTO</button>
+        <div class="modal-confirm-button">
+          <button class="button-primary" id="confirm-edit" type="submit">CONFIRMAR</button>
+        </div>
       </div>
-      <div class="modal-confirm-button">
-        <button class="button-primary" id="confirm-edit" type="submit">CONFIRMAR</button>
-      </div>
-    </div>
-  </form>
+      
     </div>
   </div>
+</div>
 
-  <div class="stock-modal-container" id="modal-remove">
-    <div class="stock-modal-content">
-      <div class="stock-modal-header">
-        <h2 class="stock-modal-title-remove">REMOVER REGISTRO</h2>
-      </div>
-      <div class="stock-modal-body">
-        <p class="stock-modal-remove-text">Você tem certeza que deseja remover o registro?</p>
-      </div>
-      <button class="button-primary" id="confirm-remove">CONFIRMAR</button>
+<div class="stock-modal-container" id="modal-remove">
+  <div class="stock-modal-content">
+    <div class="stock-modal-header">
+      <h2 class="stock-modal-title-remove">REMOVER REGISTRO</h2>
     </div>
+    <div class="stock-modal-body">
+      <p class="stock-modal-remove-text">Você tem certeza que deseja remover o registro?</p>
+    </div>
+    <button class="button-primary" id="confirm-remove">CONFIRMAR</button>
   </div>
+</div>
 {% endif %}
 
 <script src="{% static 'js/core/stock.js' %}"></script>

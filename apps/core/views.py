@@ -83,6 +83,9 @@ def load_product(request, id):
     
     return JsonResponse(data, safe=False)
 
+def restock_edit_save(request, id):
+    
+    return JsonResponse()
 
 def restock_remove(request, id):
     if request.method == 'POST':

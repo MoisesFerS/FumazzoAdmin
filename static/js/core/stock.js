@@ -50,7 +50,7 @@ document.querySelectorAll("[name='add'], [name='edit'], [name='remove']")
       window.onclick = function (event) {
         if (event.target == modal) {
           modal.style.display = "none";
-        }
+        };
 
       };
 
@@ -58,6 +58,7 @@ document.querySelectorAll("[name='add'], [name='edit'], [name='remove']")
       
   });
 
+/* Loads the information  */
 document.querySelectorAll("[name='edit']")
   .forEach(edit => {
     edit.addEventListener('click', function (event){
@@ -85,9 +86,41 @@ document.querySelectorAll("[name='edit']")
       })
       .catch(error => console.error('Erro ao carregar categorias e produtos:', error));
 
-    })
+    });
 
-  })
+  });
+
+  document.getElementById('confirm-edit').addEventListener('click', async function (event) {
+    event.preventDefault();
+
+    const form = this.closest('.modal-edit-form')
+    var editData = form.querySelectorAll('#stock-edit-supplier, #stock-edit-receiver, #stock-edit-date, #stock-edit-price');
+
+    var edit = [{
+        supplier: editData[0]?.value || '',
+        receiver: editData[1]?.value || '',
+        date: editData[2]?.value || '',
+        price: editData[3]?.value || ''
+    }];
+
+    var products = [];
+    form.querySelectorAll('.product-content').forEach(product => {
+      products.push({
+        item: product.querySelector("#product-item").value || '',
+        quantity: product.querySelector("#product-quantity").value || '',
+        price: product.querySelector("#product-price").value || '',
+      });
+    });
+    console.log(products)
+  
+    await fetch(`restock/edit/save/${id}/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+  
+    location.reload(); 
+  });
 
 /* Function that gets the csrf token from the cookies */
 function getToken() {
@@ -97,7 +130,7 @@ function getToken() {
     const [name, value] = cookie.trim().split('=');
     if (name === 'csrftoken') {
       csrfToken = decodeURIComponent(value);
-    }
+    };
   });
   return csrfToken;
 }
@@ -149,6 +182,7 @@ function createProduct(data=null){
   productsContainer.appendChild(product);
 
   const select = document.createElement('select');
+  select.id = "product-item"
 
   selectItems.forEach(item => {
     
@@ -174,11 +208,13 @@ function createProduct(data=null){
   product.appendChild(select);
 
   const productQuantity = document.createElement('input');
+  productQuantity.id = "product-quantity"
   productQuantity.type = 'number';
   productQuantity.value = data.quantity ? data.quantity : '';
   product.appendChild(productQuantity);
 
   const productPrice = document.createElement('input');
+  productPrice.id = "product-price"
   productPrice.type = 'number';
   productPrice.value = data.batch_price ? data.batch_price : '';
   product.appendChild(productPrice);
