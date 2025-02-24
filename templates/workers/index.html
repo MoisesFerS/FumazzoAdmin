@@ -4,11 +4,55 @@
 Página Inicial
 {% endblock %}
 
-{% block css %}{% endblock %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/workers/index.css' %}">
+{% endblock %}
 
 {% block content %}
 
-  <div class="main-content">
+  <div class="content-main">
+    
+    <div class="worker-data-container">
+
+      <div class="worker-sector">
+        <div class="worker-sector-label">
+          <h2>SETOR</h2>
+        </div>
+        <div class="worker-sector-data">
+          <h1>{{ worker_sector }}</h1>
+        </div>
+      </div>
+
+      <div class="worker-status-container">
+        <div class="worker-status-label">
+          <h2>STATUS</h2>
+        </div>
+        <div class="worker-status-data">
+          <h1>TESTE</h1>
+        </div>
+      </div>
+
+      <div class="worker-remaining-container">
+        <div class="worker-remaining-label">
+          <h2>HORAS RESTANTES</h2>
+        </div>
+        <div class="worker-remaining-data">
+          <h1>TESTE</h1>
+        </div>
+      </div>
+
+      <div class="worker-permission-container">
+        <div class="worker-permission-label">
+          <h2>PERMISSÃO</h2>
+        </div>
+        <div class="worker-permission-data">
+          <h1>{{ worker_permission }}</h1>
+        </div>
+      </div>
+
+    </div>
 
   </div>
 

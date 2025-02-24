@@ -17,7 +17,7 @@ def index(request):
     }
     return render(request, 'core/index.html', context)
   else:
-    return redirect('workers:login')
+    return redirect('core:login')
     
 def stock(request):
     if 'workerID' in request.session:
