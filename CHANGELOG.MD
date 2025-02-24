@@ -7,43 +7,51 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
-## [0.9.0] - 25/01/2025 - Adding the Stock System
+## [0.9.0] - 24/02/2025 - Adding the Stock System
 
 ### ADDED
-- Added the NAME_PATTERNS.md file.
-- Added the link to storage button at navbar.
-- Added to styles.css:
-    - Color variable detail 4 - Green.
-    - Color variable detail 5 - Mustard.
-    - Color variable detail 6 - Red.
-    - Button-2 - Green background.
-- Added the defs at core/views.py:
-    - stock - Render the stock page.
-    - restock 
-- Added the icons:
-    - edit.ico
-    - trash-can.ico
+- Added the `NAME_PATTERNS.md` file.
+- Added the storage page link to `storage button` at navbar.
+- Added the `Stock System`:
+    - Add `stock` entries.
+    - Edit `stock` entries.
+    - Add `products` to `stock` entries.
+    - Remove `products` from `stock` entries. 
+    - Remove `stock` entries.
+- Added to `styles.css`:
+    - Color variable `detail 4` - Green.
+    - Color variable `detail 5` - Mustard.
+    - Color variable `detail 6` - Red.
+    - `button-secondary` - Green background.
+- Added the defs at `core/views.py`:
+    - `stock` - Render the stock page.
+    - `get_products` - Get every product by its category.
+    - `stock_add` - Add a stock entry.
+    - `load_product` - Loads the products in a stock.
+    - `stock_edit_save` - Saves the edition and products added/removed from stock.
+    - `stock_remove` - Removes a  stock entry.
+- Added the icons at `static/icons/`:
+    - `edit.ico`
+    - `trash-can.ico`
 - Created the templates at templates/core/:
-    - stock.html
-    - restock.html
-- Created the form at forms/core/:
-    - ressuply.html
-- Created the css at css/core/:
-    - stock.css
-- Created the js at js/core/:
-    - stock.js
+    - `stock.html`.
+- Created the css at `css/core/`:
+    - `stock.css`.
+- Created the js at `js/core/`:
+    - `stock.js`.
+- Added the corresponding paths in `core/urls.py` for the new defs in `core/views.py`.
 
 ### CHANGED
 - Adjusted all defs:
-    - Corrected the use of context function of render.
-    - Added a uderscore after all local variables.
-- Changed the variables colors ids.
-- Changed the name of models:
-    - Restock to Stock.
-    - Ressuply to Supply
+    - Corrected the usage of the `render` function to properly pass the `context`.
+    - Added a underscore after all local variables.
+- Changed the variables colors ids at `css/styles.css`.
+- Renamed the `models`:
+    - `Restock` to `Stock`.
+    - `Ressupply` to `Supply`
 
 ### REMOVED
-- Removed the attribute `expiration_date` from Stock.
+- Removed the attribute `expiration_date` from `Stock`.
 
 ## [0.8.1] - 25/01/2025 - Fixing Login Template
 

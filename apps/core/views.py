@@ -57,6 +57,32 @@ def get_products(request):
     
   return JsonResponse(data, safe=False)
 
+def stock_add(request):
+    if request.method == 'POST':
+        if 'workerID' in request.session:
+            if request.session.get('worker_permission', 0) >= 4:
+                try:
+                    data = json.loads(request.body)
+
+                    date_ = data.get('date')                    
+                    supplier_ = models.Supplier.objects.filter(id = data.get('supplier')).first()
+                    receiver_ =  models.Worker.objects.filter(id = data.get('receiver')).first()
+
+                    models.Stock.objects.create(
+                        date = date_,
+                        supplier = supplier_,
+                        receiver = receiver_,
+                    )
+
+                    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
+
+                except json.JSONDecodeError:
+                    return JsonResponse({'status': 'error', 'message': 'Erro ao processar JSON'}, status=400)
+
+            return JsonResponse({'status': 'error', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+        return JsonResponse({'status': 'error', 'message': 'Usuário não autenticado.'}, status=403)
+    return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=405)
+
 def load_product(request, id):
 
     stock = get_object_or_404(models.Stock, id=id)
@@ -141,31 +167,10 @@ def stock_remove(request, id):
     if request.method == 'POST':
         if 'workerID' in request.session:
             if request.session.get('worker_permission', 0) >= 4:
-                stock = get_object_or_404(models.Stock, id = id)
-                stock.delete()
-                                
-                return JsonResponse({'status': 'success', 'message': 'Registro deletado com sucesso!'})
-            return JsonResponse({'status': 'error', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
-        return JsonResponse({'status': 'error', 'message': 'Usuário não autenticado.'}, status=403)
-    return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=405)
-
-
-def stock_add(request):
-    if request.method == 'POST':
-        if 'workerID' in request.session:
-            if request.session.get('worker_permission', 0) >= 4:
                 try:
-                    data = json.loads(request.body)
 
-                    date_ = data.get('date')                    
-                    supplier_ = models.Supplier.objects.filter(id = data.get('supplier')).first()
-                    receiver_ =  models.Worker.objects.filter(id = data.get('receiver')).first()
-
-                    models.Stock.objects.create(
-                        date = date_,
-                        supplier = supplier_,
-                        receiver = receiver_,
-                    )
+                    stock = get_object_or_404(models.Stock, id = id)
+                    stock.delete()
 
                     return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
 
@@ -174,6 +179,7 @@ def stock_add(request):
 
             return JsonResponse({'status': 'error', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
         return JsonResponse({'status': 'error', 'message': 'Usuário não autenticado.'}, status=403)
+
     return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=405)
 
 def category(request):
