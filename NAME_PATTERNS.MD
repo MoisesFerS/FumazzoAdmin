@@ -4,7 +4,7 @@ This document describes the naming patterns used throughout the project to maint
 
 ---
 
-## PADRONIZING  
+##  STANDARDIZING
 
 This process aims to eliminate inconsistencies in the naming of elements, IDs, and classes, as well as variables and functions used within the project. By following the formula listed below for each topic, the code becomes more organized and maintainable.  
 
@@ -27,6 +27,7 @@ The names **_MUST_** be:
 The element class should be composed of:
 
 [context/local]-[context/local]•-[element/purpose]-[variant/state]-[action/behavior]•-[theme/style]•
+
 •only if needed
 
 The classes **_MUST_** be:
@@ -105,12 +106,43 @@ Describe the element theme or style. Examples:
 #### EXAMPLES
 
 navbar-dropdown-button-primary-dark
+
 A button located at a navbar dropdown, using the primary pre-set with a dark style.
 
 accordion-row-division
+
 Just a line making a division at an accordion row.
 
 modal-header-title
+
 A title at a modal's header.
 
 ---
+
+## FILE ORGANIZATION
+
+In order to keep a file organized and within the pattern, it must be divided by contex/location. The separators being:
+
+/* ==========================================================
+    CONTEXT/LOCATION - Description of its purpose    
+    ========================================================== */ 
+ 
+/* ===== ELEMENT/SUBCONTEXT ===== */
+ 
+/* Description of said element if there is multiple elements within the subcontext */
+
+Example:
+
+/* ==========================================================
+    MODAL - Modal that exhibits to the user the callendar   
+    ========================================================== */ 
+
+/* ===== CONTAINER ===== */
+
+/* Container */
+
+/* ===== CONTENT ===== */
+
+/* Callendar Header */
+
+/* Callendar Body */
