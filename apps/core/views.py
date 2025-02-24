@@ -4,6 +4,7 @@ from . import models
 from . import forms
 from django.contrib import messages 
 from django.db.models import Q
+import json
 
 def index(request):
   if 'workerID' in request.session:
@@ -21,13 +22,7 @@ def index(request):
 def stock(request):
     if 'workerID' in request.session:
 
-        formAdd = forms.RestockRegister()
-        formAdd_path = 'partials/forms/core/stock-add.html'
-
-        formEdit = forms.RestockEdit()
-        formEdit_path = 'partials/forms/core/stock-edit.html'
-
-        restocks = models.Restock.objects.all().order_by('date')
+        stocks = models.Stock.objects.all().order_by('date')
         suppliers = models.Supplier.objects.all()
         receivers = models.Worker.objects.all()
 
@@ -37,13 +32,9 @@ def stock(request):
             'worker_last_name': request.session.get('worker_last_name', ''),
             'worker_permisson': request.session.get('worker_permission', ''),
             'worker_role': request.session.get('worker_role', ''),
-            'restocks': restocks,
+            'stocks': stocks,
             'suppliers': suppliers,
             'receivers' : receivers,
-            'formAdd' : formAdd,
-            'formAdd_path' : formAdd_path,
-            'formEdit' : formEdit,
-            'formEdit_path' : formEdit_path,
         }
 
         return render(request, 'core/stock.html', context)
@@ -68,31 +59,90 @@ def get_products(request):
 
 def load_product(request, id):
 
-    stock = get_object_or_404(models.Restock, id=id)
-    resupplies = stock.resupply_set.all()
+    stock = get_object_or_404(models.Stock, id=id)
+    resupplies = stock.supply_set.all()
 
     data = []
     
-    for resupply in resupplies:
-        current_product = resupply.product.id 
+    for supply in resupplies:
+        current_product = supply.product.id 
         data.append({
             'current_product': current_product, 
-            'quantity': resupply.quantity,
-            'batch_price': str(resupply.batch_price),
+            'quantity': supply.quantity,
+            'price': str(supply.price),
         })
     
     return JsonResponse(data, safe=False)
 
-def restock_edit_save(request, id):
-    
-    return JsonResponse()
-
-def restock_remove(request, id):
+def stock_edit_save(request, id):
     if request.method == 'POST':
         if 'workerID' in request.session:
             if request.session.get('worker_permission', 0) >= 4:
-                restock = get_object_or_404(models.Restock, id=id)
-                restock.delete()
+                try:
+                    data = json.loads(request.body)
+
+                    edit = data.get('edit', {})
+                    products = data.get('products', [])
+
+                    stock = get_object_or_404(models.Stock, id=id)
+
+                    supplies = models.Supply.objects.filter(stock_id=id)
+                    total_price_ = 0 
+
+                    product_ids = []
+
+                    for product in products:
+                        item_ = int(product.get('item')) if product.get('item') else None
+                        quantity_ = int(product.get('quantity')) if product.get('quantity') else 0
+                        price_ = float(product.get('price')) if product.get('price') else 0.0
+
+                        if item_ is None:
+                            continue 
+
+                        supply = supplies.filter(product_id=item_).first()
+
+                        if supply:
+                            supply.quantity = quantity_
+                            supply.price = price_
+                            supply.save()
+                        else:
+                            supply = models.Supply.objects.create(
+                                stock_id=id,
+                                quantity=quantity_,
+                                product_id=item_,
+                                price=price_,
+                            )
+
+                        total_price_ += supply.price
+
+                        product_ids.append(item_)
+
+                    stock.date = edit.get('date')    
+                    stock.receiver_id = edit.get('receiver')
+                    stock.supplier_id = edit.get('supplier')
+                    stock.total_price = total_price_
+                    stock.save()
+
+                    for supply in supplies:
+                        if supply.product_id not in product_ids:
+                            supply.delete()
+
+                    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
+
+                except json.JSONDecodeError:
+                    return JsonResponse({'status': 'error', 'message': 'Erro ao processar JSON'}, status=400)
+
+            return JsonResponse({'status': 'error', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+        return JsonResponse({'status': 'error', 'message': 'Usuário não autenticado.'}, status=403)
+
+    return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=405)
+
+def stock_remove(request, id):
+    if request.method == 'POST':
+        if 'workerID' in request.session:
+            if request.session.get('worker_permission', 0) >= 4:
+                stock = get_object_or_404(models.Stock, id=id)
+                stock.delete()
                                 
                 return JsonResponse({'status': 'success', 'message': 'Registro deletado com sucesso!'})
             return JsonResponse({'status': 'error', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
@@ -100,7 +150,7 @@ def restock_remove(request, id):
     return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=405)
 
 
-def restock_add(request):
+def stock_add(request):
     if request.method == 'POST':
         if 'workerID' in request.session:
             if request.session.get('worker_permission', 0) >= 4:
@@ -112,7 +162,7 @@ def restock_add(request):
                 supplier_ = get_object_or_404(models.Supplier, id=supplier_)
                 receiver_ = get_object_or_404(models.Worker, id=receiver_)
 
-                models.Restock.objects.create(
+                models.Stock.objects.create(
                     date=date_,
                     supplier=supplier_,
                     receiver=receiver_,

@@ -1,6 +1,6 @@
 from django import forms
 from phonenumber_field.formfields import PhoneNumberField
-from .models import Supplier, Category, Product, Restock
+from .models import Supplier, Category, Product, Stock
 from ..workers.models import Worker
 from django.db.models import Q
 
@@ -127,7 +127,7 @@ class CategoryRegister(forms.Form):
             raise forms.ValidationError('Insira o nome da categoria.')
         return name
     
-class RestockRegister(forms.Form):
+class StockRegister(forms.Form):
     date = forms.DateField(
         widget=forms.DateInput(attrs={'id' : 'add-date', 'class': 'form-input-date', 'type': 'date'}),
     )
@@ -146,7 +146,7 @@ class RestockRegister(forms.Form):
         widget=forms.Select(attrs={'id' : 'add-receiver', 'class': 'form-input-receiver'}),
     )
 
-class RestockEdit(forms.Form):
+class StockEdit(forms.Form):
     date = forms.DateField(
         widget=forms.DateInput(attrs={'id' : 'edit-date', 'class': 'form-input-date', 'type': 'date'}),
     )
@@ -176,12 +176,12 @@ class RessuplyRegister(forms.Form):
         widget=forms.Select(attrs={'class': 'form-input-product'}),
     )
 
-    restock = forms.ModelChoiceField(
-        queryset=Restock.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-input-restock'}),
+    stock = forms.ModelChoiceField(
+        queryset=Stock.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-input-stock'}),
     )
 
-    batch_price = forms.DecimalField(
+    price = forms.DecimalField(
         widget=forms.NumberInput(attrs={'class': 'form-input-price'}),
     )
 

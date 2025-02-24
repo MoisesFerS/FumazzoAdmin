@@ -11,6 +11,7 @@ The format is based on:
 
 ### ADDED
 - Added the NAME_PATTERNS.md file.
+- Added the link to storage button at navbar.
 - Added to styles.css:
     - Color variable detail 4 - Green.
     - Color variable detail 5 - Mustard.
@@ -37,8 +38,12 @@ The format is based on:
     - Corrected the use of context function of render.
     - Added a uderscore after all local variables.
 - Changed the variables colors ids.
-- Added the link to storage button at navbar.
+- Changed the name of models:
+    - Restock to Stock.
+    - Ressuply to Supply
 
+### REMOVED
+- Removed the attribute `expiration_date` from Stock.
 
 ## [0.8.1] - 25/01/2025 - Fixing Login Template
 

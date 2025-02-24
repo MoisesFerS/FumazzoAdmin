@@ -68,9 +68,10 @@
 }
 
 .accordion-item-detail-list{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  justify-items: center; 
+  display: flex;
+  flex-direction: row;
+  justify-content: center; 
+  gap: 200px;
 }
 
 .accordion-division{
@@ -122,7 +123,27 @@
 }
 
 .product-button-add{
-  width: ;
+  width: 180px;
+  height: 50px;
+  border-radius: 3px;
+  background-color: var(--color-detail4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  align-self: flex-end;
+}
+
+.product-button-remove{
+  width: 40px;
+  height: 40px;
+  border-radius: 3px;
+  background-color: var(--color-detail6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: var(--font-text);
+  color: var(--color-detail3);
 }
 
 /* ##### MODAL ##### */
@@ -206,15 +227,21 @@ to {top:0; opacity:1}
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
-  max-height: 198px;
-
+  max-height: 180px;
+  height: 198px;
 }
 
-/* Product Row */
-
-.productRow{
+.product-content{
   display: flex;
   flex-direction: row;
   gap: 20px;
 }
 
+.product-input{
+  width: 100px;
+  height: 40px;
+}
+
+.product-select{
+  height: 40px;
+}

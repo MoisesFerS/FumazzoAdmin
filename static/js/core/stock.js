@@ -76,10 +76,11 @@ document.querySelectorAll("[name='edit']")
       document.getElementById('stock-edit-date').value = date;
       document.getElementById('stock-edit-price').value = price;
 
+      document.querySelector('.modal-edit-form').id = edit.id;
       const productsContainer = document.getElementById('products-container');
       productsContainer.innerHTML = '';
 
-      fetch(`restock/edit/load-product/${edit.id}/`)
+      fetch(`edit/load-product/${edit.id}/`)
       .then(response => response.json())
       .then(data => {
         data.forEach(data => createProduct(data));
@@ -92,35 +93,59 @@ document.querySelectorAll("[name='edit']")
 
   document.getElementById('confirm-edit').addEventListener('click', async function (event) {
     event.preventDefault();
-
-    const form = this.closest('.modal-edit-form')
-    var editData = form.querySelectorAll('#stock-edit-supplier, #stock-edit-receiver, #stock-edit-date, #stock-edit-price');
-
-    var edit = [{
-        supplier: editData[0]?.value || '',
-        receiver: editData[1]?.value || '',
-        date: editData[2]?.value || '',
-        price: editData[3]?.value || ''
-    }];
-
-    var products = [];
-    form.querySelectorAll('.product-content').forEach(product => {
-      products.push({
-        item: product.querySelector("#product-item").value || '',
-        quantity: product.querySelector("#product-quantity").value || '',
-        price: product.querySelector("#product-price").value || '',
-      });
-    });
-    console.log(products)
   
-    await fetch(`restock/edit/save/${id}/`, {
+    const form = this.closest('.modal-edit-form');
+    var editData = form.querySelectorAll('#stock-edit-supplier, #stock-edit-receiver, #stock-edit-date');
+  
+    var edit = {
+      supplier: editData[0]?.value,
+      receiver: editData[1]?.value,
+      date: editData[2]?.value,
+    };
+  
+    if (!edit.supplier || !edit.receiver || !edit.date) {
+      alert("Preencha todos os campos.");
+      return;
+    }
+  
+    var products = [];
+    let hasError = false;
+  
+    form.querySelectorAll('.product-content').forEach(product => {
+      var productData = {
+        item: product.querySelector("#product-item")?.value || '',
+        quantity: product.querySelector("#product-quantity")?.value || '',
+        price: product.querySelector("#product-price")?.value || '',
+      };
+  
+      if (!productData.item || !productData.quantity || !productData.price) {
+        alert(`Preencha todos os campos do produto ${productData.item || "(Sem nome)"}.`);
+        hasError = true
+      } else {
+        products.push(productData);
+      }
+    });
+  
+    if (hasError) return;
+  
+    let data = {
+      edit: edit,
+      products: products,
+    };
+  
+    let csrfToken = getToken();
+
+    await fetch(`edit/save/${form.id}/`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
+      headers: { 'Content-Type': 'application/json',
+                 'X-CSRFToken': csrfToken,
+       },
+      body: JSON.stringify(data)
     });
   
     location.reload(); 
   });
+  
 
 /* Function that gets the csrf token from the cookies */
 function getToken() {
@@ -135,38 +160,12 @@ function getToken() {
   return csrfToken;
 }
 
-/* Function to submit the forms */
-function submit(button) {
-  let csrfToken = getToken(); 
-  const form = document.getElementById(`restock_${button.name}_form`);
-  const path = `restock/${button.name}${button.id ? '/' + button.id : ''}/`;
-
-  const options = {
-    method: "POST",
-    headers: {
-      "X-CSRFToken": csrfToken  
-    }
-  };
-
-  if (button.name !== 'remove') {
-    options.body = new FormData(form);
-  }
-
-  fetch(path, options)
-    .then(response => response.json())
-    .then(data => {
-      alert(data.message);
-      location.reload();
-    })
-    .catch(error => console.error("Erro:", error));
-}
-
 /* Function to add products at edit modal */
 document.getElementById('add-product').addEventListener("click", createProduct);
 
 let selectItems = []
 
-fetch(`restock/edit/get-products/`)
+fetch(`edit/get-products/`)
 .then(response => response.json())
 .then(data => {
   selectItems = data
@@ -182,6 +181,7 @@ function createProduct(data=null){
   productsContainer.appendChild(product);
 
   const select = document.createElement('select');
+  select.classList.add('product-select')
   select.id = "product-item"
 
   selectItems.forEach(item => {
@@ -208,29 +208,51 @@ function createProduct(data=null){
   product.appendChild(select);
 
   const productQuantity = document.createElement('input');
-  productQuantity.id = "product-quantity"
+  productQuantity.id = "product-quantity";
+  productQuantity.classList.add('product-input');
   productQuantity.type = 'number';
   productQuantity.value = data.quantity ? data.quantity : '';
   product.appendChild(productQuantity);
 
   const productPrice = document.createElement('input');
-  productPrice.id = "product-price"
+  productPrice.id = "product-price";
+  productPrice.classList.add('product-input');
   productPrice.type = 'number';
-  productPrice.value = data.batch_price ? data.batch_price : '';
+  productPrice.value = data.price ? data.price : '';
   product.appendChild(productPrice);
+
+  const removeProduct = document.createElement('button');
+  removeProduct.classList.add('product-button-remove');
+  removeProduct.innerText = 'X';
+  removeProduct.addEventListener('click', function (){
+    removeProduct.closest('.product-content').remove()
+  })
+  product.appendChild(removeProduct);
 
 }
 
-document.getElementById("restock_edit_form").addEventListener("submit", function(event) {
-  event.preventDefault();
+/* Function to submit the forms */
+function submit(button) {
+  let csrfToken = getToken(); 
+  const path = `stock/${button.name}${button.id ? '/' + button.id : ''}/`;
 
-  let supplier = document.getElementById("stock-edit-supplier").value;
-  let receiver = document.getElementById("stock-edit-receiver").value;
-  let date = document.getElementById("stock-edit-date").value;
-  let price = document.getElementById("stock-edit-price").value;
+  const options = {
+    method: "POST",
+    headers: {
+      "X-CSRFToken": csrfToken  
+    }
+  };
 
-  let form = this;
+  if (button.name !== 'remove') {
+    options.body = new FormData(form);
+  }
 
-  console.log(form.select[0])
+  fetch(path, options)
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message);
+      location.reload();
+    })
+    .catch(error => console.error("Erro:", error));
+}
 
-});
