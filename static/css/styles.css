@@ -1,408 +1,460 @@
-/* --- GLOBAL CSS --- */
+/* GLOBAL CSS */
 
-/* ##### IMPORTS ##### */
+/*  ==========================================================
+    IMPORTS - Files imports     
+    ========================================================== */ 
 
-  /* FONTS */
+/* ===== FONTS ===== */
 
-  @font-face {
+/* Oswald */
 
-    font-family: 'Oswald';
-    src: url('/static/fonts/Oswald.ttf') format('truetype');
-    font-weight: 100 900;
-    font-style: normal;
+@font-face{
+  font-family: 'Oswald';
+  src: url('/static/fonts/Oswald.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
 
-  }
-  @font-face {
+/* DMSans */
+@font-face{
+  font-family: 'DMSans';
+  src: url('/static/fonts/DMSans.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
 
-    font-family: 'DMSans';
-    src: url('/static/fonts/DMSans.ttf') format('truetype');
-    font-weight: 100 900;
-    font-style: normal;
-
-  }
-
-/* ##### GLOBAL VARIABLES ##### */
+/*  ==========================================================
+    VARIABLES - Global variables   
+    ========================================================== */ 
 
 :root{
 
-  /* COLORS */
+  /* ===== COLORS ===== */
+
   --color-primary: #000000; /* Black */
   --color-secundary: #F6872C; /* Orange */
   --color-detail1: #1B1B1B; /* Dark Gray */
-  --color-detail2: #FFEBD8; /* Cream */
-  --color-detail3: #333333; /* Gray */
+  --color-detail2: #333333; /* Gray */
+  --color-detail3: #FFEBD8; /* Cream */
+  --color-detail4: #0C871A; /* Green */
+  --color-detail5: #DCB61D; /* Mustard */
+  --color-detail6: #A81414; /* Red */
 
-  /* FONTS CONFIGS */
-  --font-family1: 'Oswald', sans-serif;
-  --font-family2: 'DMSans', sans-serif;
+
+  /* ===== FONTS CONFIGURATIONS ===== */
+
+  /* Fonts */
+  --font-oswald: 'Oswald', sans-serif;
+  --font-dmsans: 'DMSans', sans-serif;
+
+  /* Size */
   --size-title: 3.25rem;
   --size-subtitle: 2.25rem;
   --size-text: 1rem;
-  --size-caption: 1rem;
+  --size-caption: 0.8rem;
+
+  /* Weight */
   --weight-title: 700;
   --weight-subtitle: 600;
   --weight-text: 400;
   --weight-caption: 300;
 
-  /* FONTS */
-  --font-title: normal normal var(--weight-title) var(--size-title) var(--font-family1);
-  --font-subtitle: normal normal var(--weight-subtitle) var(--size-subtitle) var(--font-family1);
-  --font-text: normal normal var(--weight-text) var(--size-text) var(--font-family2);
-  --font-caption: normal normal var(--weight-caption) var(--size-caption) var(--font-family2);
+  /* ===== FONTS SETS ===== */
+
+  --font-title: normal normal var(--weight-title) var(--size-title) var(--font-oswald);
+  --font-subtitle: normal normal var(--weight-subtitle) var(--size-subtitle) var(--font-oswald);
+  --font-text: normal normal var(--weight-text) var(--size-text) var(--font-dmsans);
+  --font-caption: normal normal var(--weight-caption) var(--size-caption) var(--font-dmsans);
 
 }
 
-/* ##### GLOBAL RESET ##### */
+/*  ==========================================================
+    RESETS - Global resets   
+    ========================================================== */
+
+/* ===== GLOBAL ELEMENTS ===== */
 
 *{
-
   list-style-type: none;
   text-decoration: none;
   padding: 0px;
   margin: 0px;
-
 }
+
+/* ===== BUTTONS AND INPUTS ===== */
 
 button, input{
-
   border: none;
-
 }
 
-/* ##### BASE CONFIG ##### */
+/* ===== SPINNERS REMOVER ===== */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button{
+    display: none;
+}
+
+/*  ==========================================================
+    BASE CONFIGURATION - Base configuration of elements
+    ========================================================== */
+
+/* ===== TEXT ===== */
+
+/* Paragraph */
+p{
+  font: var(--font-text);
+  color: var(--color-detail3);
+}
+
+/* Anchor */
+a{
+  font: var(--font-text);
+  color: var(--color-detail3);
+}
+
+/* Title */
+h1{
+  font: var(--font-title);
+  color: var(--color-detail3);
+}
+
+/* Subtitle */
+h2{
+  font: var(--font-subtitle);
+  color: var(--color-detail3);
+}
+
+/* Label */
+label{
+  font: var(--font-text);
+  color: var(--color-detail3);
+}
+
+/* ===== TEXT CLASSES ===== */
+
+.title{
+  font: var(--font-title);
+  color: var(--color-detail3);
+}
+
+.subtitle{
+  font: var(--font-subtitle);
+  color: var(--color-detail3);
+}
+
+.text{
+  font: var(--font-text);
+  color: var(--color-detail3);
+}
+
+.caption{
+  font: var(--font-caption);
+  color: var(--color-detail3);
+}
+
+/* ===== DATA INPUTS ===== */
+
+input, select{
+  border-radius: 3px;
+  padding-left: 15px;
+  box-sizing: border-box;
+  font: var(--font-text);
+  background-color: var(--color-detail2);
+  color: var(--color-detail3);
+}
+
+/* ===== FORMS ===== */
+
+form{
+  bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+
+form ul{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+form label{
+  display: flex;
+  gap: 20px;
+  align-content: center;
+}
+
+form label input{
+  width: 25px;
+  height: 25px;
+}
+
+/*  ==========================================================
+    BODY - Body of the page  
+    ========================================================== */
 
 body{
-
   background-color: var(--color-primary);
   min-height: 100vh;
   max-width: 100vw;
   background-image: url('../images/background.png');
   display: grid;
-    grid-template-rows: auto 1fr auto;
-    grid-template-columns: 1fr;
-    grid-template-areas: 
-      'header'
-      'main'
-      'footer';
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr;
+  grid-template-areas: 
+  'header'
+  'main'
+  'footer';
   justify-items: center;
   gap: 100px;
-
 }
 
-p{
+/*  ==========================================================
+    HEADER - Top element of the page structure 
+    ========================================================== */
 
-  font: var(--font-text);
-  color: var(--color-detail2);
-
-}
-
-h1{
-
-  font: var(--font-title);
-  color: var(--color-detail2);
-
-}
-
-h2{
-
-  font: var(--font-subtitle);
-  color: var(--color-detail2);
-
-}
-
-label{
-
-  font: var(--font-text);
-  color: var(--color-detail2);
-
-}
-
-.title{
-
-  font: var(--font-title);
-  color: var(--color-detail2);
-
-}
-
-.subtitle{
-
-  font: var(--font-subtitle);
-  color: var(--color-detail2);
-
-}
-
-.text{
-
-  font: var(--font-text);
-  color: var(--color-detail2);
-
-}
-
-.caption{
-
-  font: var(--font-caption);
-  color: var(--color-detail2);
-
-}
-
-.logo{
-
-  height: 125px;
-
-}
-
-input{
-
-  border-radius: 3px;
-  padding-left: 15px;
-  font: var(--font-text);
-  width: 350px;
-  height: 40px;
-  background-color: var(--color-detail3);
-  color: var(--color-detail2);
-
-}
-
-.form{
-
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-
-}
-
-/* ##### HEADER ##### */
-
-/* BASE CONFIG */
+/* ===== BASE CONFIG ===== */
 
 header{
-
   grid-area: header;
   min-width: 100%;
   height: 8.25rem;
   display: flex;
   justify-content: center;
-
 }
 
-/* ##### NAVBAR ##### */
-
-/* BASE CONFIG */
+/* ===== NAVBAR ===== */
 
 nav{
-
   display: grid;
   grid-template-columns: auto 1fr auto auto auto auto auto;
   align-items: center;
   align-self: center;
   width: 1024px;
   gap: 25px;
-
 }
 
-/* IDENTIFYER */
+/* Logo */
+.navbar-brand-logo{
+  height: 125px;
+}
 
-.identifyer-nav{
-
+/* Identifyer */
+.identity-container{
   display: flex;
   flex-direction: column;
-
 }
 
-.worker-nav{
-
+/* Worker Data */
+.identity-worker-container{
   display: flex;
   flex-direction: row;
   gap: 5px;
-
 }
 
-/* DROPDOWN */
+/* ===== DROPDOWN ===== */
 
-/* Dropdown Icon */
-.down-arrow{
+/* Navbar link */
+.navbar-link, .navbar-dropdown-toggle{
+  width: 6.25rem;
+  height: 1.75rem;
+  text-align: center;
+  align-content: center;
+  display: block;
+}
 
-  width: 16px;
+/* Navbar link hover effect */
+.navbar-link:hover, .navbar-dropdown-toggle:hover{
+  background-color: var(--color-detail2);
+  color: var(--color-secundary);
+  border-radius: 3px;
+  cursor: pointer;
+}
 
+/* Dropdown icon */
+.navbar-dropdown-toggle-icon{
+  width: 12px;
+  transition: transform 0.3s ease; 
 }
 
 /* Dropdown choices */
-.dropdown-nav-choices {
-  
-  display: none; /* Hidden */
+.navbar-dropdown-menu{
+  display: none;
   position: absolute;
-  background-color: var(--color-detail3);
+  background-color: var(--color-detail2);
   border-radius: 0px 0px 10px 10px;
   width: 6.25rem;
   z-index: 1;
-
 }
 
 /* Show dropdown options */
-.dropdown:hover .dropdown-nav-choices {
-
+.navbar-dropdown:hover .navbar-dropdown-menu{
   display: block;
-
 }
 
-/* Hover over dropdown options */
-.dropdown-nav-option a:hover {
-
-  background-color: var(--color-detail1);
-
+.navbar-dropdown-item-link{
+  display: flex;
+  width: 100%;
 }
 
-/* Keep the button selected as the user hover over the options */
-.dropdown:hover > .button-nav {
-
+/* Dropdown options hover effect */
+.navbar-dropdown-item-link:hover{
   background-color: var(--color-detail1);
+}
 
+/* Efeito de hover no "Gerenciar" quando o menu estiver ativo */
+.navbar-dropdown:hover .navbar-dropdown-toggle{
+  background-color: var(--color-detail1);  /* Aplica o efeito de hover no "Gerenciar" */
+  color: var(--color-secundary);  /* Altera a cor do texto, se necessário */
+}
+
+/* Rotate the down arrow to an up arrow when the user hovers over the dropdown */
+.navbar-dropdown:hover .navbar-dropdown-toggle-icon{
+  transform: rotate(180deg); /* Rotaciona a seta */
 }
 
 /* Change the down arrow to an up arrow when the user hovers over the dropdown */
-.dropdown:hover .down-arrow {
-
+.navbar-dropdown:hover .navbar-dropdown-toggle-icon{
   content: url("../icons/up-arrow.ico");
-
 }
 
+/*  ==========================================================
+    MAIN - Middle element of the page structure 
+    ========================================================== */
 
-/* ##### MAIN ##### */
+/* ===== BASE CONFIG ===== */
 
 main{
-
   grid-template-areas: main;
   display: flex;
   flex-direction: column;
   gap: 100px;
   width: 100%;
   align-items: center;
-  
-  }
-  
-  .content{
-  
-    width: 1024px;
-  
-  }
+}
 
-/* ##### FOOTER ##### */
+/* ===== CONTENT SECTION ===== */
 
-/* BASE CONFIG */
+.main-content{
+  width: 1024px;
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
+  align-items: center;
+}
+
+/*  ==========================================================
+    FOOTER - Bottom element of the page structure 
+    ========================================================== */
+
+/* ===== BASE CONFIG ===== */
 
 footer{
-
   width: 100%;
   display: flex;
   background-color: var(--color-primary);
   justify-content: center;
-
 }
 
-.footer-content{
+/* ===== FOOTER CONTENT ===== */
 
+.footer-container{
   width: 1024px;
   height: 25.5rem;
   grid-template-areas: footer;
   display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 1fr auto;
-
-
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr auto;
 }
 
-/* BRAND */
-
-.brand{
-
+/* Brand */
+.footer-brand-content{
   display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto;
   align-content: center;
   margin: auto;
-
 }
 
-/* RIGTHS */
+.footer-brand-logo{
+  height: 125px;
+}
 
-.rights{
-
+/* Rights */
+.footer-rights-content{
   grid-column: 1 /span 2;
   height: 100px;
   display: flex;
-    flex-direction: column;
+  flex-direction: column;
   gap: 20px;
-
 }
 
-/* ##### BUTTONS ##### */
+.footer-rights-caption{
+  align-self: end;
+}
 
-.button-nav{
+/*  ==========================================================
+    BUTTONS - Buttons styles
+    ========================================================== */
 
+/* Primary */
+.button-primary{
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font: var(--font-text);
-  color: var(--color-detail2);
-  width: 6.25rem;
-  height: 2.5rem;
-  text-align: center;
-  align-content: center;
-  display: block;
-
-}
-
-.button-nav:hover{
-
-  background-color: var(--color-detail3);
-  color: var(--color-secundary);
-  border-radius: 3px;
-  cursor: pointer;
-
-}
-
-.button-1{
-
-  font: var(--font-text);
-  color: var(--color-detail2);
+  color: var(--color-detail3);
   width: 11.5rem;
   height: 3.25rem;
-  text-align: center;
-  align-content: center;
   background-color: var(--color-secundary);
   border: 3px solid var(--color-secundary);
   border-radius: 3px;
-
+  transition: background-color 0.3s, color 0.3s;
 }
 
-.button-1:hover{
-
+.button-primary:hover{
   background-color: var(--color-primary);
   color: var(--color-secundary);
   cursor: pointer;
-
 }
 
-/* ##### FORMS GLOBAL ##### */
+/* Secondary */
+.button-secondary{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: var(--font-text);
+  color: var(--color-detail3);
+  width: 11.25rem;
+  height: 3.125rem;
+  background-color: var(--color-detail4);
+  border: 3px solid var(--color-detail4);
+  border-radius: 3px;
+  transition: background-color 0.3s, color 0.3s;
+}
 
-/* RADIALS INPUTS */
+.button-secondary:hover{
+  background-color: var(--color-primary);
+  color: var(--color-detail4);
+  cursor: pointer;
+}
 
-form ul{
+/*  ==========================================================
+    INPUTS - Inputs styles
+    ========================================================== */
 
+.input-primary{
+  width: 350px;
+  height: 40px;
+  background-color: var(--color-detail2);
+  color: var(--color-detail3);
+}
+
+.login-form{
+
+  gap:30px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-
-}
-
-form label{
-
-  display: flex;
-  gap: 20px;
-  align-content: center;
-
-}
-
-form label input{
-
-  width: 25px;
-  height: 25px;
 
 }

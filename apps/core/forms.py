@@ -1,6 +1,6 @@
 from django import forms
 from phonenumber_field.formfields import PhoneNumberField
-from .models import Supplier, Category
+from .models import Supplier, Category, Product, Stock
 from ..workers.models import Worker
 from django.db.models import Q
 
@@ -127,23 +127,66 @@ class CategoryRegister(forms.Form):
             raise forms.ValidationError('Insira o nome da categoria.')
         return name
     
-class RestockRegister(forms.Form):
+class StockRegister(forms.Form):
     date = forms.DateField(
-        widget=forms.DateInput(attrs={'class': 'form-input-date', 'type': 'date'}),
+        widget=forms.DateInput(attrs={'id' : 'add-date', 'class': 'form-input-date', 'type': 'date'}),
     )
 
     total_price = forms.DecimalField(
-        widget=forms.NumberInput(attrs={'class': 'form-input-total_price'}),
+        widget=forms.NumberInput(attrs={'id' : 'add-price', 'class': 'form-input-total_price'}),
     )
 
     supplier = forms.ModelChoiceField(
         queryset=Supplier.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-input-supplier'}),
+        widget=forms.Select(attrs={'id' : 'add-supplier', 'class': 'form-input-supplier'}),
     )
 
     receiver = forms.ModelChoiceField(
         queryset=Worker.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-input-receiver'}),
+        widget=forms.Select(attrs={'id' : 'add-receiver', 'class': 'form-input-receiver'}),
+    )
+
+class StockEdit(forms.Form):
+    date = forms.DateField(
+        widget=forms.DateInput(attrs={'id' : 'edit-date', 'class': 'form-input-date', 'type': 'date'}),
+    )
+
+    total_price = forms.DecimalField(
+        widget=forms.NumberInput(attrs={'id' : 'edit-price', 'class': 'form-input-total_price'}),
+    )
+
+    supplier = forms.ModelChoiceField(
+        queryset=Supplier.objects.all(),
+        widget=forms.Select(attrs={'id' : 'edit-supplier', 'class': 'form-input-supplier'}),
+    )
+
+    receiver = forms.ModelChoiceField(
+        queryset=Worker.objects.all(),
+        widget=forms.Select(attrs={'id' : 'edit-receiver', 'class': 'form-input-receiver'}),
+    )
+
+class RessuplyRegister(forms.Form):
+    quantity = forms.IntegerField(
+        min_value=1,
+        widget=forms.NumberInput(attrs={'class': 'form-input-quantity'}),
+    )
+
+    product = forms.ModelChoiceField(
+        queryset=Product.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-input-product'}),
+    )
+
+    stock = forms.ModelChoiceField(
+        queryset=Stock.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-input-stock'}),
+    )
+
+    price = forms.DecimalField(
+        widget=forms.NumberInput(attrs={'class': 'form-input-price'}),
+    )
+
+    expiration_date= forms.DateField(
+        widget=forms.DateInput(attrs={'class': 'form-input-date', 'type': 'date'}),
     )
 
 class MealRegister(forms.Form):

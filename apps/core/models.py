@@ -54,20 +54,19 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-class Restock(models.Model):
+class Stock(models.Model):
     id = models.AutoField(primary_key=True)
     date = models.DateField()
-    total_price = models.DecimalField(max_digits=6, decimal_places=2)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
     receiver = models.ForeignKey(Worker, on_delete=models.CASCADE)
 
-class Resuply(models.Model):
+class Supply(models.Model):
     id = models.AutoField(primary_key=True)
     quantity = models.IntegerField()
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    restock = models.ForeignKey(Restock, on_delete=models.CASCADE)
-    batch_price = models.DecimalField(max_digits=6, decimal_places=2)
-    expiration_date = models.DateField()
+    stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
 
 class Meal(models.Model):
     id = models.AutoField(primary_key=True)
