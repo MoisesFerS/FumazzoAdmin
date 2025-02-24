@@ -82,30 +82,31 @@ Estoque
       <h1 class="stock-modal-title-add">ADICIONAR REGISTRO</h1>
     </div>
     <div class="stock-modal-body">
-      <form id="stock_add_form" method="post">
-        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-        <div class="stock-form-add">
-          <div class="stock-form-data">
-            <h2 class="stock-form-label">DATA: </h2>
-            {{ formAdd.date }}
-          </div>
-          <div class="stock-form-data">
-            <h2 class="stock-form-label">FORNECEDOR: </h2>
-            {{ formAdd.supplier }}
-          </div>
-          <div class="stock-form-data">
-            <h2 class="stock-form-label">RECEPTOR: </h2>
-            {{ formAdd.receiver }}
-          </div>
-          <div class="stock-form-data">
-            <h2 class="stock-form-label">PREÇO TOTAL: </h2>
-            {{ formAdd.total_price }}
-          </div>
-          <div class="formAdd-button">
-            <button class="button-primary" id="confirm-add" type="submit">REGISTRAR</button>
-          </div>
+      <div class="modal-add-form">
+        <div class="stock-form-data">
+          <h2 class="stock-form-label">DATA: </h2>
+          <input type="date" id="stock-add-date" class="form-input-text">
         </div>
-      </form>
+        <div class="stock-form-data">
+          <h2 class="stock-form-label">FORNECEDOR: </h2>
+          <select id="stock-add-supplier" class="form-input-select">
+            {% for supplier in suppliers %}
+            <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="stock-form-data">
+          <h2 class="stock-form-label">RECEPTOR: </h2>
+          <select id="stock-add-receiver" class="form-input-select">
+            {% for receiver in receivers %}
+            <option value="{{ receiver.id }}">{{ receiver.first_name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="modal-confirm-button">
+          <button class="button-primary" id="confirm-add">CONFIRMAR</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -133,7 +134,7 @@ Estoque
         <div class="products-container" id="products-container"></div>
         <button class="product-button-add title" id="add-product" type="button">+</button>
         <div class="modal-confirm-button">
-          <button class="button-primary" id="confirm-edit" type="submit">CONFIRMAR</button>
+          <button class="button-primary" id="confirm-edit">CONFIRMAR</button>
         </div>
       </div>
     </div>

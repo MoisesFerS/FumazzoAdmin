@@ -47,21 +47,71 @@ document.querySelectorAll("[name='add'], [name='edit'], [name='remove']")
       const modal = document.getElementById(`modal-${button.name}`);
       modal.style.display = 'block';
 
-      window.onclick = function (event) {
-        if (event.target == modal) {
+      window.addEventListener('click', function(event) {
+        if (event.target === modal) {
           modal.style.display = "none";
-        };
-
-      };
+        }
+      });
 
     });
-      
   });
 
-/* Loads the information  */
+/* Function that gets the csrf token from the cookies */
+function getToken() {
+  return document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1] || '';
+}
+
+
+/* Get the selects info */
+let selectItems = [];
+
+fetch(`edit/get-products/`)
+.then(response => response.json())
+.then(data => {
+  selectItems = data
+})
+.catch(error => console.error('Erro ao carregar categorias e produtos:', error));
+
+
+/* ===== ADD MODAL ===== */
+
+/* Function to add an entry to the database */
+document.getElementById('confirm-add').addEventListener('click', async function () {
+
+  const form = this.closest('.modal-add-form');
+  var addData = form.querySelectorAll('#stock-add-supplier, #stock-add-receiver, #stock-add-date');
+  
+  let data = {
+    date: addData[0]?.value,
+    supplier: addData[1]?.value,
+    receiver: addData[2]?.value,
+  };
+
+  if (!data.date) {
+    alert("Preencha todos os campos.");
+    return;
+  }
+
+  let csrfToken = getToken();
+
+  await fetch(`add/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+      },
+    body: JSON.stringify(data)
+  });
+
+  location.reload(); 
+
+});
+
+/* ===== EDIT MODAL ===== */
+
+/* Loads the edit information  */
 document.querySelectorAll("[name='edit']")
   .forEach(edit => {
-    edit.addEventListener('click', function (event){
+    edit.addEventListener('click', function (){
 
       const accordionData = edit.closest('.stock-accordion');
       const stockData = accordionData.querySelectorAll(".stock-accordion-text");
@@ -91,86 +141,68 @@ document.querySelectorAll("[name='edit']")
 
   });
 
-  document.getElementById('confirm-edit').addEventListener('click', async function (event) {
-    event.preventDefault();
-  
-    const form = this.closest('.modal-edit-form');
-    var editData = form.querySelectorAll('#stock-edit-supplier, #stock-edit-receiver, #stock-edit-date');
-  
-    var edit = {
-      supplier: editData[0]?.value,
-      receiver: editData[1]?.value,
-      date: editData[2]?.value,
+/* Function to send the information from edit modal to backend */
+document.getElementById('confirm-edit').addEventListener('click', async function () {
+
+  const form = this.closest('.modal-edit-form');
+  var editData = form.querySelectorAll('#stock-edit-supplier, #stock-edit-receiver, #stock-edit-date');
+
+  var edit = {
+    supplier: editData[0]?.value,
+    receiver: editData[1]?.value,
+    date: editData[2]?.value,
+  };
+
+  if (!edit.supplier || !edit.receiver || !edit.date) {
+    alert("Preencha todos os campos.");
+    return;
+  }
+
+  var products = [];
+  let hasError = false;
+
+  form.querySelectorAll('.product-content').forEach(product => {
+    
+    var productData = {
+      item: product.querySelector("#product-item")?.value || '',
+      quantity: product.querySelector("#product-quantity")?.value || '',
+      price: product.querySelector("#product-price")?.value || '',
     };
-  
-    if (!edit.supplier || !edit.receiver || !edit.date) {
-      alert("Preencha todos os campos.");
-      return;
+
+    if (!productData.item || !productData.quantity || !productData.price) {
+      alert(`Preencha todos os campos de todos os produtos.`);
+      hasError = true
+    } else if (productData.quantity < 0 || productData.price < 0) {
+      alert(`Os valores não podem ser negativos.`);
+      hasError = true
+    } else {
+      products.push(productData);
     }
-  
-    var products = [];
-    let hasError = false;
-  
-    form.querySelectorAll('.product-content').forEach(product => {
-      var productData = {
-        item: product.querySelector("#product-item")?.value || '',
-        quantity: product.querySelector("#product-quantity")?.value || '',
-        price: product.querySelector("#product-price")?.value || '',
-      };
-  
-      if (!productData.item || !productData.quantity || !productData.price) {
-        alert(`Preencha todos os campos do produto ${productData.item || "(Sem nome)"}.`);
-        hasError = true
-      } else {
-        products.push(productData);
-      }
-    });
-  
-    if (hasError) return;
-  
-    let data = {
-      edit: edit,
-      products: products,
-    };
-  
-    let csrfToken = getToken();
 
-    await fetch(`edit/save/${form.id}/`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json',
-                 'X-CSRFToken': csrfToken,
-       },
-      body: JSON.stringify(data)
-    });
-  
-    location.reload(); 
   });
-  
 
-/* Function that gets the csrf token from the cookies */
-function getToken() {
-  let csrfToken = null;
-  const cookies = document.cookie.split(';');
-  cookies.forEach(cookie => {
-    const [name, value] = cookie.trim().split('=');
-    if (name === 'csrftoken') {
-      csrfToken = decodeURIComponent(value);
-    };
+  if (hasError) return;
+
+  let data = {
+    edit: edit,
+    products: products,
+  };
+
+  let csrfToken = getToken();
+
+  await fetch(`edit/save/${form.id}/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+      },
+    body: JSON.stringify(data)
   });
-  return csrfToken;
-}
 
-/* Function to add products at edit modal */
+  location.reload(); 
+});
+
+/* Function to add products in edit modal */
 document.getElementById('add-product').addEventListener("click", createProduct);
-
-let selectItems = []
-
-fetch(`edit/get-products/`)
-.then(response => response.json())
-.then(data => {
-  selectItems = data
-})
-.catch(error => console.error('Erro ao carregar categorias e produtos:', error));
 
 function createProduct(data=null){
 
@@ -231,28 +263,26 @@ function createProduct(data=null){
 
 }
 
-/* Function to submit the forms */
-function submit(button) {
-  let csrfToken = getToken(); 
-  const path = `stock/${button.name}${button.id ? '/' + button.id : ''}/`;
+/* ===== REMOVE MODAL ===== */
 
-  const options = {
-    method: "POST",
-    headers: {
-      "X-CSRFToken": csrfToken  
-    }
-  };
+/* Function to remove an entry */
+document.querySelectorAll("[name='remove']")
+  .forEach(remove => {
+    remove.addEventListener('click', function (){
 
-  if (button.name !== 'remove') {
-    options.body = new FormData(form);
-  }
+      document.getElementById('confirm-remove').addEventListener('click', async function (){
 
-  fetch(path, options)
-    .then(response => response.json())
-    .then(data => {
-      alert(data.message);
-      location.reload();
-    })
-    .catch(error => console.error("Erro:", error));
-}
+        let csrfToken = getToken();
+        
+        await fetch(`remove/${remove.id}/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json',
+                      'X-CSRFToken': csrfToken,
+            },        
+        });
 
+        location.reload(); 
+
+      });
+    });
+  });

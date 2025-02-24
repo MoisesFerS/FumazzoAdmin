@@ -99,7 +99,7 @@ def stock_edit_save(request, id):
                         if item_ is None:
                             continue 
 
-                        supply = supplies.filter(product_id=item_).first()
+                        supply = supplies.filter(product_id = item_).first()
 
                         if supply:
                             supply.quantity = quantity_
@@ -107,10 +107,10 @@ def stock_edit_save(request, id):
                             supply.save()
                         else:
                             supply = models.Supply.objects.create(
-                                stock_id=id,
-                                quantity=quantity_,
-                                product_id=item_,
-                                price=price_,
+                                stock_id = id,
+                                quantity = quantity_,
+                                product_id = item_,
+                                price = price_,
                             )
 
                         total_price_ += supply.price
@@ -141,7 +141,7 @@ def stock_remove(request, id):
     if request.method == 'POST':
         if 'workerID' in request.session:
             if request.session.get('worker_permission', 0) >= 4:
-                stock = get_object_or_404(models.Stock, id=id)
+                stock = get_object_or_404(models.Stock, id = id)
                 stock.delete()
                                 
                 return JsonResponse({'status': 'success', 'message': 'Registro deletado com sucesso!'})
@@ -154,30 +154,26 @@ def stock_add(request):
     if request.method == 'POST':
         if 'workerID' in request.session:
             if request.session.get('worker_permission', 0) >= 4:
-                date_ = request.POST.get('date')
-                supplier_ = request.POST.get('supplier')
-                receiver_ = request.POST.get('receiver')
-                total_price_ = request.POST.get('total_price')
+                try:
+                    data = json.loads(request.body)
 
-                supplier_ = get_object_or_404(models.Supplier, id=supplier_)
-                receiver_ = get_object_or_404(models.Worker, id=receiver_)
+                    date_ = data.get('date')                    
+                    supplier_ = models.Supplier.objects.filter(id = data.get('supplier')).first()
+                    receiver_ =  models.Worker.objects.filter(id = data.get('receiver')).first()
 
-                models.Stock.objects.create(
-                    date=date_,
-                    supplier=supplier_,
-                    receiver=receiver_,
-                    total_price=total_price_,
-                )
+                    models.Stock.objects.create(
+                        date = date_,
+                        supplier = supplier_,
+                        receiver = receiver_,
+                    )
 
-                return JsonResponse({
-                    'status': 'success',
-                    'message': 'Registro adicionado com sucesso!',       
-                })
-            
-            else:
-                return JsonResponse({'status': 'error', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
-        else:
-            return JsonResponse({'status': 'error', 'message': 'Usuário não autenticado.'}, status=403)
+                    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
+
+                except json.JSONDecodeError:
+                    return JsonResponse({'status': 'error', 'message': 'Erro ao processar JSON'}, status=400)
+
+            return JsonResponse({'status': 'error', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+        return JsonResponse({'status': 'error', 'message': 'Usuário não autenticado.'}, status=403)
     return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=405)
 
 def category(request):
