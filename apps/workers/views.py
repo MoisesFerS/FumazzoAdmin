@@ -6,11 +6,14 @@ from .utils import bcrypt
 
 def index(request):
     if 'workerID' in request.session:
+
+        notifications = models.Notification
+
         context = {
             'workerID': request.session['workerID'],
             'worker_first_name': request.session.get('worker_first_name', ''),
             'worker_last_name': request.session.get('worker_last_name', ''),
-            'worker_permisson': request.session.get('worker_permission', ''),
+            'worker_permission': request.session.get('worker_permission', ''),
             'worker_role': request.session.get('worker_role', ''),
             'worker_sector': request.session.get('worker_sector', ''),
         }

@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Gerenciar
 {% endblock %}
 
 {% load static %}
@@ -15,24 +14,123 @@ Gerenciar
   <div class="content-main">
     
     <div class="manage-content">
-      <div class="manage-content-header">
-        <h2>GERENCIAR </h2>
-      </div>
-      <div class="manage-content-body">
-        <div class="manage-content-labels">
-          <p class="manage-label"></p>
-          <p class="manage-label"></p>
-          <p class="manage-label"></p>
-          <p class="manage-label"></p>
+
+      <div class="manage-content-container">
+        <div class="manage-content-header">
+          <h2>ESTOQUE</h2>
         </div>
-        <div class="manage-content-options">
-          <button>
-            <img src="{% static 'images/core/manage/register.png' %}" alt="">
-          </button>
+        <div class="manage-content-body">
+          <div class="manage-content-labels">
+            <p class="manage-label">GERENCIAR</p>
+            <p class="manage-label">GRÁFICO</p>
+          </div>
+          <div class="manage-content-options">
+            <a class="button-manage manage" href="{% url 'core:stock' %}"></a>
+            <a class="button-manage graph"></a>
+          </div>
         </div>
       </div>
+
+      <div class="manage-content-container">
+        <div class="manage-content-header">
+          <h2>PRODUTOS</h2>
+        </div>
+        <div class="manage-content-body">
+          <div class="manage-content-labels">
+            <p class="manage-label">GERENCIAR</p>
+            <p class="manage-label">GRÁFICO</p>
+          </div>
+          <div class="manage-content-options">
+            <a class="button-manage manage" href="{% url 'core:stock' %}"></a>
+            <a class="button-manage graph"></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="manage-content-container">
+        <div class="manage-content-header">
+          <h2>PEDIDOS</h2>
+        </div>
+        <div class="manage-content-body">
+          <div class="manage-content-labels">
+            <p class="manage-label">GERENCIAR</p>
+            <p class="manage-label">GRÁFICO</p>
+          </div>
+          <div class="manage-content-options">
+            <a class="button-manage manage" href="{% url 'core:stock' %}"></a>
+            <a class="button-manage graph"></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="manage-content-container">
+        <div class="manage-content-header">
+          <h2>REFEIÇÕES</h2>
+        </div>
+        <div class="manage-content-body">
+          <div class="manage-content-labels">
+            <p class="manage-label">GERENCIAR</p>
+            <p class="manage-label">GRÁFICO</p>
+          </div>
+          <div class="manage-content-options">
+            <a class="button-manage manage" href="{% url 'core:stock' %}"></a>
+            <a class="button-manage graph"></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="manage-content-container">
+        <div class="manage-content-header">
+          <h2>PROMOÇÕES</h2>
+        </div>
+        <div class="manage-content-body">
+          <div class="manage-content-labels">
+            <p class="manage-label">GERENCIAR</p>
+            <p class="manage-label">GRÁFICO</p>
+          </div>
+          <div class="manage-content-options">
+            <a class="button-manage manage" href="{% url 'core:stock' %}"></a>
+            <a class="button-manage graph"></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="manage-content-container">
+        <div class="manage-content-header">
+          <h2>NOTIFICAÇÕES</h2>
+        </div>
+        <div class="manage-content-body">
+          <div class="manage-content-labels">
+            <p class="manage-label">GERENCIAR</p>
+            <p class="manage-label">GRÁFICO</p>
+          </div>
+          <div class="manage-content-options">
+            <a class="button-manage manage" href="{% url 'core:stock' %}"></a>
+            <a class="button-manage graph"></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="manage-content-container">
+        <div class="manage-content-header">
+          <h2>NEWSLETTER</h2>
+        </div>
+        <div class="manage-content-body">
+          <div class="manage-content-labels">
+            <p class="manage-label">GERENCIAR</p>
+            <p class="manage-label">GRÁFICO</p>
+          </div>
+          <div class="manage-content-options">
+            <a class="button-manage manage" href="{% url 'core:stock' %}"></a>
+            <a class="button-manage graph"></a>
+          </div>
+        </div>
+      </div>
+      
     </div>
 
   </div>
+  
+  <script src="{% static 'js/core/stock.js' %}"></script>
 
 {% endblock %}
