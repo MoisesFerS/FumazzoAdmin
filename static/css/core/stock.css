@@ -9,7 +9,7 @@
 .stock-container{
   width: 1024px;
   min-height: 100vh;
-  background-color: var(--color-detail2);
+  background-color: var(--color-detail3);
   border-radius: 3px;
   display: grid;
   grid-template-rows: auto 1fr;
@@ -33,13 +33,12 @@
   height: 100px;
   border-radius: 3px;
   background-color: var(--color-detail1);
-  color: var(--color-detail3);
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-rows: 1fr;
   cursor: pointer;
   outline: none;
-  transition: 0.4s;
+  transition: 0.4s ease;
   align-items: center;
 }
 
@@ -51,15 +50,22 @@
 }
 
 /* Effect applied when the accordion is active or hovered */
-.active, .stock-accordion:hover, .stock-product-accordion:hover {
-  background-color: var(--color-primary);
+.stock-accordion:hover, .stock-product-accordion:hover {
+  background-color: var(--color-detail2);
+  transform: scale(1.1);
+  transition: 0.4s ease;
+}
+
+.active{
+  background-color: var(--color-detail2);
+  transition: 0.4s ease;
 }
 
 /* Accordions pannels(Stock & Product) */
 .stock-accordion-panel, .stock-product-accordion-panel {
   border-radius: 0px 0px 3px 3px;
   width: 96%;
-  background-color: var(--color-detail1);
+  background-color: var(--color-detail2);
   overflow: hidden;
   max-height: 0;
   transition: max-height 0.2s ease;
@@ -105,8 +111,8 @@
   width: 35px;
   height: 100px;
   align-content: center;
-  background-color: var(--color-detail6);
-  border: 3px solid var(--color-detail6);
+  background-color: var(--color-detail7);
+  border: 3px solid var(--color-detail7);
   border-radius: 3px;
 }
 
@@ -115,8 +121,8 @@
   width: 35px;
   height: 100px;
   align-content: center;
-  background-color: var(--color-detail5);
-  border: 3px solid var(--color-detail5);
+  background-color: var(--color-detail6);
+  border: 3px solid var(--color-detail6);
   border-radius: 3px;
 }
 
@@ -136,7 +142,7 @@
   width: 180px;
   height: 50px;
   border-radius: 3px;
-  background-color: var(--color-detail4);
+  background-color: var(--color-detail5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -149,12 +155,12 @@
   width: 40px;
   height: 40px;
   border-radius: 3px;
-  background-color: var(--color-detail6);
+  background-color: var(--color-detail7);
   display: flex;
   align-items: center;
   justify-content: center;
   font: var(--font-text);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 /*  ==========================================================

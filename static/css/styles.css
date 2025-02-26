@@ -33,12 +33,13 @@
 
   --color-primary: #000000; /* Black */
   --color-secundary: #F6872C; /* Orange */
-  --color-detail1: #1B1B1B; /* Dark Gray */
-  --color-detail2: #333333; /* Gray */
-  --color-detail3: #FFEBD8; /* Cream */
-  --color-detail4: #0C871A; /* Green */
-  --color-detail5: #DCB61D; /* Mustard */
-  --color-detail6: #A81414; /* Red */
+  --color-detail1: #0d0d0d; /* Darker Gray */
+  --color-detail2: #1B1B1B; /* Dark Gray */
+  --color-detail3: #333333; /* Gray */
+  --color-detail4: #FFEBD8; /* Cream */
+  --color-detail5: #0C871A; /* Green */
+  --color-detail6: #DCB61D; /* Mustard */
+  --color-detail7: #A81414; /* Red */
 
 
   /* ===== FONTS CONFIGURATIONS ===== */
@@ -54,17 +55,19 @@
   --size-caption: 0.8rem;
 
   /* Weight */
-  --weight-title: 700;
-  --weight-subtitle: 600;
-  --weight-text: 400;
-  --weight-caption: 300;
+  --weight-bold: 700;
+  --weight-semibold: 600;
+  --weight-regular: 400;
+  --weight-ligth: 300;
+  --weigth-thin: 100;
 
   /* ===== FONTS SETS ===== */
 
-  --font-title: normal normal var(--weight-title) var(--size-title) var(--font-oswald);
-  --font-subtitle: normal normal var(--weight-subtitle) var(--size-subtitle) var(--font-oswald);
-  --font-text: normal normal var(--weight-text) var(--size-text) var(--font-dmsans);
-  --font-caption: normal normal var(--weight-caption) var(--size-caption) var(--font-dmsans);
+  --font-title: normal normal var(--weight-bold) var(--size-title) var(--font-oswald);
+  --font-subtitle: normal normal var(--weight-semibold) var(--size-subtitle) var(--font-oswald);
+  --font-text: normal normal var(--weight-regular) var(--size-text) var(--font-dmsans);
+  --font-caption: normal normal var(--weight-ligth) var(--size-caption) var(--font-dmsans);
+  --font-detail1: normal normal var(--weigth-thin) var(--size-subtitle) var(--font-dmsans);
 
 }
 
@@ -103,53 +106,58 @@ input[type="number"]::-webkit-outer-spin-button{
 /* Paragraph */
 p{
   font: var(--font-text);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 /* Anchor */
 a{
   font: var(--font-text);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 /* Title */
 h1{
   font: var(--font-title);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 /* Subtitle */
 h2{
   font: var(--font-subtitle);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 /* Label */
 label{
   font: var(--font-text);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 /* ===== TEXT CLASSES ===== */
 
 .title{
   font: var(--font-title);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 .subtitle{
   font: var(--font-subtitle);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 .text{
   font: var(--font-text);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 .caption{
   font: var(--font-caption);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
+}
+
+.font-detail1{
+  font: var(--font-detail1);
+  color: var(--color-detail4);
 }
 
 /* ===== DATA INPUTS ===== */
@@ -159,8 +167,8 @@ input, select{
   padding-left: 15px;
   box-sizing: border-box;
   font: var(--font-text);
-  background-color: var(--color-detail2);
-  color: var(--color-detail3);
+  background-color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 /* ===== FORMS ===== */
@@ -266,7 +274,7 @@ nav{
 
 /* Navbar link hover effect */
 .navbar-link:hover, .navbar-dropdown-toggle:hover{
-  background-color: var(--color-detail2);
+  background-color: var(--color-detail3);
   color: var(--color-secundary);
   border-radius: 3px;
   cursor: pointer;
@@ -282,7 +290,7 @@ nav{
 .navbar-dropdown-menu{
   display: none;
   position: absolute;
-  background-color: var(--color-detail2);
+  background-color: var(--color-detail3);
   border-radius: 0px 0px 10px 10px;
   width: 6.25rem;
   z-index: 1;
@@ -300,12 +308,12 @@ nav{
 
 /* Dropdown options hover effect */
 .navbar-dropdown-item-link:hover{
-  background-color: var(--color-detail1);
+  background-color: var(--color-detail2);
 }
 
 /* Efeito de hover no "Gerenciar" quando o menu estiver ativo */
 .navbar-dropdown:hover .navbar-dropdown-toggle{
-  background-color: var(--color-detail1);  /* Aplica o efeito de hover no "Gerenciar" */
+  background-color: var(--color-detail2);  /* Aplica o efeito de hover no "Gerenciar" */
   color: var(--color-secundary);  /* Altera a cor do texto, se necessário */
 }
 
@@ -404,7 +412,7 @@ footer{
   align-items: center;
   justify-content: center;
   font: var(--font-text);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
   width: 11.5rem;
   height: 3.25rem;
   background-color: var(--color-secundary);
@@ -425,18 +433,18 @@ footer{
   align-items: center;
   justify-content: center;
   font: var(--font-text);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
   width: 11.25rem;
   height: 3.125rem;
-  background-color: var(--color-detail4);
-  border: 3px solid var(--color-detail4);
+  background-color: var(--color-detail5);
+  border: 3px solid var(--color-detail5);
   border-radius: 3px;
   transition: background-color 0.3s, color 0.3s;
 }
 
 .button-secondary:hover{
   background-color: var(--color-primary);
-  color: var(--color-detail4);
+  color: var(--color-detail5);
   cursor: pointer;
 }
 
@@ -447,8 +455,8 @@ footer{
 .input-primary{
   width: 350px;
   height: 40px;
-  background-color: var(--color-detail2);
-  color: var(--color-detail3);
+  background-color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 .login-form{
