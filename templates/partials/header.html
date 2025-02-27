@@ -6,15 +6,15 @@
     </a>
     <section class="identity-container">
       <p class="identity-title">Administrativo</p>
-      {% if workerID %}
+      {% if worker.id %}
       <section class="identity-worker-container">
-        <p class="identity-worker-text">{{ worker_first_name }}</p>
+        <p class="identity-worker-text">{{ worker.first_name }}</p>
         <p class="identity-worker-separator"> - </p>
-        <p class="identity-worker-text">{{ worker_role }}</p>
+        <p class="identity-worker-text">{{ workerRole.name }}</p>
       </section>
       {% endif %}
     </section>
-    {% if workerID %}
+    {% if worker.id %}
     <a class="navbar-link" href="{% url 'workers:index' %}">Página Inicial</a>
     <ul class="navbar-dropdown">
       <li class="navbar-dropdown-container">

@@ -5,17 +5,14 @@ from django.contrib import messages
 from .utils import bcrypt
 
 def index(request):
-    if 'workerID' in request.session:
+
+    if 'worker' in request.session:
 
         notifications = models.Notification
 
         context = {
-            'workerID': request.session['workerID'],
-            'worker_first_name': request.session.get('worker_first_name', ''),
-            'worker_last_name': request.session.get('worker_last_name', ''),
-            'worker_permission': request.session.get('worker_permission', ''),
-            'worker_role': request.session.get('worker_role', ''),
-            'worker_sector': request.session.get('worker_sector', ''),
+            'worker': request.session.get('worker', {}),
+            'workerRole': request.session.get('workerRole', {})
         }
         
         return render(request, 'workers/index.html', context)
@@ -41,12 +38,18 @@ def login(request):
                     role = worker.role
                     sector = role.sector
 
-                    request.session['workerID'] = worker.id
-                    request.session['worker_first_name'] = worker.first_name
-                    request.session['worker_last_name'] = worker.last_name
-                    request.session['worker_permission'] = role.permission
-                    request.session['worker_role'] = role.name
-                    request.session['worker_sector'] = sector.name
+                    request.session['worker'] = {
+                        'id' : worker.id,
+                        'first_name' : worker.first_name,
+                        'last_name' : worker.last_name,
+                    }
+                    request.session['workerRole'] = {
+                        'permission' : role.permission,
+                        'name': role.name,
+                        'sector' : sector.name,
+                        'description' : role.description,
+                        'image': role.image.url if role.image else None
+                    }
 
                     return redirect('workers:index')  
                 else:

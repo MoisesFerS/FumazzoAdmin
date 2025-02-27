@@ -32,7 +32,7 @@ class Product(models.Model):
     name = models.CharField(max_length=50)
     quantity = models.IntegerField()
     individual_price = models.IntegerField()
-    image = models.ImageField(upload_to='core/products', null=True, blank=True)
+    image = models.ImageField(upload_to='core/products/', null=True, blank=True)
     status_choices = [
         (1, 'Cheio(100%)'),
         (2, 'Metade(50%)'),
@@ -74,7 +74,7 @@ class Meal(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2)
     description = models.TextField()
     calories = models.IntegerField()
-    image = models.ImageField(upload_to='core/meals', null=True, blank=True)
+    image = models.ImageField(upload_to='core/meals/', null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def __str__(self):

@@ -12,9 +12,9 @@ Página Inicial
 
 {% block content %}
 
-  <div class="content-main">
+  <div class="main-content">
 
-    <h1>OLÁ, {{ worker_first_name }}</h1>
+    <h1>OLÁ, {{ worker.first_name }}</h1>
     
     <div class="worker-data-container">      
 
@@ -23,7 +23,7 @@ Página Inicial
           <h2 class="font-detail1">SETOR</h2>
         </div>
         <div class="worker-data-content">
-          <h1>{{ worker_sector }}</h1>
+          <p class="title">{{ workerRole.sector }}</p>
         </div>
       </div>
 
@@ -41,7 +41,7 @@ Página Inicial
           <h2 class="font-detail1">HORAS RESTANTES</h2>
         </div>
         <div class="worker-data-content">
-          <h1>TESTE</h1>
+          <p class="title">TESTE</p>
         </div>
       </div>
 
@@ -50,7 +50,7 @@ Página Inicial
           <h2 class="font-detail1">PERMISSÃO</h2>
         </div>
         <div class="worker-data-content">
-          <h1>{{ worker_permission }}</h1>
+          <p class="title">{{ workerRole.permission }}</p>
         </div>
       </div>
 
@@ -68,7 +68,11 @@ Página Inicial
           <h2 class="font-detail1">FUNÇÃO</h2>
         </div>
         <div class="worker-function-data">
-          
+          <p class="title">{{ workerRole.name }}</p>
+          <p class="caption"> {{ workerRole.description }} </p>
+        </div>
+        <div class="worker-function-image-container">
+          <img class="worker-function-image" src="{{ workerRole.image }}" alt="Imagem do cargo">
         </div>
       </div>
 

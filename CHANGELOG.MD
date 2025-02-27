@@ -7,6 +7,17 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.10.0] - 27/02/2025 - Developing the index's Pages
+
+### ADDED
+- Added the `favicon.ico`.
+- Added content to:
+    - `worker/index.html`.
+    - `core/index.html`.
+
+### CHANGED
+- Changed the context to have objects, and not each attribute from worker.
+
 ## [0.9.0] - 24/02/2025 - Adding the Stock System
 
 ### ADDED

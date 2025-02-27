@@ -218,6 +218,12 @@ body{
   gap: 100px;
 }
 
+.main-content{
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+}
+
 /*  ==========================================================
     HEADER - Top element of the page structure 
     ========================================================== */

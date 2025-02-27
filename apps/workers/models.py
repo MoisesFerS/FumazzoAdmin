@@ -22,6 +22,7 @@ class Role(models.Model):
     name = models.CharField(max_length=50)
     permission = models.IntegerField()
     description = models.TextField()
+    image = models.ImageField(upload_to='workers/roles/', null=True, blank=True)
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
     wage = models.DecimalField(max_digits=6, decimal_places=2)
 
