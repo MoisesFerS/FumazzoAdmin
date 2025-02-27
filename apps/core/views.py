@@ -7,31 +7,25 @@ from django.db.models import Q
 import json
 
 def index(request):
-  if 'workerID' in request.session:
+  if 'worker' in request.session:
     context = {
-      'workerID': request.session['workerID'],
-      'worker_first_name': request.session.get('worker_first_name', ''),
-      'worker_last_name': request.session.get('worker_last_name', ''),
-      'worker_permisson': request.session.get('worker_permission', ''),
-      'worker_role': request.session.get('worker_role', ''),
+        'worker': request.session.get('worker'),
+        'workerRole': request.session.get('workerRole'),
     }
     return render(request, 'core/index.html', context)
   else:
     return redirect('core:login')
     
 def stock(request):
-    if 'workerID' in request.session:
+    if 'worker' in request.session:
 
         stocks = models.Stock.objects.all().order_by('date')
         suppliers = models.Supplier.objects.all()
         receivers = models.Worker.objects.all()
 
         context = {
-            'workerID': request.session['workerID'],
-            'worker_first_name': request.session.get('worker_first_name', ''),
-            'worker_last_name': request.session.get('worker_last_name', ''),
-            'worker_permisson': request.session.get('worker_permission', ''),
-            'worker_role': request.session.get('worker_role', ''),
+            'worker': request.session.get('worker'),
+            'workerRole': request.session.get('workerRole'),
             'stocks': stocks,
             'suppliers': suppliers,
             'receivers' : receivers,
@@ -59,7 +53,7 @@ def get_products(request):
 
 def stock_add(request):
     if request.method == 'POST':
-        if 'workerID' in request.session:
+        if 'worker' in request.session:
             if request.session.get('worker_permission', 0) >= 4:
                 try:
                     data = json.loads(request.body)
@@ -102,7 +96,7 @@ def load_product(request, id):
 
 def stock_edit_save(request, id):
     if request.method == 'POST':
-        if 'workerID' in request.session:
+        if 'worker' in request.session:
             if request.session.get('worker_permission', 0) >= 4:
                 try:
                     data = json.loads(request.body)
@@ -165,7 +159,7 @@ def stock_edit_save(request, id):
 
 def stock_remove(request, id):
     if request.method == 'POST':
-        if 'workerID' in request.session:
+        if 'worker' in request.session:
             if request.session.get('worker_permission', 0) >= 4:
                 try:
 
@@ -183,7 +177,7 @@ def stock_remove(request, id):
     return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=405)
 
 def category(request):
-    if 'workerID' in request.session:
+    if 'worker' in request.session:
 
         form = forms.CategoryRegister()
         form_path = 'partials/forms/core/category.html'
@@ -222,7 +216,7 @@ def category(request):
         return redirect('workers:login')
 
 def supplier(request):
-    if 'workerID' in request.session:
+    if 'worker' in request.session:
 
         form = forms.SupplierRegister()
         form_path = 'partials/forms/core/supplier.html'
@@ -265,7 +259,7 @@ def supplier(request):
         return redirect('workers:login')
 
 def product(request):
-    if 'workerID' in request.session:
+    if 'worker' in request.session:
 
         form = forms.ProductRegister()
         form_path = 'partials/forms/core/product.html'
@@ -312,7 +306,7 @@ def product(request):
         return redirect('workers:login')
  
 def meal(request):
-    if 'workerID' in request.session:
+    if 'worker' in request.session:
 
         form = forms.MealRegister()
         form_path = 'partials/forms/core/meal.html'

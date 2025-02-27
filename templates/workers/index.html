@@ -23,7 +23,7 @@ Página Inicial
           <h2 class="font-detail1">SETOR</h2>
         </div>
         <div class="worker-data-content">
-          <p class="title">{{ workerRole.sector }}</p>
+          <p class="title">{{ workerData.sector_name }}</p>
         </div>
       </div>
 
@@ -59,7 +59,13 @@ Página Inicial
           <h2 class="font-detail1">NOTIFICAÇÕES</h2>
         </div>
         <div class="worker-notification-data">
-          
+          {% if notifications %}
+            {% for notification in notifications %}
+              <p>○ {{ notification.message }}</p>
+            {% endfor %}
+          {% else %}
+            <p>Não há notificações hoje.</p>
+          {% endif %}
         </div>
       </div>
 
@@ -69,10 +75,10 @@ Página Inicial
         </div>
         <div class="worker-function-data">
           <p class="title">{{ workerRole.name }}</p>
-          <p class="caption"> {{ workerRole.description }} </p>
+          <p class="caption"> {{ workerData.description }} </p>
         </div>
         <div class="worker-function-image-container">
-          <img class="worker-function-image" src="{{ workerRole.image }}" alt="Imagem do cargo">
+          <img class="worker-function-image" src="{{ workerData.image }}" alt="Imagem do cargo">
         </div>
       </div>
 

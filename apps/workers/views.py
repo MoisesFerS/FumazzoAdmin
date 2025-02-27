@@ -8,11 +8,24 @@ def index(request):
 
     if 'worker' in request.session:
 
-        notifications = models.Notification
+        worker = models.Worker.objects.get(id = request.session['worker']['id'])
+        role = worker.role
+        sector = role.sector
+        
+        workerData = {
+            'sector_id' : sector.id,
+            'sector_name' : sector.name,
+            'description' : role.description,
+            'image': role.image.url if role.image else None
+        }
+
+        notifications = models.Notification.objects.filter(sector_id = workerData['sector_id'])
 
         context = {
-            'worker': request.session.get('worker', {}),
-            'workerRole': request.session.get('workerRole', {})
+            'worker': request.session.get('worker'),
+            'workerRole': request.session.get('workerRole'),
+            'workerData' : workerData,
+            'notifications' : notifications,
         }
         
         return render(request, 'workers/index.html', context)
@@ -35,8 +48,7 @@ def login(request):
 
                 if bcrypt.checkpw(password.encode('UTF-8'), worker.password.encode('UTF-8')):
 
-                    role = worker.role
-                    sector = role.sector
+                    role = worker.role                    
 
                     request.session['worker'] = {
                         'id' : worker.id,
@@ -46,9 +58,6 @@ def login(request):
                     request.session['workerRole'] = {
                         'permission' : role.permission,
                         'name': role.name,
-                        'sector' : sector.name,
-                        'description' : role.description,
-                        'image': role.image.url if role.image else None
                     }
 
                     return redirect('workers:index')  
