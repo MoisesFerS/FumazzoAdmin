@@ -54,7 +54,7 @@ def get_products(request):
 def stock_add(request):
     if request.method == 'POST':
         if 'worker' in request.session:
-            if request.session.get('worker_permission', 0) >= 4:
+            if request.session.get('workerRole', {}).get('permission', 0) >= 4:
                 try:
                     data = json.loads(request.body)
 
@@ -97,7 +97,7 @@ def load_product(request, id):
 def stock_edit_save(request, id):
     if request.method == 'POST':
         if 'worker' in request.session:
-            if request.session.get('worker_permission', 0) >= 4:
+            if request.session.get('workerRole', {}).get('permission', 0) >= 4:
                 try:
                     data = json.loads(request.body)
 
@@ -160,7 +160,7 @@ def stock_edit_save(request, id):
 def stock_remove(request, id):
     if request.method == 'POST':
         if 'worker' in request.session:
-            if request.session.get('worker_permission', 0) >= 4:
+            if request.session.get('workerRole', {}).get('permission', 0) >= 4:
                 try:
 
                     stock = get_object_or_404(models.Stock, id = id)
@@ -205,7 +205,7 @@ def category(request):
             'workerID': request.session['workerID'],
             'worker_first_name': request.session.get('worker_first_name', ''),
             'worker_last_name': request.session.get('worker_last_name', ''),
-            'worker_permisson': request.session.get('worker_permission', ''),
+            'workerRole.permission': request.session.get('workerRole.permission', ''),
             'worker_role': request.session.get('worker_role', ''),
             'form': form,
             'form_path' : form_path,
@@ -248,7 +248,7 @@ def supplier(request):
             'workerID': request.session['workerID'],
             'worker_first_name': request.session.get('worker_first_name', ''),
             'worker_last_name': request.session.get('worker_last_name', ''),
-            'worker_permisson': request.session.get('worker_permission', ''),
+            'workerRole.permission': request.session.get('workerRole.permission', ''),
             'worker_role': request.session.get('worker_role', ''),
             'form': form, 
             'form_path' : form_path
@@ -295,7 +295,7 @@ def product(request):
             'workerID': request.session['workerID'],
             'worker_first_name': request.session.get('worker_first_name', ''),
             'worker_last_name': request.session.get('worker_last_name', ''),
-            'worker_permisson': request.session.get('worker_permission', ''),
+            'workerRole.permission': request.session.get('workerRole.permission', ''),
             'worker_role': request.session.get('worker_role', ''),
             'form': form, 
             'form_path' : form_path
@@ -343,7 +343,7 @@ def meal(request):
             'workerID': request.session['workerID'],
             'worker_first_name': request.session.get('worker_first_name', ''),
             'worker_last_name': request.session.get('worker_last_name', ''),
-            'worker_permisson': request.session.get('worker_permission', ''),
+            'workerRole.permission': request.session.get('workerRole.permission', ''),
             'worker_role': request.session.get('worker_role', ''),
             'form': form,
             'form_path' : form_path,

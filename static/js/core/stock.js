@@ -124,7 +124,6 @@ document.querySelectorAll("[name='edit']")
       document.getElementById('stock-edit-supplier').value = supplier;
       document.getElementById('stock-edit-receiver').value = receiver;
       document.getElementById('stock-edit-date').value = date;
-      document.getElementById('stock-edit-price').value = price;
 
       document.querySelector('.modal-edit-form').id = edit.id;
       const productsContainer = document.getElementById('products-container');
