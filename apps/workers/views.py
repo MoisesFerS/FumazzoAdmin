@@ -3,77 +3,131 @@ from . import models
 from . import forms
 from django.contrib import messages 
 from .utils import bcrypt
+from django.http import JsonResponse
+from django.contrib import messages 
+import json
 
+#   ============================================================
+#   INDEX - Defs related to Index page(dashboard)
+#   ============================================================ 
+
+# Renders the Index page
 def index(request):
 
-    if 'worker' in request.session:
+	if 'worker' not in request.session:
+		return redirect('workers:login')
 
-        worker = models.Worker.objects.get(id = request.session['worker']['id'])
-        role = worker.role
-        sector = role.sector
-        
-        workerData = {
-            'sector_id' : sector.id,
-            'sector_name' : sector.name,
-            'description' : role.description,
-            'image': role.image.url if role.image else None
-        }
+	worker = models.Worker.objects.get(id = request.session['worker']['id'])
+	role = worker.role
+	sector = role.sector
+	
+	workerData = {
+		'sector_id' : sector.id,
+		'sector_name' : sector.name,
+		'description' : role.description,
+		'image': role.image.url if role.image else None
+	}
 
-        notifications = models.Notification.objects.filter(sector_id = workerData['sector_id'])
+	notifications = models.Notification.objects.filter(sector_id = workerData['sector_id'])
 
-        context = {
-            'worker': request.session.get('worker'),
-            'workerRole': request.session.get('workerRole'),
-            'workerData' : workerData,
-            'notifications' : notifications,
-        }
-        
-        return render(request, 'workers/index.html', context)
-    else:
-        return redirect('workers:login')
+	context = {
+		'worker': request.session.get('worker'),
+		'workerRole': request.session.get('workerRole'),
+		'workerData' : workerData,
+		'notifications' : notifications,
+	}
+	
+	return render(request, 'workers/index.html', context)
 
+#   ============================================================
+#   LOGIN - Defs related to User login
+#   ============================================================ 
+
+# Renders the Login page
 def login(request):
-    form = forms.WorkerLogin()
-    form_path = 'partials/forms/workers/login.html'
+	return render(request, 'workers/login.html')
 
-    if request.method == 'POST':
-        form = forms.WorkerLogin(request.POST)  
-        if form.is_valid(): 
-            id_ = form.cleaned_data.get('id')
-            password = form.cleaned_data.get('password')
+# Authenticates the user
+def authentication(request):
 
-            try:
+	if request.method != 'POST':
+		return JsonResponse({'status': 'error', 'error' : '405', 'message': 'Método inválido.'}, status=405)	
 
-                worker = models.Worker.objects.get(id = id_)
+	try:
 
-                if bcrypt.checkpw(password.encode('UTF-8'), worker.password.encode('UTF-8')):
+		data = json.loads(request.body)
 
-                    role = worker.role                    
+		if not data.get('id') or not data.get('password'):
+			return JsonResponse({'status': 'error', 'error' : '400', 'message': 'ID e senha são obrigatórios.'}, status=400)
 
-                    request.session['worker'] = {
-                        'id' : worker.id,
-                        'first_name' : worker.first_name,
-                        'last_name' : worker.last_name,
-                    }
-                    request.session['workerRole'] = {
-                        'permission' : role.permission,
-                        'name': role.name,
-                    }
+		try:
+			worker = models.Worker.objects.get(id = data.get('id'))
+		except:
+			return JsonResponse({'status': 'error', 'error' : '400', 'message': 'Credenciais inválidas.'}, status=400)
 
-                    return redirect('workers:index')  
-                else:
+		if bcrypt.checkpw(data.get('password').encode('UTF-8'), worker.password.encode('UTF-8')):
 
-                    messages.error(request, 'Senha inválida')
-            except models.Worker.DoesNotExist:
+			role = worker.role                    
 
-                messages.error(request, 'Usuário inválido')
-        else:
+			request.session['worker'] = {
+				'id' : worker.id,
+				'first_name' : worker.first_name,
+				'last_name' : worker.last_name,
+			}
+			request.session['workerRole'] = {
+				'permission' : role.permission,
+				'name': role.name,
+			}
 
-            messages.error(request, 'Por favor, corrija os erros no formulário.')
+			return redirect('workers:index')  
+		
+		else:
+			return JsonResponse({'status': 'error', 'error' : '400', 'message': 'Credenciais inválidas.'}, status=400)
+
+	except json.JSONDecodeError:
+		return JsonResponse({'status': 'error', 'error' : '400', 'message': 'Erro ao processar JSON'}, status=400)
+	
+
+def authentication(request):
+	if request.method != 'POST':
+		return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+	try:
+		data = json.loads(request.body)
+
+		if not data.get('id') or not data.get('password'):
+			return JsonResponse({'status': 'error', 'error': '400', 'message': 'ID e senha são obrigatórios.'}, status=400)
+
+		try:
+			worker = models.Worker.objects.get(id=data.get('id'))
+		except models.Worker.DoesNotExist:
+			return JsonResponse({'status': 'error', 'error': '400', 'message': 'Credenciais inválidas.'}, status=400)
+		
+		if bcrypt.checkpw(data.get('password').encode('UTF-8'), worker.password.encode('UTF-8')):
+
+			role = worker.role
+
+			request.session['worker'] = {
+				'id': worker.id,
+				'first_name': worker.first_name,
+				'last_name': worker.last_name,
+			}
+			request.session['workerRole'] = {
+				'permission': role.permission,
+				'name': role.name,
+			}
+
+			return JsonResponse({'status': 'success', 'message': 'Login realizado com sucesso!', 'redirect_url': '/workers/'})
+
+		else:
+			return JsonResponse({'status': 'error', 'error': '400', 'message': 'Credenciais inválidas.'}, status=400)
+
+	except json.JSONDecodeError:
+		return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON.'}, status=400)
 
 
-    return render(request, 'workers/login.html', {'form': form, 'form_path': form_path})
 
+# Flushes the session
 def logout(request):
-    request.session.flush()
-    return redirect('workers:login')
+	request.session.flush()
+	return redirect('workers:login')
