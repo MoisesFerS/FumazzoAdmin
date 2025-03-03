@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect
 from . import models
-from . import forms
-from django.contrib import messages 
 from .utils import bcrypt
 from django.http import JsonResponse
-from django.contrib import messages 
 import json
+from django.db.models import Count, Max, Q
+from apps.core.models import Category
 
 #   ============================================================
 #   INDEX - Defs related to Index page(dashboard)
@@ -19,8 +18,8 @@ def index(request):
 
 	worker = models.Worker.objects.get(id = request.session['worker']['id'])
 	role = worker.role
-	sector = role.sector
-	
+	sector = role.sector	
+
 	workerData = {
 		'sector_id' : sector.id,
 		'sector_name' : sector.name,
@@ -29,12 +28,20 @@ def index(request):
 	}
 
 	notifications = models.Notification.objects.filter(sector_id = workerData['sector_id'])
+	sectors = models.Sector.objects.annotate(
+			ticket_count=Count('ticket', filter=~Q(ticket__status=3)),
+			max_priority=Max('ticket__priority', filter=~Q(ticket__status=3)) 
+	)
+
+	tickets_categories = Category.objects.filter(type=6)
 
 	context = {
 		'worker': request.session.get('worker'),
 		'workerRole': request.session.get('workerRole'),
 		'workerData' : workerData,
 		'notifications' : notifications,
+		'sectors' : sectors,
+		'tickets_categories' : tickets_categories,
 	}
 	
 	return render(request, 'workers/index.html', context)

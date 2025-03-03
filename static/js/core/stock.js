@@ -131,9 +131,9 @@ document.querySelectorAll("[name='edit']")
 
       fetch(`edit/load-product/${edit.id}/`)
       .then(response => response.json())
-      .then(data => {
+      .then(data => { 
         if(data.status == 'success'){
-          data.forEach(data => createProduct(data));
+          data.data.forEach(data => createProduct(data));
         } else {          
           message.style.display = 'block';        
           message.querySelector('#message-text').innerHTML = data.message; 
@@ -243,7 +243,7 @@ function createProduct(data=null){
   productsContainer.appendChild(product);
 
   const select = document.createElement('select');
-  select.classList.add('product-select')
+  select.classList.add('select-primary')
   select.id = "product-item"
 
   selectItems.forEach(item => {

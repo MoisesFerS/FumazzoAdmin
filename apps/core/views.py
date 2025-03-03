@@ -5,6 +5,7 @@ from . import forms
 from django.contrib import messages 
 from django.db.models import Q
 import json
+from apps.workers.models import Worker, Sector
 
 #   ============================================================
 #   INDEX - Defs related to Index page(manage)
@@ -34,7 +35,7 @@ def stock(request):
 
   stocks = models.Stock.objects.all().order_by('date')
   suppliers = models.Supplier.objects.all()
-  receivers = models.Worker.objects.all()
+  receivers = Worker.objects.all()
 
   context = {
     'worker': request.session.get('worker'),
@@ -116,7 +117,7 @@ def load_product(request, id):
       'price': str(supply.price),
     })
   
-  return JsonResponse(data, safe=False)
+  return JsonResponse({'status': 'success', 'message': 'Produtos carregados com sucesso', 'data' : data})
 
 # Save a stock entry edit
 def stock_edit_save(request, id):
@@ -195,6 +196,43 @@ def stock_remove(request, id):
 
     stock = get_object_or_404(models.Stock, id = id)
     stock.delete()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
+
+  except json.JSONDecodeError:
+    return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
+
+# Add a Ticket entry
+def ticket_add(request):
+
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  try:
+    data = json.loads(request.body)
+
+    if not data.get('reason'):
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
+
+    if not data.get('description'):
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
+
+    reason_ = data.get('reason')
+    sector_ = Sector.objects.filter(id = data.get('sector')).first()
+    priority_ = data.get('priority')
+    category_ = models.Category.objects.filter(id = data.get('category')).first()
+    description_ = data.get('description')
+
+    models.Ticket.objects.create(
+      reason = reason_,
+      sector = sector_,
+      priority = priority_,
+      category = category_,
+      description = description_,
+    )
 
     return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
 

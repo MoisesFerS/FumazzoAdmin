@@ -84,6 +84,92 @@ Página Inicial
 
     </div>
 
+    <div class="ticket-container">
+      <div class="ticket-title-container">
+        <p class="ticket-title title">TICKET</p>
+      </div>
+      <div class="ticket-form-container">
+        <form action="POST" id="ticket-form">
+          <div class="ticket-form-content">
+            <div class="ticket-form-data-container">
+              <div class="ticket-form-data">
+                <p class="subtitle">MOTIVO</p> 
+                <input type="text" class="input-primary" id="form-data">
+              </div>
+              <div class="ticket-form-data">
+                <p class="subtitle">PRIORIDADE</p>
+                <select class="select-primary" id="form-data">
+                  <option value="1">BAIXA</option>
+                  <option value="2">MÉDIA</option>
+                  <option value="3">ALTA</option>
+                </select> 
+              </div>
+            </div>
+            <div class="ticket-form-data-container">
+              <div class="ticket-form-data">
+                <p class="subtitle">SETOR</p>
+                <select class="select-primary" id="form-data">
+                  {% for sector in sectors %}
+                    <option value="{{ sector.id }}">{{ sector.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="ticket-form-data">
+                <p class="subtitle">CATEGORIA</p>
+                <select class="select-primary" id="form-data">
+                  {% for category in tickets_categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                  {% endfor %}
+                </select>
+              </div> 
+            </div>
+            <div class="ticket-form-data-container ">
+              <div class="ticket-form-data form-description">
+                <p class="subtitle">DESCRIÇÃO</p>
+                <textarea class="ticket-form-description" id="form-data"></textarea>
+              </div>
+            </div>
+            <div class="ticket-form-button-container">
+              <button class="button-secondary" type="submit">ENVIAR</button>
+            </div>
+          </div>
+        </form>
+      </div>  
+    </div>
+
+    <div class="sector-status-container">
+      <h2 class="sector-status-title title">SETORES OPERACIONAIS</h2>
+      {% for sector in sectors %}
+        <div class="sector-status-content">
+          <div class="sector-status-name">
+            <p class="title">{{ sector.name }}</p>
+          </div>
+          <div class="sector-status">
+            <p class="sector-status-text">
+              {% if not sector.max_priority %} FUNCIONAL
+              {% elif sector.max_priority == 1 %} FUNCIONAL
+              {% elif sector.max_priority == 2 %} PARCIAL
+              {% elif sector.max_priority == 3 %} INTERROMPIDO
+              {% endif %}</p>
+            <p class="sector-status-problems 
+              {% if not sector.max_priority %} functional
+              {% elif sector.max_priority == 1 %} functional
+              {% elif sector.max_priority == 2 %} partially-functional
+              {% elif sector.max_priority == 3 %} not-functional
+              {% endif %}"> {{ sector.ticket_count }} PROBLEMAS </p>
+          </div>
+          <hr class="sector-status-bar 
+            {% if not sector.max_priority %} functional
+            {% elif sector.max_priority == 1 %} functional
+            {% elif sector.max_priority == 2 %} partially-functional
+            {% elif sector.max_priority == 3 %} not-functional
+            {% endif %}">
+        </div>
+      {% endfor %}
+    </div>
+
   </div>
+
+  <script src="{% static 'js/workers/index.js' %}"></script>
 
 {% endblock %}

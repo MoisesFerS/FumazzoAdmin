@@ -71,3 +71,88 @@
     flex-direction: column;
     overflow-y: scroll;
 }
+
+.sector-status-container{
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-detail2);
+    gap: 30px;
+    width: 950px;
+}
+
+.sector-status-content{
+    height: 240px;
+    width: 935px;
+    border-radius: 5px;
+    background-color: var(--color-detail1);
+    align-self: center;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: 1fr auto;
+}
+
+.sector-status-bar{
+    border-width: 0px 0px 20px 0px;
+    grid-column: 1 /span 2;
+    grid-row: 2;
+    margin-bottom: 10px;
+}
+
+.sector-status{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+}
+
+.sector-status-name{
+    padding: 20px;
+}
+
+.sector-status-text, .sector-status-problems{
+    width: 155px;
+    height: 35px;
+    border-radius: 5px;
+    background-color: var(--color-detail2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.functional{
+    border-color: var(--color-detail5);
+    background-color: var(--color-detail5);
+}
+
+.partially-functional{
+    border-color: var(--color-detail6);
+    background-color: var(--color-detail6);
+}
+
+.not-functional{
+    border-color: var(--color-detail7);
+    background-color: var(--color-detail7);
+}
+
+.ticket-form-content{
+    width: 930px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-detail1);
+    padding: 30px;
+    gap: 30px;
+}
+
+.ticket-form-data-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.form-description{
+    grid-column: 1 /span 2;
+}
+
+.ticket-form-description{
+    width: 100%;
+    height: 300px;
+}

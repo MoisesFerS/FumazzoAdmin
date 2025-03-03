@@ -50,11 +50,3 @@ class Notification(models.Model):
     id = models.AutoField(primary_key=True)
     message = models.TextField()
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
-
-class Ticket(models.Model):
-    id = models.AutoField(primary_key=True)
-    reason = models.TextField()
-    sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
-    priority = models.IntegerField()
-    category = models.IntegerField()
-    description = models.TextField()
