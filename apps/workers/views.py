@@ -18,13 +18,16 @@ def index(request):
 
 	worker = models.Worker.objects.get(id = request.session['worker']['id'])
 	role = worker.role
-	sector = role.sector	
+	sector = role.sector
+	shift = worker.shift	
+	shift_end = str(shift.end_time)
 
 	workerData = {
 		'sector_id' : sector.id,
 		'sector_name' : sector.name,
 		'description' : role.description,
-		'image': role.image.url if role.image else None
+		'image': role.image.url if role.image else None,
+		'shift_end' : shift_end,
 	}
 
 	notifications = models.Notification.objects.filter(sector_id = workerData['sector_id'])

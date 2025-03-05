@@ -32,16 +32,17 @@ Página Inicial
           <h2 class="font-detail1">STATUS</h2>
         </div>
         <div class="worker-data-content">
-          <h1>TESTE</h1>
+          <div class="status-indicator" id="status-indicator"></div>
+          <p class="title" id="status-indicator-text">TESTE</p>
         </div>
       </div>
 
       <div class="worker-remaining worker-content">
         <div class="worker-remaining-label">
-          <h2 class="font-detail1">HORAS RESTANTES</h2>
+          <h2 class="font-detail1">TEMPO RESTANTE</h2>
         </div>
         <div class="worker-data-content">
-          <p class="title">TESTE</p>
+          <p class="title" id="remaining-time">{{ workerData.shift_end }}</p>
         </div>
       </div>
 
