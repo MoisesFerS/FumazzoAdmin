@@ -11,12 +11,21 @@ The format is based on:
 
 ### ADDED
 - Added the `favicon.ico`.
+- Added the `error messages modal`, which displays errors on the screen for three seconds, or until the user clicks to dismiss it.
 - Added content to:
     - `worker/index.html`.
     - `core/index.html`.
+- Added `index.css` to `css/workers/` (dashboard).
+- Added `index.js` to `js/workers/` (dashboard).
+- Added `index.css` to `css/core/` (management).
+- Added the defs to workers/views.py:
+    - `index` - Renders the dashboard with worker data.
+    - `get_shift` - Gets the worker shift data.
 
 ### CHANGED
-- Changed the context to have objects, and not each attribute from worker.
+- Updated the context to pass complete worker objects instead of individual attributes.
+- Updated the authentication function in `worker/views.py`.
+- Changed the default scrollbar to a custom style for a more consistent design.
 
 ## [0.9.0] - 24/02/2025 - Adding the Stock System
 

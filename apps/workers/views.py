@@ -105,8 +105,6 @@ def authentication(request):
 	except json.JSONDecodeError:
 		return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON.'}, status=400)
 
-
-
 # Flushes the session
 def logout(request):
 	request.session.flush()
