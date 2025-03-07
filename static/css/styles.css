@@ -91,13 +91,6 @@ button, input{
   border: none;
 }
 
-/* ===== SPINNERS REMOVER ===== */
-
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button{
-    display: none;
-}
-
 .select-primary{
   height: 40px;
   width: 200px;
@@ -543,9 +536,40 @@ footer{
 @-webkit-keyframes animatetop {
   from {top:-300px; opacity:0} 
   to {top:0; opacity:1}
-  }
+}
   
-  @keyframes animatetop {
+@keyframes animatetop {
   from {top:-300px; opacity:0}
   to {top:0; opacity:1}
-  }
+}
+
+/*  ==========================================================
+    BROWSER - Styles of browser elements
+    ========================================================== */
+
+/* ===== SCROLL BAR ===== */
+
+::-webkit-scrollbar {
+  width: 12px; 
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-detail2); 
+  border-radius: 10px; 
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-detail3);
+  border-radius: 10px; 
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+/* ===== SPINNERS ===== */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button{
+    display: none;
+}
