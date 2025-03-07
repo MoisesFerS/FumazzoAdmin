@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  Refeições
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/core/meal.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <div class="main-content">
+    <h1 class="content-main-title">REFEIÇÕES</h1>
+
+    {% for type_id, type_data in entries.items %}
+      <h2>{{ type_data.name }}</h2> 
+
+      {% for category in type_data.categories %}
+        <p>{{ category.category_name }}</p> 
+
+        <ul>
+          {% for meal in category.meals %}
+            <li>{{ meal.meal_name }}</li>  
+          {% endfor %}
+        </ul>
+      {% endfor %}
+    {% endfor %}
+
+
+    <section class="stock-container">
+      {% if workerRole.permission >= 4 %}
+      <div class="stock-container-button-add">
+        <button class="button-secondary" name="add">Adicionar</button>
+      </div>
+      {% endif %}
+      <section class="stock-accordion-container" id="accordion-container">
+        {% for stock in stocks %}
+        <div class="stock-accordion" id="accordion">
+          <div class="stock-accordion-data">
+            <div class="stock-accordion-data-date">
+              <p class="stock-accordion-data-label" for="">DATA:</p>
+              <p class="stock-accordion-text" id="{{ stock.date | date:'Y-m-d' }}">{{ stock.date | date:"d/m/Y" }}
+              </p>
+            </div>
+            <div class="stock-accordion-data-supplier">
+              <p class="stock-accordion-data-label" for="">FORNECEDOR:</p>
+              <p class="stock-accordion-text" id="{{ stock.supplier_id }}">{{ stock.supplier }}</p>
+            </div>
+            <div class="stock-accordion-data-receiver">
+              <p class="stock-accordion-data-label" for="">RECEPTOR:</p>
+              <p class="stock-accordion-text" id="{{ stock.receiver_id }}">{{ stock.receiver }}</p>
+            </div>
+            <div class="stock-accordion-data-price">
+              <p class="stock-accordion-data-label" for="">PREÇO TOTAL:</p>
+              <p class="stock-accordion-text" id="{{ stock.total_price }}">{{ stock.total_price }}</p>
+            </div>
+          </div>
+          {% if workerRole.permission >= 4 %}
+          <div class="stock-accordion-buttons">
+            <button class="stock-button-edit" id="{{ stock.id }}" name="edit">
+              <img src="{% static 'icons/edit.ico' %}" class="stock-accordion-icon" alt="edit-icon">
+            </button>
+            <button class="stock-button-remove" id="{{ stock.id }}" name="remove">
+              <img src="{% static 'icons/trash-can.ico' %}" class="stock-accordion-icon" alt="remove-icon">
+            </button>
+          </div>
+          {% endif %}
+        </div>
+        <div class="stock-accordion-panel" id="panel-{{ stock.id }}">
+          {% for supply in stock.supply_set.all %}
+          <div class="stock-product-accordion">
+            <p class="" id="">{{ supply.product.name }}</p>
+          </div>
+          <div class="stock-product-accordion-panel">
+            <div class="accordion-item-detail-list">
+              <p class="accordion-item-detail-list-item">QUANTIDADE: {{ supply.quantity }}</p>
+              <p class="accordion-item-detail-list-item">PREÇO: {{ supply.price }}</p>
+            </div>
+          </div>
+          {% empty %}
+          <p>Não há produtos neste registro.</p>
+          {% endfor %}
+        </div>
+        <hr class="accordion-division">
+        {% endfor %}
+      </section>
+    </section>
+  </div>
+
+  <script src="{% static 'js/core/meal.js' %}"></script>
+
+{% endblock %}

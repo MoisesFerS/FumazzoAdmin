@@ -239,6 +239,45 @@ def ticket_add(request):
   except json.JSONDecodeError:
     return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
 
+def meal(request):
+  if 'worker' not in request.session:
+    return redirect('workers:login')
+  
+  types = [1, 2, 3, 4] 
+  entries = { 
+    1: {"name": "LANCHES", "categories": []}, 
+    2: {"name": "SOBREMESAS", "categories": []},
+    3: {"name": "PORÇÕES", "categories": []},
+    4: {"name": "BEBIDAS", "categories": []}
+  }
+
+
+  for type in types:
+    categories = models.Category.objects.filter(type=type)
+
+    for category in categories:
+      category_data = {
+        "category_name": category.name,  
+        "category_id": category.id,
+        "meals": []  
+      }
+        
+      meals = models.Meal.objects.filter(category=category)
+        
+      for meal in meals:
+        category_data["meals"].append({"meal_name": meal.name, "meal_id": meal.id})
+
+      entries[type]["categories"].append(category_data)
+
+  context = {
+    'worker': request.session.get('worker'),
+    'workerRole': request.session.get('workerRole'),
+    'entries': entries,
+  }
+
+  return render(request, 'core/meal.html', context)
+
+
 # ===== TESTS =====
 
 def category(request):
@@ -370,51 +409,3 @@ def product(request):
     else:
         return redirect('workers:login')
  
-def meal(request):
-    if 'worker' not in request.session:
-
-        form = forms.MealRegister()
-        form_path = 'partials/forms/core/meal.html'
-
-        if request.method == 'POST':
-            form = forms.MealRegister(request.POST, request.FILES)
-
-
-            if form.is_valid():
-                name_ = form.cleaned_data.get('name')
-                price_ = form.cleaned_data.get('price')
-                category_ = form.cleaned_data.get('category')
-                description_ = form.cleaned_data.get('description')
-                calories_ = form.cleaned_data.get('calories')
-                image_ = form.cleaned_data.get('image')
-
-                meal = models.Meal(
-                    name = name_,
-                    price = price_,
-                    category = category_,
-                    description = description_,
-                    calories = calories_,
-                    image = image_,
-                )
-
-                try:
-                    meal.save()
-                    messages.success(request, "Refeição registrado com sucesso!")
-                    return redirect('worker:index') 
-                except Exception as e:
-                    messages.error(request, f"Erro ao fazer o registro: {e}")
-
-        context = {
-            'workerID': request.session['workerID'],
-            'worker_first_name': request.session.get('worker_first_name', ''),
-            'worker_last_name': request.session.get('worker_last_name', ''),
-            'workerRole.permission': request.session.get('workerRole.permission', ''),
-            'worker_role': request.session.get('worker_role', ''),
-            'form': form,
-            'form_path' : form_path,
-        }
-
-
-        return render(request, 'partials/forms/template.html', context)
-    else:
-        return redirect('workers:login')

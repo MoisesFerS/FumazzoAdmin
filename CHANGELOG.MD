@@ -7,6 +7,14 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.11.0] - 24/02/2025 - Adding the Stock System
+
+### ADDED
+- Added `meal.html` to `templates/core/`.
+- Added `meal.css` to `css/core/`.
+- Added `meal.js` to `js/core/`.
+- Added the link to meal system on the `navbar`.
+
 ## [0.10.0] - 27/02/2025 - Developing the index's Pages
 
 ### ADDED
