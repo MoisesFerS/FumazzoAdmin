@@ -20,7 +20,7 @@ Página Inicial
 
       <div class="worker-sector worker-content">
         <div class="worker-sector-label">
-          <h2 class="font-detail1">SETOR</h2>
+          <h2 class="detail-subtitle1">SETOR</h2>
         </div>
         <div class="worker-data-content">
           <p class="title">{{ workerData.sector_name }}</p>
@@ -29,7 +29,7 @@ Página Inicial
 
       <div class="worker-status worker-content">
         <div class="worker-status-label">
-          <h2 class="font-detail1">STATUS</h2>
+          <h2 class="detail-subtitle1">STATUS</h2>
         </div>
         <div class="worker-data-content">
           <div class="status-indicator" id="status-indicator"></div>
@@ -39,25 +39,31 @@ Página Inicial
 
       <div class="worker-remaining worker-content">
         <div class="worker-remaining-label">
-          <h2 class="font-detail1">TEMPO RESTANTE</h2>
+          <h2 class="detail-subtitle1">TEMPO RESTANTE</h2>
         </div>
         <div class="worker-data-content">
           <p class="title" id="remaining-time">{{ workerData.shift_end }}</p>
+        </div>
+        <div class="worker-remaining-text">
+          <p class="detail-text1">TURNO: </p><p id="shift-name"></p>
         </div>
       </div>
 
       <div class="worker-permission worker-content">
         <div class="worker-permission-label">
-          <h2 class="font-detail1">PERMISSÃO</h2>
+          <h2 class="detail-subtitle1">PERMISSÃO</h2>
         </div>
         <div class="worker-data-content">
           <p class="title">{{ workerRole.permission }}</p>
+        </div>
+        <div class="worker-permission-text-container">
+          <p class="worker-permission-text">SEU NÍVEL DE ACESSO</p>
         </div>
       </div>
 
       <div class="worker-notification worker-content">
         <div class="worker-notification-label">
-          <h2 class="font-detail1">NOTIFICAÇÕES</h2>
+          <h2 class="detail-subtitle1">NOTIFICAÇÕES</h2>
         </div>
         <div class="worker-notification-data">
           {% if notifications %}
@@ -72,7 +78,7 @@ Página Inicial
 
       <div class="worker-function worker-content">
         <div class="worker-function-label">
-          <h2 class="font-detail1">FUNÇÃO</h2>
+          <h2 class="detail-subtitle1">FUNÇÃO</h2>
         </div>
         <div class="worker-function-data">
           <p class="title">{{ workerRole.name }}</p>

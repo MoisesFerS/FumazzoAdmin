@@ -1,10 +1,19 @@
-const shiftEndStr = document.getElementById("remaining-time").innerHTML;  
-startCountdown(shiftEndStr);
+fetch(`get-shift/`)
+.then(response => response.json())
+.then(data => {
+    startCountdown(data)
+})
+.catch(error => console.error('Erro ao carregar informações do turno:', error));
 
-function startCountdown(endTimeStr) {
-  const [hours, minutes, seconds] = endTimeStr.split(":").map(Number);
+function startCountdown(data) {
+
   const now = new Date();
+  var [hours, minutes, seconds] = data.start.split(":").map(Number);
+  const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, seconds);
+  var [hours, minutes, seconds] = data.end.split(":").map(Number);
   const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, seconds);
+
+  document.getElementById('shift-name').innerHTML = data.name
 
   const statusIndicator = document.getElementById('status-indicator')
   statusIndicator.classList.add('functional')
@@ -12,20 +21,23 @@ function startCountdown(endTimeStr) {
 
   function updateCountdown() {
     const now = new Date();
-    let remainingTime = endTime - now;
-
-    if (remainingTime > 0) {
+    if(now < endTime && now > startTime){
+      
+      var remainingTime = endTime - now;
       const hoursLeft = Math.floor(remainingTime / (1000 * 60 * 60));
       const minutesLeft = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
       const secondsLeft = Math.floor((remainingTime % (1000 * 60)) / 1000);
 
       document.getElementById('remaining-time').innerHTML = (`${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`);
+
     } else {
       document.getElementById('status-indicator-text').innerHTML = `DESCANSO`
+      document.getElementById('remaining-time').innerHTML = (`00h 00m 00s`);
       statusIndicator.classList.remove('functional')
       statusIndicator.classList.add('not-functional')
       clearInterval(interval);
     }
+    
   }
 
   const interval = setInterval(updateCountdown, 1000);

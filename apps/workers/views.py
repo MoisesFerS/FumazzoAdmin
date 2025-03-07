@@ -19,15 +19,12 @@ def index(request):
 	worker = models.Worker.objects.get(id = request.session['worker']['id'])
 	role = worker.role
 	sector = role.sector
-	shift = worker.shift	
-	shift_end = str(shift.end_time)
 
 	workerData = {
 		'sector_id' : sector.id,
 		'sector_name' : sector.name,
 		'description' : role.description,
 		'image': role.image.url if role.image else None,
-		'shift_end' : shift_end,
 	}
 
 	notifications = models.Notification.objects.filter(sector_id = workerData['sector_id'])
@@ -49,6 +46,19 @@ def index(request):
 	
 	return render(request, 'workers/index.html', context)
 
+def get_shift(request):
+
+	worker = models.Worker.objects.get(id = request.session['worker']['id'])
+	shift = worker.shift
+
+	data = {
+		'start' : shift.start_time,
+		'end' : shift.end_time,
+		'name' : shift.name
+	}
+
+	return JsonResponse(data, safe=False)
+
 #   ============================================================
 #   LOGIN - Defs related to User login
 #   ============================================================ 
@@ -58,46 +68,6 @@ def login(request):
 	return render(request, 'workers/login.html')
 
 # Authenticates the user
-def authentication(request):
-
-	if request.method != 'POST':
-		return JsonResponse({'status': 'error', 'error' : '405', 'message': 'Método inválido.'}, status=405)	
-
-	try:
-
-		data = json.loads(request.body)
-
-		if not data.get('id') or not data.get('password'):
-			return JsonResponse({'status': 'error', 'error' : '400', 'message': 'ID e senha são obrigatórios.'}, status=400)
-
-		try:
-			worker = models.Worker.objects.get(id = data.get('id'))
-		except:
-			return JsonResponse({'status': 'error', 'error' : '400', 'message': 'Credenciais inválidas.'}, status=400)
-
-		if bcrypt.checkpw(data.get('password').encode('UTF-8'), worker.password.encode('UTF-8')):
-
-			role = worker.role                    
-
-			request.session['worker'] = {
-				'id' : worker.id,
-				'first_name' : worker.first_name,
-				'last_name' : worker.last_name,
-			}
-			request.session['workerRole'] = {
-				'permission' : role.permission,
-				'name': role.name,
-			}
-
-			return redirect('workers:index')  
-		
-		else:
-			return JsonResponse({'status': 'error', 'error' : '400', 'message': 'Credenciais inválidas.'}, status=400)
-
-	except json.JSONDecodeError:
-		return JsonResponse({'status': 'error', 'error' : '400', 'message': 'Erro ao processar JSON'}, status=400)
-	
-
 def authentication(request):
 	if request.method != 'POST':
 		return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)

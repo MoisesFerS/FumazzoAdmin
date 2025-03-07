@@ -47,6 +47,17 @@
     grid-row: 1 /span 2 ;
 }
 
+.worker-remaining-text{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.worker-permission-text-container{
+    display: flex;
+    justify-content: center;
+}
+
 .worker-function{
     grid-column: 1 /span 3;
     grid-row: 3;

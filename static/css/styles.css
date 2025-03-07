@@ -67,7 +67,8 @@
   --font-subtitle: normal normal var(--weight-semibold) var(--size-subtitle) var(--font-oswald);
   --font-text: normal normal var(--weight-regular) var(--size-text) var(--font-dmsans);
   --font-caption: normal normal var(--weight-ligth) var(--size-caption) var(--font-dmsans);
-  --font-detail1: normal normal var(--weigth-thin) var(--size-subtitle) var(--font-dmsans);
+  --detail-subtitle1: normal normal var(--weigth-thin) var(--size-subtitle) var(--font-dmsans);
+  --detail-text1: normal normal var(--weigth-thin) var(--size-text) var(--font-dmsans);
 
 }
 
@@ -160,8 +161,13 @@ label{
   color: var(--color-detail4);
 }
 
-.font-detail1{
-  font: var(--font-detail1);
+.detail-subtitle1{
+  font: var(--detail-subtitle1);
+  color: var(--color-detail4);
+}
+
+.detail-text1{
+  font: var(--detail-text1);
   color: var(--color-detail4);
 }
 
