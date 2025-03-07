@@ -4,12 +4,179 @@
 Página Inicial
 {% endblock %}
 
-{% block css %}{% endblock %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/workers/index.css' %}">
+{% endblock %}
 
 {% block content %}
 
   <div class="main-content">
 
+    <h1>OLÁ, {{ worker.first_name }}</h1>
+    
+    <div class="worker-data-container">      
+
+      <div class="worker-sector worker-content">
+        <div class="worker-sector-label">
+          <h2 class="detail-subtitle1">SETOR</h2>
+        </div>
+        <div class="worker-data-content">
+          <p class="title">{{ workerData.sector_name }}</p>
+        </div>
+      </div>
+
+      <div class="worker-status worker-content">
+        <div class="worker-status-label">
+          <h2 class="detail-subtitle1">STATUS</h2>
+        </div>
+        <div class="worker-data-content">
+          <div class="status-indicator" id="status-indicator"></div>
+          <p class="title" id="status-indicator-text">TESTE</p>
+        </div>
+      </div>
+
+      <div class="worker-remaining worker-content">
+        <div class="worker-remaining-label">
+          <h2 class="detail-subtitle1">TEMPO RESTANTE</h2>
+        </div>
+        <div class="worker-data-content">
+          <p class="title" id="remaining-time">{{ workerData.shift_end }}</p>
+        </div>
+        <div class="worker-remaining-text">
+          <p class="detail-text1">TURNO: </p><p id="shift-name"></p>
+        </div>
+      </div>
+
+      <div class="worker-permission worker-content">
+        <div class="worker-permission-label">
+          <h2 class="detail-subtitle1">PERMISSÃO</h2>
+        </div>
+        <div class="worker-data-content">
+          <p class="title">{{ workerRole.permission }}</p>
+        </div>
+        <div class="worker-permission-text-container">
+          <p class="worker-permission-text">SEU NÍVEL DE ACESSO</p>
+        </div>
+      </div>
+
+      <div class="worker-notification worker-content">
+        <div class="worker-notification-label">
+          <h2 class="detail-subtitle1">NOTIFICAÇÕES</h2>
+        </div>
+        <div class="worker-notification-data">
+          {% if notifications %}
+            {% for notification in notifications %}
+              <p>○ {{ notification.message }}</p>
+            {% endfor %}
+          {% else %}
+            <p>Não há notificações hoje.</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="worker-function worker-content">
+        <div class="worker-function-label">
+          <h2 class="detail-subtitle1">FUNÇÃO</h2>
+        </div>
+        <div class="worker-function-data">
+          <p class="title">{{ workerRole.name }}</p>
+          <p class="caption"> {{ workerData.description }} </p>
+        </div>
+        <div class="worker-function-image-container">
+          <img class="worker-function-image" src="{{ workerData.image }}" alt="Imagem do cargo">
+        </div>
+      </div>
+
+    </div>
+
+    <div class="ticket-container">
+      <div class="ticket-title-container">
+        <p class="ticket-title title">TICKET</p>
+      </div>
+      <div class="ticket-form-container">
+        <form action="POST" id="ticket-form">
+          <div class="ticket-form-content">
+            <div class="ticket-form-data-container">
+              <div class="ticket-form-data">
+                <p class="subtitle">MOTIVO</p> 
+                <input type="text" class="input-primary" id="form-data">
+              </div>
+              <div class="ticket-form-data">
+                <p class="subtitle">PRIORIDADE</p>
+                <select class="select-primary" id="form-data">
+                  <option value="1">BAIXA</option>
+                  <option value="2">MÉDIA</option>
+                  <option value="3">ALTA</option>
+                </select> 
+              </div>
+            </div>
+            <div class="ticket-form-data-container">
+              <div class="ticket-form-data">
+                <p class="subtitle">SETOR</p>
+                <select class="select-primary" id="form-data">
+                  {% for sector in sectors %}
+                    <option value="{{ sector.id }}">{{ sector.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="ticket-form-data">
+                <p class="subtitle">CATEGORIA</p>
+                <select class="select-primary" id="form-data">
+                  {% for category in tickets_categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                  {% endfor %}
+                </select>
+              </div> 
+            </div>
+            <div class="ticket-form-data-container ">
+              <div class="ticket-form-data form-description">
+                <p class="subtitle">DESCRIÇÃO</p>
+                <textarea class="ticket-form-description" id="form-data"></textarea>
+              </div>
+            </div>
+            <div class="ticket-form-button-container">
+              <button class="button-secondary" type="submit">ENVIAR</button>
+            </div>
+          </div>
+        </form>
+      </div>  
+    </div>
+
+    <div class="sector-status-container">
+      <h2 class="sector-status-title title">SETORES OPERACIONAIS</h2>
+      {% for sector in sectors %}
+        <div class="sector-status-content">
+          <div class="sector-status-name">
+            <p class="title">{{ sector.name }}</p>
+          </div>
+          <div class="sector-status">
+            <p class="sector-status-text">
+              {% if not sector.max_priority %} FUNCIONAL
+              {% elif sector.max_priority == 1 %} FUNCIONAL
+              {% elif sector.max_priority == 2 %} PARCIAL
+              {% elif sector.max_priority == 3 %} INTERROMPIDO
+              {% endif %}</p>
+            <p class="sector-status-problems 
+              {% if not sector.max_priority %} functional
+              {% elif sector.max_priority == 1 %} functional
+              {% elif sector.max_priority == 2 %} partially-functional
+              {% elif sector.max_priority == 3 %} not-functional
+              {% endif %}"> {{ sector.ticket_count }} PROBLEMAS </p>
+          </div>
+          <hr class="sector-status-bar 
+            {% if not sector.max_priority %} functional
+            {% elif sector.max_priority == 1 %} functional
+            {% elif sector.max_priority == 2 %} partially-functional
+            {% elif sector.max_priority == 3 %} not-functional
+            {% endif %}">
+        </div>
+      {% endfor %}
+    </div>
+
   </div>
+
+  <script src="{% static 'js/workers/index.js' %}"></script>
 
 {% endblock %}

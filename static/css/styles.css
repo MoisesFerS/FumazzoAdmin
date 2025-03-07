@@ -1,8 +1,8 @@
 /* GLOBAL CSS */
 
-/*  ==========================================================
+/*  ============================================================
     IMPORTS - Files imports     
-    ========================================================== */ 
+    ============================================================ */ 
 
 /* ===== FONTS ===== */
 
@@ -23,9 +23,9 @@
   font-style: normal;
 }
 
-/*  ==========================================================
+/*  ============================================================
     VARIABLES - Global variables   
-    ========================================================== */ 
+    ============================================================ */ 
 
 :root{
 
@@ -33,12 +33,13 @@
 
   --color-primary: #000000; /* Black */
   --color-secundary: #F6872C; /* Orange */
-  --color-detail1: #1B1B1B; /* Dark Gray */
-  --color-detail2: #333333; /* Gray */
-  --color-detail3: #FFEBD8; /* Cream */
-  --color-detail4: #0C871A; /* Green */
-  --color-detail5: #DCB61D; /* Mustard */
-  --color-detail6: #A81414; /* Red */
+  --color-detail1: #0d0d0d; /* Darker Gray */
+  --color-detail2: #1B1B1B; /* Dark Gray */
+  --color-detail3: #333333; /* Gray */
+  --color-detail4: #FFEBD8; /* Cream */
+  --color-detail5: #0C871A; /* Green */
+  --color-detail6: #DCB61D; /* Mustard */
+  --color-detail7: #A81414; /* Red */
 
 
   /* ===== FONTS CONFIGURATIONS ===== */
@@ -54,23 +55,26 @@
   --size-caption: 0.8rem;
 
   /* Weight */
-  --weight-title: 700;
-  --weight-subtitle: 600;
-  --weight-text: 400;
-  --weight-caption: 300;
+  --weight-bold: 700;
+  --weight-semibold: 600;
+  --weight-regular: 400;
+  --weight-ligth: 300;
+  --weigth-thin: 100;
 
   /* ===== FONTS SETS ===== */
 
-  --font-title: normal normal var(--weight-title) var(--size-title) var(--font-oswald);
-  --font-subtitle: normal normal var(--weight-subtitle) var(--size-subtitle) var(--font-oswald);
-  --font-text: normal normal var(--weight-text) var(--size-text) var(--font-dmsans);
-  --font-caption: normal normal var(--weight-caption) var(--size-caption) var(--font-dmsans);
+  --font-title: normal normal var(--weight-bold) var(--size-title) var(--font-oswald);
+  --font-subtitle: normal normal var(--weight-semibold) var(--size-subtitle) var(--font-oswald);
+  --font-text: normal normal var(--weight-regular) var(--size-text) var(--font-dmsans);
+  --font-caption: normal normal var(--weight-ligth) var(--size-caption) var(--font-dmsans);
+  --detail-subtitle1: normal normal var(--weigth-thin) var(--size-subtitle) var(--font-dmsans);
+  --detail-text1: normal normal var(--weigth-thin) var(--size-text) var(--font-dmsans);
 
 }
 
-/*  ==========================================================
+/*  ============================================================
     RESETS - Global resets   
-    ========================================================== */
+    ============================================================ */
 
 /* ===== GLOBAL ELEMENTS ===== */
 
@@ -87,80 +91,88 @@ button, input{
   border: none;
 }
 
-/* ===== SPINNERS REMOVER ===== */
-
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button{
-    display: none;
+.select-primary{
+  height: 40px;
+  width: 200px;
 }
 
-/*  ==========================================================
+/*  ============================================================
     BASE CONFIGURATION - Base configuration of elements
-    ========================================================== */
+    ============================================================ */
 
 /* ===== TEXT ===== */
 
 /* Paragraph */
 p{
   font: var(--font-text);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 /* Anchor */
 a{
   font: var(--font-text);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 /* Title */
 h1{
   font: var(--font-title);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 /* Subtitle */
 h2{
   font: var(--font-subtitle);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 /* Label */
 label{
   font: var(--font-text);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 /* ===== TEXT CLASSES ===== */
 
 .title{
   font: var(--font-title);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 .subtitle{
   font: var(--font-subtitle);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 .text{
   font: var(--font-text);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 .caption{
   font: var(--font-caption);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
+}
+
+.detail-subtitle1{
+  font: var(--detail-subtitle1);
+  color: var(--color-detail4);
+}
+
+.detail-text1{
+  font: var(--detail-text1);
+  color: var(--color-detail4);
 }
 
 /* ===== DATA INPUTS ===== */
 
-input, select{
+input, select, textarea{
   border-radius: 3px;
   padding-left: 15px;
   box-sizing: border-box;
   font: var(--font-text);
-  background-color: var(--color-detail2);
-  color: var(--color-detail3);
+  background-color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 /* ===== FORMS ===== */
@@ -190,9 +202,9 @@ form label input{
   height: 25px;
 }
 
-/*  ==========================================================
+/*  ============================================================
     BODY - Body of the page  
-    ========================================================== */
+    ============================================================ */
 
 body{
   background-color: var(--color-primary);
@@ -210,9 +222,15 @@ body{
   gap: 100px;
 }
 
-/*  ==========================================================
+.main-content{
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+}
+
+/*  ============================================================
     HEADER - Top element of the page structure 
-    ========================================================== */
+    ============================================================ */
 
 /* ===== BASE CONFIG ===== */
 
@@ -266,7 +284,7 @@ nav{
 
 /* Navbar link hover effect */
 .navbar-link:hover, .navbar-dropdown-toggle:hover{
-  background-color: var(--color-detail2);
+  background-color: var(--color-detail3);
   color: var(--color-secundary);
   border-radius: 3px;
   cursor: pointer;
@@ -282,7 +300,7 @@ nav{
 .navbar-dropdown-menu{
   display: none;
   position: absolute;
-  background-color: var(--color-detail2);
+  background-color: var(--color-detail3);
   border-radius: 0px 0px 10px 10px;
   width: 6.25rem;
   z-index: 1;
@@ -300,12 +318,12 @@ nav{
 
 /* Dropdown options hover effect */
 .navbar-dropdown-item-link:hover{
-  background-color: var(--color-detail1);
+  background-color: var(--color-detail2);
 }
 
 /* Efeito de hover no "Gerenciar" quando o menu estiver ativo */
 .navbar-dropdown:hover .navbar-dropdown-toggle{
-  background-color: var(--color-detail1);  /* Aplica o efeito de hover no "Gerenciar" */
+  background-color: var(--color-detail2);  /* Aplica o efeito de hover no "Gerenciar" */
   color: var(--color-secundary);  /* Altera a cor do texto, se necessário */
 }
 
@@ -319,9 +337,9 @@ nav{
   content: url("../icons/up-arrow.ico");
 }
 
-/*  ==========================================================
+/*  ============================================================
     MAIN - Middle element of the page structure 
-    ========================================================== */
+    ============================================================ */
 
 /* ===== BASE CONFIG ===== */
 
@@ -344,9 +362,9 @@ main{
   align-items: center;
 }
 
-/*  ==========================================================
+/*  ============================================================
     FOOTER - Bottom element of the page structure 
-    ========================================================== */
+    ============================================================ */
 
 /* ===== BASE CONFIG ===== */
 
@@ -394,9 +412,9 @@ footer{
   align-self: end;
 }
 
-/*  ==========================================================
+/*  ============================================================
     BUTTONS - Buttons styles
-    ========================================================== */
+    ============================================================ */
 
 /* Primary */
 .button-primary{
@@ -404,7 +422,7 @@ footer{
   align-items: center;
   justify-content: center;
   font: var(--font-text);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
   width: 11.5rem;
   height: 3.25rem;
   background-color: var(--color-secundary);
@@ -425,30 +443,30 @@ footer{
   align-items: center;
   justify-content: center;
   font: var(--font-text);
-  color: var(--color-detail3);
+  color: var(--color-detail4);
   width: 11.25rem;
   height: 3.125rem;
-  background-color: var(--color-detail4);
-  border: 3px solid var(--color-detail4);
+  background-color: var(--color-detail5);
+  border: 3px solid var(--color-detail5);
   border-radius: 3px;
   transition: background-color 0.3s, color 0.3s;
 }
 
 .button-secondary:hover{
   background-color: var(--color-primary);
-  color: var(--color-detail4);
+  color: var(--color-detail5);
   cursor: pointer;
 }
 
-/*  ==========================================================
+/*  ============================================================
     INPUTS - Inputs styles
-    ========================================================== */
+    ============================================================ */
 
 .input-primary{
   width: 350px;
   height: 40px;
-  background-color: var(--color-detail2);
-  color: var(--color-detail3);
+  background-color: var(--color-detail3);
+  color: var(--color-detail4);
 }
 
 .login-form{
@@ -457,4 +475,101 @@ footer{
   display: flex;
   flex-direction: column;
 
+}
+
+/*  ============================================================
+    MODAL - Modals used for the messages
+    ============================================================ */ 
+
+/* ===== CONTAINER ===== */
+
+/* Dark background */
+.message-modal-container{
+  display: none; 
+  position: fixed; 
+  z-index: 1;
+  padding-top: 80vh; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.4); 
+}
+
+/* ===== CONTENT ===== */
+
+/* Modal content */
+.message-modal-content{
+  position: relative;
+  background-color: var(--color-detail2);
+  margin: auto;
+  width: 500px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  -webkit-animation-name: animatetop;
+  -webkit-animation-duration: 0.4s;
+  animation-name: animatetop;
+  animation-duration: 0.4s
+}
+
+.message-modal-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 20px;
+}
+
+/* Modal Header */
+.message-modal-header{
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+/* ===== ANIMATION ===== */
+
+@-webkit-keyframes animatetop {
+  from {top:-300px; opacity:0} 
+  to {top:0; opacity:1}
+}
+  
+@keyframes animatetop {
+  from {top:-300px; opacity:0}
+  to {top:0; opacity:1}
+}
+
+/*  ==========================================================
+    BROWSER - Styles of browser elements
+    ========================================================== */
+
+/* ===== SCROLL BAR ===== */
+
+::-webkit-scrollbar {
+  width: 12px; 
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-detail2); 
+  border-radius: 10px; 
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-detail3);
+  border-radius: 10px; 
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+/* ===== SPINNERS ===== */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button{
+    display: none;
 }

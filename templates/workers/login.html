@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="main-content">
   <div class="login-container">
 
@@ -21,9 +22,22 @@
 
     <section class="login-form-container">
       <h1 class="login-form-title">LOG-IN</h1>
-      {% include form_path %}
+      <form class="login-form" id="login-form" method="POST">
+        <div class="login-form-data">
+          <h2>ID</h2>
+          <input type="number" class="input-primary" id="id" required>
+        </div>
+        <div>
+          <h2>SENHA</h2>
+          <input type="password" class="input-primary" id="password" required>
+        </div>
+        <button class="button-primary" id="confirm" type="submit">CONFIRMAR</button>
+      </form>
     </section>
     
   </div>
 </div>
+
+<script src="{% static 'js/workers/login.js' %}"></script>
+
 {% endblock %}

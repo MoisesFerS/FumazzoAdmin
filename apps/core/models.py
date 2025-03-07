@@ -1,5 +1,4 @@
 from django.db import models
-from apps.workers.models import Worker
 from phonenumber_field.modelfields import PhoneNumberField
 
 class Supplier(models.Model):
@@ -21,6 +20,7 @@ class Category(models.Model):
         (3, 'Porção'),
         (4, 'Bebida'),
         (5, 'Produtos'),
+        (6, 'Tickets')
     ]
     type = models.IntegerField(choices=type_choices, default=1)
 
@@ -32,7 +32,7 @@ class Product(models.Model):
     name = models.CharField(max_length=50)
     quantity = models.IntegerField()
     individual_price = models.IntegerField()
-    image = models.ImageField(upload_to='core/products', null=True, blank=True)
+    image = models.ImageField(upload_to='core/products/', null=True, blank=True)
     status_choices = [
         (1, 'Cheio(100%)'),
         (2, 'Metade(50%)'),
@@ -55,6 +55,7 @@ class Product(models.Model):
         return self.name
 
 class Stock(models.Model):
+    from apps.workers.models import Worker
     id = models.AutoField(primary_key=True)
     date = models.DateField()
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -74,7 +75,7 @@ class Meal(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2)
     description = models.TextField()
     calories = models.IntegerField()
-    image = models.ImageField(upload_to='core/meals', null=True, blank=True)
+    image = models.ImageField(upload_to='core/meals/', null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -85,3 +86,13 @@ class Product_meal(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
     quantity = models.IntegerField()
+
+class Ticket(models.Model):
+    from apps.workers.models import Sector
+    id = models.AutoField(primary_key=True)
+    reason = models.TextField()
+    sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
+    priority = models.IntegerField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    description = models.TextField()
+    status = models.IntegerField(default=0)

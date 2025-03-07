@@ -11,11 +11,11 @@ Estoque
 {% endblock %}
 
 {% block content %}
-<div class="content-main">
+<div class="main-content">
   <h1 class="content-main-title">REGISTROS DO ESTOQUE</h1>
 
   <section class="stock-container">
-    {% if worker_permisson >= 4 %}
+    {% if workerRole.permission >= 4 %}
     <div class="stock-container-button-add">
       <button class="button-secondary" name="add">Adicionar</button>
     </div>
@@ -42,7 +42,7 @@ Estoque
             <p class="stock-accordion-text" id="{{ stock.total_price }}">{{ stock.total_price }}</p>
           </div>
         </div>
-        {% if worker_permisson >= 4 %}
+        {% if workerRole.permission >= 4 %}
         <div class="stock-accordion-buttons">
           <button class="stock-button-edit" id="{{ stock.id }}" name="edit">
             <img src="{% static 'icons/edit.ico' %}" class="stock-accordion-icon" alt="edit-icon">
@@ -74,7 +74,7 @@ Estoque
   </section>
 </div>
 
-{% if worker_permisson >= 4 %}
+{% if workerRole.permission >= 4 %}
 <!-- Modals -->
 <div class="stock-modal-container" id="modal-add">
   <div class="stock-modal-content">
@@ -129,7 +129,6 @@ Estoque
           {% endfor %}
         </select>
         <input type="date" id="stock-edit-date" class="form-input-text" />
-        <input type="number" id="stock-edit-price" class="form-input-number" />
         <h2 class="products-title">PRODUTOS:</h2>
         <div class="products-container" id="products-container"></div>
         <button class="product-button-add title" id="add-product" type="button">+</button>

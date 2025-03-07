@@ -1,6 +1,6 @@
-/*  ==========================================================
-  ACCORDIONS - Accordions functions
-  ========================================================== */ 
+/*  ============================================================
+    ACCORDIONS - Accordions functions
+    ============================================================ */ 
 
 /* Add 'onclick' to accordions */
 document.querySelector('.stock-accordion-container').addEventListener('click', function(event){
@@ -35,9 +35,9 @@ function expand(accordion){
 
 }
 
-/*  ==========================================================
-  MODALS - Modals functions   
-  ========================================================== */ 
+/*  ============================================================
+    MODALS - Modals functions   
+    ============================================================ */ 
 
 /* Function to open the modals dynamically */
 document.querySelectorAll("[name='add'], [name='edit'], [name='remove']")
@@ -56,19 +56,13 @@ document.querySelectorAll("[name='add'], [name='edit'], [name='remove']")
     });
   });
 
-/* Function that gets the csrf token from the cookies */
-function getToken() {
-  return document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1] || '';
-}
-
-
 /* Get the selects info */
 let selectItems = [];
 
 fetch(`edit/get-products/`)
 .then(response => response.json())
 .then(data => {
-  selectItems = data
+    selectItems = data
 })
 .catch(error => console.error('Erro ao carregar categorias e produtos:', error));
 
@@ -87,11 +81,6 @@ document.getElementById('confirm-add').addEventListener('click', async function 
     receiver: addData[2]?.value,
   };
 
-  if (!data.date) {
-    alert("Preencha todos os campos.");
-    return;
-  }
-
   let csrfToken = getToken();
 
   await fetch(`add/`, {
@@ -100,9 +89,20 @@ document.getElementById('confirm-add').addEventListener('click', async function 
                 'X-CSRFToken': csrfToken,
       },
     body: JSON.stringify(data)
-  });
-
-  location.reload(); 
+  })
+  .then(response => response.json())
+  .then(data => {
+    if(data.status == 'success'){
+      location.reload(); 
+    } else {          
+      message.style.display = 'block';        
+      message.querySelector('#message-text').innerHTML = data.message; 
+      message.querySelector('#message-error').innerHTML = data.error;
+      setTimeout(() => {
+        message.style.display = 'none'; 
+      }, 3000);
+    }
+  }); 
 
 });
 
@@ -124,7 +124,6 @@ document.querySelectorAll("[name='edit']")
       document.getElementById('stock-edit-supplier').value = supplier;
       document.getElementById('stock-edit-receiver').value = receiver;
       document.getElementById('stock-edit-date').value = date;
-      document.getElementById('stock-edit-price').value = price;
 
       document.querySelector('.modal-edit-form').id = edit.id;
       const productsContainer = document.getElementById('products-container');
@@ -132,8 +131,17 @@ document.querySelectorAll("[name='edit']")
 
       fetch(`edit/load-product/${edit.id}/`)
       .then(response => response.json())
-      .then(data => {
-        data.forEach(data => createProduct(data));
+      .then(data => { 
+        if(data.status == 'success'){
+          data.data.forEach(data => createProduct(data));
+        } else {          
+          message.style.display = 'block';        
+          message.querySelector('#message-text').innerHTML = data.message; 
+          message.querySelector('#message-error').innerHTML = data.error;
+          setTimeout(() => {
+            message.style.display = 'none'; 
+          }, 3000);
+        }
       })
       .catch(error => console.error('Erro ao carregar categorias e produtos:', error));
 
@@ -170,10 +178,20 @@ document.getElementById('confirm-edit').addEventListener('click', async function
     };
 
     if (!productData.item || !productData.quantity || !productData.price) {
-      alert(`Preencha todos os campos de todos os produtos.`);
+      message.style.display = 'block';
+      message.querySelector('#message-error').innerHTML = `Falha`;
+      message.querySelector('#message-text').innerHTML = `Preencha todos os campos de todos os produtos.`; 
+      setTimeout(() => {
+        message.style.display = 'none'; 
+      }, 3000);
       hasError = true
     } else if (productData.quantity < 0 || productData.price < 0) {
-      alert(`Os valores não podem ser negativos.`);
+      message.style.display = 'block';
+      message.querySelector('#message-error').innerHTML = `Falha`;
+      message.querySelector('#message-text').innerHTML = `Os valores não podem ser negativos.`; 
+      setTimeout(() => {
+        message.style.display = 'none'; 
+      }, 3000);
       hasError = true
     } else {
       products.push(productData);
@@ -196,9 +214,21 @@ document.getElementById('confirm-edit').addEventListener('click', async function
                 'X-CSRFToken': csrfToken,
       },
     body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if(data.status == 'success'){
+      location.reload(); 
+    } else {          
+      message.style.display = 'block';        
+      message.querySelector('#message-text').innerHTML = data.message; 
+      message.querySelector('#message-error').innerHTML = data.error;
+      setTimeout(() => {
+        message.style.display = 'none'; 
+      }, 3000);
+    }
   });
 
-  location.reload(); 
 });
 
 /* Function to add products in edit modal */
@@ -213,7 +243,7 @@ function createProduct(data=null){
   productsContainer.appendChild(product);
 
   const select = document.createElement('select');
-  select.classList.add('product-select')
+  select.classList.add('select-primary')
   select.id = "product-item"
 
   selectItems.forEach(item => {
@@ -279,10 +309,21 @@ document.querySelectorAll("[name='remove']")
           headers: { 'Content-Type': 'application/json',
                       'X-CSRFToken': csrfToken,
             },        
+        })
+        .then(response => response.json())
+        .then(data => {
+          if(data.status == 'success'){
+            location.reload(); 
+          } else {          
+            message.style.display = 'block';        
+            message.querySelector('#message-text').innerHTML = data.message; 
+            message.querySelector('#message-error').innerHTML = data.error;
+            setTimeout(() => {
+              message.style.display = 'none'; 
+            }, 3000);
+          }
         });
 
-        location.reload(); 
-
       });
-    });
+    });    
   });

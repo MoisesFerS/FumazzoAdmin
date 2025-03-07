@@ -5,185 +5,244 @@ from . import forms
 from django.contrib import messages 
 from django.db.models import Q
 import json
+from apps.workers.models import Worker, Sector
 
+#   ============================================================
+#   INDEX - Defs related to Index page(manage)
+#   ============================================================ 
+
+# Render index page
 def index(request):
-  if 'workerID' in request.session:
-    context = {
-      'workerID': request.session['workerID'],
-      'worker_first_name': request.session.get('worker_first_name', ''),
-      'worker_last_name': request.session.get('worker_last_name', ''),
-      'worker_permisson': request.session.get('worker_permission', ''),
-      'worker_role': request.session.get('worker_role', ''),
-    }
-    return render(request, 'core/index.html', context)
-  else:
+
+  if 'worker' not in request.session:
     return redirect('workers:login')
-    
+  
+  context = {
+    'worker': request.session.get('worker'),
+    'workerRole': request.session.get('workerRole'),
+  }
+  return render(request, 'core/index.html', context)    
+
+#   ============================================================
+#   STOCK SYSTEM - Defs related to Stock page
+#   ============================================================ 
+
+# Render Stock page
 def stock(request):
-    if 'workerID' in request.session:
 
-        stocks = models.Stock.objects.all().order_by('date')
-        suppliers = models.Supplier.objects.all()
-        receivers = models.Worker.objects.all()
+  if 'worker' not in request.session:
+    return redirect('workers:login')
 
-        context = {
-            'workerID': request.session['workerID'],
-            'worker_first_name': request.session.get('worker_first_name', ''),
-            'worker_last_name': request.session.get('worker_last_name', ''),
-            'worker_permisson': request.session.get('worker_permission', ''),
-            'worker_role': request.session.get('worker_role', ''),
-            'stocks': stocks,
-            'suppliers': suppliers,
-            'receivers' : receivers,
-        }
+  stocks = models.Stock.objects.all().order_by('date')
+  suppliers = models.Supplier.objects.all()
+  receivers = Worker.objects.all()
 
-        return render(request, 'core/stock.html', context)
-    else:
-        return redirect('workers:login')
-    
+  context = {
+    'worker': request.session.get('worker'),
+    'workerRole': request.session.get('workerRole'),
+    'stocks': stocks,
+    'suppliers': suppliers,
+    'receivers' : receivers,
+  }
+
+  return render(request, 'core/stock.html', context)
+
+# Gets the Products and Categories shown in the select 
 def get_products(request):
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+  
   categories = models.Category.objects.filter(Q(type=5) | Q(type=4))
   products = models.Product.objects.all()
   data = []
   for category in categories:
     products_in_category = [
-        {'id': product.id, 'name': product.name}
-        for product in products if product.category.id == category.id
+      {'id': product.id, 'name': product.name}
+      for product in products if product.category.id == category.id
     ]
     data.append({
-        'categories': category.name,
-        'products': products_in_category
+      'categories': category.name,
+      'products': products_in_category
     })
     
   return JsonResponse(data, safe=False)
 
+# Add a stock entry
 def stock_add(request):
-    if request.method == 'POST':
-        if 'workerID' in request.session:
-            if request.session.get('worker_permission', 0) >= 4:
-                try:
-                    data = json.loads(request.body)
 
-                    date_ = data.get('date')                    
-                    supplier_ = models.Supplier.objects.filter(id = data.get('supplier')).first()
-                    receiver_ =  models.Worker.objects.filter(id = data.get('receiver')).first()
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
 
-                    models.Stock.objects.create(
-                        date = date_,
-                        supplier = supplier_,
-                        receiver = receiver_,
-                    )
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
 
-                    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+  
+  try:
+    data = json.loads(request.body)
 
-                except json.JSONDecodeError:
-                    return JsonResponse({'status': 'error', 'message': 'Erro ao processar JSON'}, status=400)
+    if not data.get('date'):
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
 
-            return JsonResponse({'status': 'error', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
-        return JsonResponse({'status': 'error', 'message': 'Usuário não autenticado.'}, status=403)
-    return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=405)
+    date_ = data.get('date')                    
+    supplier_ = models.Supplier.objects.filter(id = data.get('supplier')).first()
+    receiver_ =  models.Worker.objects.filter(id = data.get('receiver')).first()
 
+    models.Stock.objects.create(
+      date = date_,
+      supplier = supplier_,
+      receiver = receiver_,
+    )
+
+    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
+
+  except json.JSONDecodeError:
+    return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
+
+# Loads every Product from a Stock entry in the Edit Modal
 def load_product(request, id):
 
-    stock = get_object_or_404(models.Stock, id=id)
-    resupplies = stock.supply_set.all()
+  stock = get_object_or_404(models.Stock, id=id)
+  resupplies = stock.supply_set.all()
 
-    data = []
-    
-    for supply in resupplies:
-        current_product = supply.product.id 
-        data.append({
-            'current_product': current_product, 
-            'quantity': supply.quantity,
-            'price': str(supply.price),
-        })
-    
-    return JsonResponse(data, safe=False)
+  data = []
+  
+  for supply in resupplies:
+    current_product = supply.product.id 
+    data.append({
+      'current_product': current_product, 
+      'quantity': supply.quantity,
+      'price': str(supply.price),
+    })
+  
+  return JsonResponse({'status': 'success', 'message': 'Produtos carregados com sucesso', 'data' : data})
 
+# Save a stock entry edit
 def stock_edit_save(request, id):
-    if request.method == 'POST':
-        if 'workerID' in request.session:
-            if request.session.get('worker_permission', 0) >= 4:
-                try:
-                    data = json.loads(request.body)
 
-                    edit = data.get('edit', {})
-                    products = data.get('products', [])
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
 
-                    stock = get_object_or_404(models.Stock, id=id)
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
 
-                    supplies = models.Supply.objects.filter(stock_id=id)
-                    total_price_ = 0 
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
 
-                    product_ids = []
+  try:
+    data = json.loads(request.body)
+    edit = data.get('edit', {})
+    products = data.get('products', [])
 
-                    for product in products:
-                        item_ = int(product.get('item')) if product.get('item') else None
-                        quantity_ = int(product.get('quantity')) if product.get('quantity') else 0
-                        price_ = float(product.get('price')) if product.get('price') else 0.0
+    stock = get_object_or_404(models.Stock, id=id)
+    supplies = models.Supply.objects.filter(stock_id=id)
 
-                        if item_ is None:
-                            continue 
+    total_price_ = 0
+    product_ids = []
 
-                        supply = supplies.filter(product_id = item_).first()
+    for product in products:
+      item_ = product.get('item')
+      quantity_ = int(product.get('quantity', 0))
+      price_ = float(product.get('price', 0.0))
 
-                        if supply:
-                            supply.quantity = quantity_
-                            supply.price = price_
-                            supply.save()
-                        else:
-                            supply = models.Supply.objects.create(
-                                stock_id = id,
-                                quantity = quantity_,
-                                product_id = item_,
-                                price = price_,
-                            )
+      if not item_:
+        continue  
 
-                        total_price_ += supply.price
+      supply = supplies.filter(product_id=item_).first()
 
-                        product_ids.append(item_)
+      if supply:
+        supply.quantity = quantity_
+        supply.price = price_
+        supply.save()
+      else:
+        supply = models.Supply.objects.create(
+          stock_id=id,
+          quantity=quantity_,
+          product_id=item_,
+          price=price_,
+        )
 
-                    stock.date = edit.get('date')    
-                    stock.receiver_id = edit.get('receiver')
-                    stock.supplier_id = edit.get('supplier')
-                    stock.total_price = total_price_
-                    stock.save()
+      total_price_ += supply.price
+      product_ids.append(item_)
 
-                    for supply in supplies:
-                        if supply.product_id not in product_ids:
-                            supply.delete()
+    stock.date = edit.get('date')
+    stock.receiver_id = edit.get('receiver')
+    stock.supplier_id = edit.get('supplier')
+    stock.total_price = total_price_
+    stock.save()
 
-                    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
+    supplies.exclude(product_id__in=product_ids).delete()
 
-                except json.JSONDecodeError:
-                    return JsonResponse({'status': 'error', 'message': 'Erro ao processar JSON'}, status=400)
+    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
 
-            return JsonResponse({'status': 'error', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
-        return JsonResponse({'status': 'error', 'message': 'Usuário não autenticado.'}, status=403)
-
-    return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=405)
-
+  except json.JSONDecodeError:
+    return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
+  
+# Removes a Stock entry
 def stock_remove(request, id):
-    if request.method == 'POST':
-        if 'workerID' in request.session:
-            if request.session.get('worker_permission', 0) >= 4:
-                try:
 
-                    stock = get_object_or_404(models.Stock, id = id)
-                    stock.delete()
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
 
-                    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
 
-                except json.JSONDecodeError:
-                    return JsonResponse({'status': 'error', 'message': 'Erro ao processar JSON'}, status=400)
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+  
+  try:
 
-            return JsonResponse({'status': 'error', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
-        return JsonResponse({'status': 'error', 'message': 'Usuário não autenticado.'}, status=403)
+    stock = get_object_or_404(models.Stock, id = id)
+    stock.delete()
 
-    return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=405)
+    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
+
+  except json.JSONDecodeError:
+    return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
+
+# Add a Ticket entry
+def ticket_add(request):
+
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  try:
+    data = json.loads(request.body)
+
+    if not data.get('reason'):
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
+
+    if not data.get('description'):
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
+
+    reason_ = data.get('reason')
+    sector_ = Sector.objects.filter(id = data.get('sector')).first()
+    priority_ = data.get('priority')
+    category_ = models.Category.objects.filter(id = data.get('category')).first()
+    description_ = data.get('description')
+
+    models.Ticket.objects.create(
+      reason = reason_,
+      sector = sector_,
+      priority = priority_,
+      category = category_,
+      description = description_,
+    )
+
+    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
+
+  except json.JSONDecodeError:
+    return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
+
+# ===== TESTS =====
 
 def category(request):
-    if 'workerID' in request.session:
+    if 'worker' not in request.session:
 
         form = forms.CategoryRegister()
         form_path = 'partials/forms/core/category.html'
@@ -211,7 +270,7 @@ def category(request):
             'workerID': request.session['workerID'],
             'worker_first_name': request.session.get('worker_first_name', ''),
             'worker_last_name': request.session.get('worker_last_name', ''),
-            'worker_permisson': request.session.get('worker_permission', ''),
+            'workerRole.permission': request.session.get('workerRole.permission', ''),
             'worker_role': request.session.get('worker_role', ''),
             'form': form,
             'form_path' : form_path,
@@ -222,7 +281,7 @@ def category(request):
         return redirect('workers:login')
 
 def supplier(request):
-    if 'workerID' in request.session:
+    if 'worker' not in request.session:
 
         form = forms.SupplierRegister()
         form_path = 'partials/forms/core/supplier.html'
@@ -254,7 +313,7 @@ def supplier(request):
             'workerID': request.session['workerID'],
             'worker_first_name': request.session.get('worker_first_name', ''),
             'worker_last_name': request.session.get('worker_last_name', ''),
-            'worker_permisson': request.session.get('worker_permission', ''),
+            'workerRole.permission': request.session.get('workerRole.permission', ''),
             'worker_role': request.session.get('worker_role', ''),
             'form': form, 
             'form_path' : form_path
@@ -265,7 +324,7 @@ def supplier(request):
         return redirect('workers:login')
 
 def product(request):
-    if 'workerID' in request.session:
+    if 'worker' not in request.session:
 
         form = forms.ProductRegister()
         form_path = 'partials/forms/core/product.html'
@@ -301,7 +360,7 @@ def product(request):
             'workerID': request.session['workerID'],
             'worker_first_name': request.session.get('worker_first_name', ''),
             'worker_last_name': request.session.get('worker_last_name', ''),
-            'worker_permisson': request.session.get('worker_permission', ''),
+            'workerRole.permission': request.session.get('workerRole.permission', ''),
             'worker_role': request.session.get('worker_role', ''),
             'form': form, 
             'form_path' : form_path
@@ -312,7 +371,7 @@ def product(request):
         return redirect('workers:login')
  
 def meal(request):
-    if 'workerID' in request.session:
+    if 'worker' not in request.session:
 
         form = forms.MealRegister()
         form_path = 'partials/forms/core/meal.html'
@@ -349,7 +408,7 @@ def meal(request):
             'workerID': request.session['workerID'],
             'worker_first_name': request.session.get('worker_first_name', ''),
             'worker_last_name': request.session.get('worker_last_name', ''),
-            'worker_permisson': request.session.get('worker_permission', ''),
+            'workerRole.permission': request.session.get('workerRole.permission', ''),
             'worker_role': request.session.get('worker_role', ''),
             'form': form,
             'form_path' : form_path,

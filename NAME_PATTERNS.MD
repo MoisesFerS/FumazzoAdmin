@@ -123,9 +123,9 @@ A title at a modal's header.
 
 In order to keep a file organized and within the pattern, it must be divided by contex/location. The separators being:
 
-/* ==========================================================
+/*  ============================================================
     CONTEXT/LOCATION - Description of its purpose    
-    ========================================================== */ 
+    ============================================================ */ 
  
 /* ===== ELEMENT/SUBCONTEXT ===== */
  
@@ -133,9 +133,9 @@ In order to keep a file organized and within the pattern, it must be divided by 
 
 Example:
 
-/* ==========================================================
+/*  ============================================================
     MODAL - Modal that exhibits to the user the callendar   
-    ========================================================== */ 
+    ============================================================ */ 
 
 /* ===== CONTAINER ===== */
 
