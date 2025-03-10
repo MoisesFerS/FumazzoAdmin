@@ -14,6 +14,10 @@ The format is based on:
 - Added `meal.css` to `css/core/`.
 - Added `meal.js` to `js/core/`.
 - Added the link to meal system on the `navbar`.
+- Added defs to `core/views.py`:
+    - `meal` - Renders the meal system page.
+    - `get_categories` - Retrieve the categories when selecting a type in `meal add modal`.
+    - `meal_add` - Register a meal entry. 
 
 ## [0.10.0] - 27/02/2025 - Developing the index's Pages
 
@@ -26,7 +30,7 @@ The format is based on:
 - Added `index.css` to `css/workers/` (dashboard).
 - Added `index.js` to `js/workers/` (dashboard).
 - Added `index.css` to `css/core/` (management).
-- Added the defs to workers/views.py:
+- Added the defs to `workers/views.py`:
     - `index` - Renders the dashboard with worker data.
     - `get_shift` - Gets the worker shift data.
 

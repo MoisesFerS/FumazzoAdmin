@@ -34,7 +34,14 @@
                 <p class="meal-accordion-name subtitle">{{ meal.meal.name }}</p>  
               </div>
               <div class="meal-accordion-pannel">
-                <p>teste</p>
+              {% for ingredient in meal.ingredient_set.all %}                
+                  <p>teste</p>                
+                {% empty %}
+                <p>Nenhum ingrediente encontrado.</p>
+              {% endfor %}
+              <div class="meal-accordion-pannel-buttons">
+                <button>REMOVER</button><button>EDITAR</button>
+              </div>
               </div>
               {% empty %}
                 <p>Nenhuma refeição encontrada para esta categoria.</p>
