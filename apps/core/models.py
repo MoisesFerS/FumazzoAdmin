@@ -74,14 +74,13 @@ class Meal(models.Model):
     name = models.CharField(max_length=50)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     description = models.TextField()
-    calories = models.IntegerField()
     image = models.ImageField(upload_to='core/meals/', null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
-class Product_meal(models.Model):
+class Ingredients(models.Model):
     id = models.AutoField(primary_key=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)

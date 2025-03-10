@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.db.models import Q
 import json
 from apps.workers.models import Worker, Sector
+from django.core.files.base import ContentFile
 
 #   ============================================================
 #   INDEX - Defs related to Index page(manage)
@@ -88,7 +89,7 @@ def stock_add(request):
 
     date_ = data.get('date')                    
     supplier_ = models.Supplier.objects.filter(id = data.get('supplier')).first()
-    receiver_ =  models.Worker.objects.filter(id = data.get('receiver')).first()
+    receiver_ =  Worker.objects.filter(id = data.get('receiver')).first()
 
     models.Stock.objects.create(
       date = date_,
@@ -251,7 +252,6 @@ def meal(request):
     4: {"name": "BEBIDAS", "categories": []}
   }
 
-
   for type in types:
     categories = models.Category.objects.filter(type=type)
 
@@ -265,7 +265,7 @@ def meal(request):
       meals = models.Meal.objects.filter(category=category)
         
       for meal in meals:
-        category_data["meals"].append({"meal_name": meal.name, "meal_id": meal.id})
+        category_data["meals"].append({"meal": meal})
 
       entries[type]["categories"].append(category_data)
 
@@ -276,6 +276,54 @@ def meal(request):
   }
 
   return render(request, 'core/meal.html', context)
+
+def get_categories(request, id):
+  categories = list(models.Category.objects.filter(type=id).values()) 
+  return JsonResponse({'status': 'success', 'message': 'Categorias carregadas com sucesso', 'data': categories})
+
+def meal_add(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  try:
+    category_id = request.POST.get('category')
+    name_ = request.POST.get('name')
+    description_ = request.POST.get('description')
+    price_ = request.POST.get('price')
+    image_file = request.FILES.get('image')
+
+    if not category_id or not name_ or not description_ or not price_:
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
+
+    try:
+      price_ = float(price_)
+      if price_ <= 0:
+        return JsonResponse({'status': 'error', 'error': '400', 'message': 'O preço não pode ser zero ou negativo.'}, status=400)
+    except ValueError:
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço inválido.'}, status=400)
+
+    category_ = models.Category.objects.filter(id=category_id).first()
+    if not category_:
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Categoria inválida.'}, status=400)
+
+    models.Meal.objects.create(
+      category=category_,
+      name=name_,
+      description=description_,
+      price=price_,
+      image=image_file  
+    )
+
+    return JsonResponse({'status': 'success', 'message': 'Registro criado com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
 
 
 # ===== TESTS =====

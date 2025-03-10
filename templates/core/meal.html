@@ -13,80 +13,90 @@
 
   <div class="main-content">
     <h1 class="content-main-title">REFEIÇÕES</h1>
-
-    {% for type_id, type_data in entries.items %}
-      <h2>{{ type_data.name }}</h2> 
-
-      {% for category in type_data.categories %}
-        <p>{{ category.category_name }}</p> 
-
-        <ul>
-          {% for meal in category.meals %}
-            <li>{{ meal.meal_name }}</li>  
-          {% endfor %}
-        </ul>
-      {% endfor %}
-    {% endfor %}
-
-
-    <section class="stock-container">
-      {% if workerRole.permission >= 4 %}
-      <div class="stock-container-button-add">
+    <div class="meal-container">
+      <div class="meal-button-add">
         <button class="button-secondary" name="add">Adicionar</button>
       </div>
-      {% endif %}
-      <section class="stock-accordion-container" id="accordion-container">
-        {% for stock in stocks %}
-        <div class="stock-accordion" id="accordion">
-          <div class="stock-accordion-data">
-            <div class="stock-accordion-data-date">
-              <p class="stock-accordion-data-label" for="">DATA:</p>
-              <p class="stock-accordion-text" id="{{ stock.date | date:'Y-m-d' }}">{{ stock.date | date:"d/m/Y" }}
-              </p>
-            </div>
-            <div class="stock-accordion-data-supplier">
-              <p class="stock-accordion-data-label" for="">FORNECEDOR:</p>
-              <p class="stock-accordion-text" id="{{ stock.supplier_id }}">{{ stock.supplier }}</p>
-            </div>
-            <div class="stock-accordion-data-receiver">
-              <p class="stock-accordion-data-label" for="">RECEPTOR:</p>
-              <p class="stock-accordion-text" id="{{ stock.receiver_id }}">{{ stock.receiver }}</p>
-            </div>
-            <div class="stock-accordion-data-price">
-              <p class="stock-accordion-data-label" for="">PREÇO TOTAL:</p>
-              <p class="stock-accordion-text" id="{{ stock.total_price }}">{{ stock.total_price }}</p>
-            </div>
-          </div>
-          {% if workerRole.permission >= 4 %}
-          <div class="stock-accordion-buttons">
-            <button class="stock-button-edit" id="{{ stock.id }}" name="edit">
-              <img src="{% static 'icons/edit.ico' %}" class="stock-accordion-icon" alt="edit-icon">
-            </button>
-            <button class="stock-button-remove" id="{{ stock.id }}" name="remove">
-              <img src="{% static 'icons/trash-can.ico' %}" class="stock-accordion-icon" alt="remove-icon">
-            </button>
-          </div>
-          {% endif %}
+      <div class="meal-accordion-container">
+        {% for type_id, type_data in entries.items %}
+        <div class="meal-type-accordion" id="accordion">
+          <p class="subtitle">{{ type_data.name }}</p> 
         </div>
-        <div class="stock-accordion-panel" id="panel-{{ stock.id }}">
-          {% for supply in stock.supply_set.all %}
-          <div class="stock-product-accordion">
-            <p class="" id="">{{ supply.product.name }}</p>
+        <div class="meal-type-accordion-pannel">
+          {% for category in type_data.categories %}
+          <div class="meal-category-accordion" id="accordion">
+            <p class="subtitle">{{ category.category_name }}</p> 
           </div>
-          <div class="stock-product-accordion-panel">
-            <div class="accordion-item-detail-list">
-              <p class="accordion-item-detail-list-item">QUANTIDADE: {{ supply.quantity }}</p>
-              <p class="accordion-item-detail-list-item">PREÇO: {{ supply.price }}</p>
-            </div>
+          <div class="meal-category-accordion-pannel">
+            {% for meal in category.meals %}
+              <div class="meal-accordion" id="accordion">
+                <img class="meal-accordion-image" src="{{ meal.meal.image.url }}" alt="{{ meal.meal.image.name|cut:'core/meals/' }}">
+                <p class="meal-accordion-name subtitle">{{ meal.meal.name }}</p>  
+              </div>
+              <div class="meal-accordion-pannel">
+                <p>teste</p>
+              </div>
+              {% empty %}
+                <p>Nenhuma refeição encontrada para esta categoria.</p>
+            {% endfor %}
+            <hr class="category-accordion-division">
           </div>
-          {% empty %}
-          <p>Não há produtos neste registro.</p>
           {% endfor %}
         </div>
-        <hr class="accordion-division">
+        <hr class="type-accordion-division">
         {% endfor %}
-      </section>
-    </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals -->
+
+  <div class="meal-modal-container" id="modal-add">
+    <div class="meal-modal-content">
+      <div class="meal-modal-header">
+        <h1 class="meal-modal-title-add">ADICIONAR REGISTRO</h1>
+      </div>
+      <div class="meal-modal-body">
+        <div class="modal-add-form">  
+          <form action="POST" id="meal-add-form" enctype="multipart/form-data">       
+            <div class="meal-form-data">
+              <p class="meal-form-label subtitle">TIPO: </p>
+              <select id="meal-add-type" class="form-input-select">
+                  <option value="" selected disabled hidden>SELECIONE UM TIPO</option>
+                {% for type_id, type_data in entries.items %}
+                  <option value="{{ type_id }}">{{ type_data.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="meal-form-data">
+              <p class="meal-form-label subtitle">CATEGORIA: </p>
+              <select id="meal-add-categories" class="form-input-select">
+                <option value="">SELECIONE UM TIPO</option>
+              </select>
+            </div>
+            <div class="meal-form-data">
+              <p class="meal-form-label subtitle">NOME: </p>
+              <input id="meal-add-name">
+            </div>
+            <div class="meal-form-data">
+              <p class="meal-form-label subtitle">DESCRIÇÃO: </p>
+              <textarea id="meal-add-description"></textarea>
+            </div>
+            <div class="meal-form-data">
+              <p class="meal-form-label subtitle">PREÇO: </p>
+              <input type="number" id="meal-add-price" step="0.01">
+            </div>
+            <div class="meal-form-data">
+              <p class="meal-form-label subtitle">IMAGEM: </p>
+              <input type="file" id="meal-add-image" accept="image/*">
+            </div>
+            <div class="modal-confirm-button">
+              <button class="button-primary" id="confirm-add" type="submit">CONFIRMAR</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="{% static 'js/core/meal.js' %}"></script>
