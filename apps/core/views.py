@@ -265,7 +265,7 @@ def meal(request):
       meals = models.Meal.objects.filter(category=category)
         
       for meal in meals:
-        category_data["meals"].append({"meal": meal})
+        category_data["meals"].append(meal)
 
       entries[type]["categories"].append(category_data)
 
@@ -324,7 +324,58 @@ def meal_add(request):
 
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+  
+def meal_remove(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
 
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  try:
+    meal_id = request.POST.get('meal')
+
+    models.Meal.objects.get(id=meal_id).delete()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro removido com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
+def ingredient_add(request, mealID, ingredientID):
+  meal_ = models.Meal.objects.get(id = mealID)
+  ingredient_ = models.Product.objects.get(id = ingredientID)
+
+  try:
+
+    models.Ingredient.objects.create(
+      meal = meal_,
+      ingredient = ingredient_,
+    )
+
+    return JsonResponse({'status': 'success', 'message': 'Ingrediente adicionado com sucesso!'})
+  except:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': 'Erro interno: '}, status=500)
+  
+
+def ingredient_remove(request, mealID, ingredientID):
+  meal_ = models.Meal.objects.get(id = mealID)
+  ingredient_ = models.Product.objects.get(id = ingredientID)
+
+  try:
+
+    models.Ingredient.get(meal = meal_, ingredient = ingredient_).remove()
+
+    return JsonResponse({'status': 'success', 'message': 'Ingrediente removido com sucesso!'})
+  except:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': 'Erro interno: '}, status=500)
+
+def ingredient(request, action):
+
+  return JsonResponse({'status': 'success', 'message': 'Número de ingredientes alterado com sucesso!'})
 
 # ===== TESTS =====
 

@@ -47,11 +47,11 @@
   border-radius: 0px 0px 3px 3px;
 }
 
-.type-accordion-division{
+.accordion-division{
   border: 25px solid transparent;
 }
 
-.category-accordion-division{
+.accordion-division{
   border: 25px solid transparent;
 }
 
@@ -91,12 +91,72 @@
   transition: 0.4s ease;
 }
 
+.meal-accordion-pannel{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .meal-accordion-pannel-buttons{
   background-color: var(--color-detail2);
   height: 100px;
   border-radius: 0px 0px 3px 3px;
+  width: 100%;
 }
 
+.meal-ingredients-container{
+  background-color: var(--color-detail2);
+  width: 96%;
+}
+
+.meal-ingredient{
+  padding: 20px;
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+}
+
+.ingredient-image{
+  width: 75px;
+  height: 75px;
+}
+
+.ingredient-quantity{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  justify-content: end;
+  align-items: center;
+}
+
+.ingredient-add-button{
+  width: 50px;
+  height: 50px;
+  background-size: cover; 
+  background-position: center;
+  background-image: url('../../images/buttons/add.png');
+  border-radius: 3px;
+}
+
+.ingredient-subtract-button{
+  width: 50px;
+  height: 50px;
+  background-size: cover; 
+  background-position: center;
+  background-image: url('../../images/buttons/subtract.png');
+  border-radius: 3px;
+}
+
+.ingredient-remove-button{
+  width: 50px;
+  height: 50px;
+  background-size: cover; 
+  background-position: center;
+  background-image: url('../../images/buttons/remove.png');
+  border-radius: 3px;
+}
 
 /*  ============================================================
     MODALS - Modals used on the page

@@ -56,6 +56,8 @@ document.querySelectorAll("[name='add'], [name='edit'], [name='remove']")
         
       const modal = document.getElementById(`modal-${button.name}`);
       modal.style.display = 'block';
+      const form = modal.querySelector(`[name="meal-${button.name}-form"]`)
+      form.id = button.id
 
       window.addEventListener('click', function(event) {
         if (event.target === modal) {
@@ -85,7 +87,7 @@ document.getElementById('meal-add-type').addEventListener('change', function () 
     .catch(error => console.error('Erro ao carregar categorias:', error));
 });
 
-document.getElementById('meal-add-form').addEventListener('submit', async function(event){
+document.querySelector("[name='meal-add-form']").addEventListener('submit', async function(event){
   event.preventDefault();
 
   var formData = new FormData();
@@ -115,4 +117,33 @@ document.getElementById('meal-add-form').addEventListener('submit', async functi
       }, 3000);
     }
   }); 
+});
+
+document.querySelector("[name='meal-remove-form']").addEventListener('submit', async function(event){
+  event.preventDefault();
+
+  var formData = new FormData();
+  formData.append('meal', this.id)
+
+  let csrfToken = getToken(); 
+  
+  await fetch(`remove/`, {
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrfToken }, 
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if(data.status == 'success'){
+      location.reload(); 
+    } else {          
+      message.style.display = 'block';        
+      message.querySelector('#message-text').innerHTML = data.message; 
+      message.querySelector('#message-error').innerHTML = data.error;
+      setTimeout(() => {
+        message.style.display = 'none'; 
+      }, 3000);
+    }
+  }); 
+
 });

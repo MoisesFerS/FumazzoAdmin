@@ -30,27 +30,43 @@
           <div class="meal-category-accordion-pannel">
             {% for meal in category.meals %}
               <div class="meal-accordion" id="accordion">
-                <img class="meal-accordion-image" src="{{ meal.meal.image.url }}" alt="{{ meal.meal.image.name|cut:'core/meals/' }}">
-                <p class="meal-accordion-name subtitle">{{ meal.meal.name }}</p>  
+                {% if meal.image %}
+                  <img class="meal-accordion-image" src="{{ meal.image.url }}" alt="{{ meal.image.name|cut:'core/meals/' }}">
+                {% endif %}
+                <p class="meal-accordion-name subtitle" id="{{ meal.id }}">{{ meal.name }}</p>  
               </div>
               <div class="meal-accordion-pannel">
-              {% for ingredient in meal.ingredient_set.all %}                
-                  <p>teste</p>                
-                {% empty %}
-                <p>Nenhum ingrediente encontrado.</p>
-              {% endfor %}
+                <div class="meal-ingredients-container">
+                  {% for ingredient in meal.ingredient_set.all %}
+                    <div class="meal-ingredient">   
+                      {% if ingredient.ingredient.image %}   
+                        <img src="{{ ingredient.ingredient.image.url }}" alt="" class="ingredient-image">
+                      {% endif %}          
+                      <p class="subtitle">{{ ingredient.ingredient.name }}</p>     
+                      <div class="ingredient-quantity">
+                        <p class="subtitle">{{ ingredient.quantity }}</p>
+                        <button class="ingredient-add-button"></button>
+                        <button class="ingredient-subtract-button"></button>
+                        <button class="ingredient-remove-button"></button>
+                      </div>
+                    </div>           
+                    {% empty %}
+                    <p>Nenhum ingrediente encontrado.</p>
+                  {% endfor %}
+                </div>
               <div class="meal-accordion-pannel-buttons">
-                <button>REMOVER</button><button>EDITAR</button>
+                <button name="remove" id="{{ meal.id }}">REMOVER</button><button>EDITAR</button>
               </div>
+              <hr class="accordion-division">
               </div>
               {% empty %}
                 <p>Nenhuma refeição encontrada para esta categoria.</p>
             {% endfor %}
-            <hr class="category-accordion-division">
+            <hr class="accordion-division">
           </div>
           {% endfor %}
         </div>
-        <hr class="type-accordion-division">
+        <hr class="accordion-division">
         {% endfor %}
       </div>
     </div>
@@ -65,7 +81,7 @@
       </div>
       <div class="meal-modal-body">
         <div class="modal-add-form">  
-          <form action="POST" id="meal-add-form" enctype="multipart/form-data">       
+          <form action="POST" name="meal-add-form" enctype="multipart/form-data">       
             <div class="meal-form-data">
               <p class="meal-form-label subtitle">TIPO: </p>
               <select id="meal-add-type" class="form-input-select">
@@ -100,7 +116,28 @@
             <div class="modal-confirm-button">
               <button class="button-primary" id="confirm-add" type="submit">CONFIRMAR</button>
             </div>
-          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="meal-modal-container" id="modal-remove">
+    <div class="meal-modal-content">
+      <div class="meal-modal-header">
+        <h1 class="meal-modal-title-remove">REMOVER REGISTRO</h1>
+      </div>
+      <div class="meal-modal-body">
+        <div class="modal-remove-form">
+          <form method="POST" id="" name="meal-remove-form">
+            <div class="form-text">
+              <p>Você tem certeza que deseja remover</p>
+              <p id="remove-meal">REFEIÇÃO</p>
+            </div>
+            <div>
+              <button type="submit">teste</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

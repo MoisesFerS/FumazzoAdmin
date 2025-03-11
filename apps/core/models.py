@@ -30,16 +30,9 @@ class Category(models.Model):
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
-    quantity = models.IntegerField()
-    individual_price = models.IntegerField()
+    quantity = models.IntegerField(default=0)
+    individual_price = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     image = models.ImageField(upload_to='core/products/', null=True, blank=True)
-    status_choices = [
-        (1, 'Cheio(100%)'),
-        (2, 'Metade(50%)'),
-        (3, 'Acabando(25%)'),
-        (4, 'Vazio(0%)'),
-    ]
-    status = models.IntegerField(choices=status_choices, default=1)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     measurement_choices = [
         (1, 'Kilogramas'),
@@ -80,11 +73,11 @@ class Meal(models.Model):
     def __str__(self):
         return self.name
 
-class Ingredients(models.Model):
+class Ingredient(models.Model):
     id = models.AutoField(primary_key=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    ingredient = models.ForeignKey(Product, on_delete=models.CASCADE)
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(default=0)
 
 class Ticket(models.Model):
     from apps.workers.models import Sector
