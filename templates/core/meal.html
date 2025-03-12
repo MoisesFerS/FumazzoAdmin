@@ -55,7 +55,9 @@
                   {% endfor %}
                 </div>
                 <div class="meal-accordion-pannel-buttons">
-                  <button name="remove" id="{{ meal.id }}">REMOVER</button><button>EDITAR</button>
+                  <button class="meal-button ingredient"></button>
+                  <button class="meal-button edit" name="ingredient" id="{{ meal.id }}"></button>
+                  <button class="meal-button delete" name="remove" id="{{ meal.id }}"></button>
                 </div>
                 <hr class="accordion-division">
               </div>
@@ -136,6 +138,26 @@
             </div>
             <div>
               <button type="submit">teste</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="meal-modal-container" id="modal-ingredient">
+    <div class="meal-modal-content">
+      <div class="meal-modal-header">
+        <h1 class="meal-modal-title-ingredient">ADICIONAR INGREDIENTE</h1>
+      </div>
+      <div class="meal-modal-body">
+        <div class="modal-ingredient-form">
+          <form method="POST" id="" name="meal-ingredient-form">
+            <div class="form-text">
+              <select name="" id=""></select>
+            </div>
+            <div>
+              <button type="submit">ADICIONAR</button>
             </div>
           </form>
         </div>

@@ -102,11 +102,18 @@
   height: 100px;
   border-radius: 0px 0px 3px 3px;
   width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+  justify-content: center;
+  align-items: center;
 }
 
 .meal-ingredients-container{
   background-color: var(--color-detail2);
   width: 96%;
+  overflow-y: scroll;
+  max-height: 350px;
 }
 
 .meal-ingredient{
@@ -156,6 +163,31 @@
   background-position: center;
   background-image: url('../../images/buttons/remove.png');
   border-radius: 3px;
+}
+
+.meal-button{
+  height: 50px;
+  width: 180px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.ingredient{
+  background-size: cover; 
+  background-position: center;
+  background-image: url(../../images/buttons/ingredient.png);
+}
+
+.edit{
+  background-size: cover; 
+  background-position: center;
+  background-image: url(../../images/buttons/edit.png);
+}
+
+.delete{
+  background-size: cover; 
+  background-position: center;
+  background-image: url(../../images/buttons/delete.png);
 }
 
 /*  ============================================================

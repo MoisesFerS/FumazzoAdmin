@@ -45,12 +45,32 @@ function updateParentPanelHeight(accordion) {
   }
 }
 
+let csrfToken = getToken();
+
+fetch(`add/get-products/`)
+  .then(response => response.json())
+  .then(data => {
+    const categoriesSelect = document.getElementById('meal-add-categories');
+    
+    categoriesSelect.innerHTML = '';
+    const defaultOption = document.createElement('option');
+
+    data.data.forEach(category => {
+      const option = document.createElement('option'); 
+      option.textContent = category.name;
+      option.value = category.id;
+      categoriesSelect.appendChild(option);
+    });
+  })
+  .catch(error => console.error('Erro ao carregar categorias:', error));
+
+
 /*  ============================================================
     MODALS - Modals functions   
     ============================================================ */ 
 
 /* Function to open the modals dynamically */
-document.querySelectorAll("[name='add'], [name='edit'], [name='remove']")
+document.querySelectorAll("[name='add'], [name='edit'], [name='ingredient'], [name='remove']")
   .forEach(button => {
     button.addEventListener('click', function (event) {
         
