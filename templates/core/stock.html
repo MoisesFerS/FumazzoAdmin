@@ -31,11 +31,11 @@ Estoque
           </div>
           <div class="stock-accordion-data-supplier">
             <p class="stock-accordion-data-label" for="">FORNECEDOR:</p>
-            <p class="stock-accordion-text" id="{{ stock.supplier_id }}">{{ stock.supplier }}</p>
+            <p class="stock-accordion-text" id="{{ stock.supplier_id }}">{{ stock.supplier.name }}</p>
           </div>
           <div class="stock-accordion-data-receiver">
             <p class="stock-accordion-data-label" for="">RECEPTOR:</p>
-            <p class="stock-accordion-text" id="{{ stock.receiver_id }}">{{ stock.receiver }}</p>
+            <p class="stock-accordion-text" id="{{ stock.receiver_id }}">{{ stock.receiver.first_name }}</p>
           </div>
           <div class="stock-accordion-data-price">
             <p class="stock-accordion-data-label" for="">PREÇO TOTAL:</p>

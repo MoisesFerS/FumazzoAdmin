@@ -35,29 +35,29 @@
                 {% endif %}
                 <p class="meal-accordion-name subtitle" id="{{ meal.id }}">{{ meal.name }}</p>  
               </div>
-              <div class="meal-accordion-pannel">
+              <div class="meal-accordion-pannel" id="{{ meal.id }}">
                 <div class="meal-ingredients-container">
                   {% for ingredient in meal.ingredient_set.all %}
                     <div class="meal-ingredient">   
                       {% if ingredient.ingredient.image %}   
                         <img src="{{ ingredient.ingredient.image.url }}" alt="" class="ingredient-image">
                       {% endif %}          
-                      <p class="subtitle">{{ ingredient.ingredient.name }}</p>     
-                      <div class="ingredient-quantity">
-                        <p class="subtitle">{{ ingredient.quantity }}</p>
-                        <button class="ingredient-add-button"></button>
-                        <button class="ingredient-subtract-button"></button>
-                        <button class="ingredient-remove-button"></button>
+                      <p class="ingredient-label subtitle" id="{{ ingredient.ingredient.id }}">{{ ingredient.ingredient.name }}</p>     
+                      <div class="ingredient-quantity-container">
+                        <p class="ingredient-quantity subtitle">{{ ingredient.quantity }}</p>
+                        <button class="ingredient-increment-button" id="{{ ingredient.ingredient.id }}"></button>
+                        <button class="ingredient-subtract-button" id="{{ ingredient.ingredient.id }}"></button>
+                        <button class="ingredient-remove-button" id="{{ ingredient.ingredient.id }}"></button>
                       </div>
                     </div>           
                     {% empty %}
                     <p>Nenhum ingrediente encontrado.</p>
                   {% endfor %}
                 </div>
-              <div class="meal-accordion-pannel-buttons">
-                <button name="remove" id="{{ meal.id }}">REMOVER</button><button>EDITAR</button>
-              </div>
-              <hr class="accordion-division">
+                <div class="meal-accordion-pannel-buttons">
+                  <button name="remove" id="{{ meal.id }}">REMOVER</button><button>EDITAR</button>
+                </div>
+                <hr class="accordion-division">
               </div>
               {% empty %}
                 <p>Nenhuma refeição encontrada para esta categoria.</p>

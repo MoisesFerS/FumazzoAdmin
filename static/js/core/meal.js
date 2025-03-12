@@ -147,3 +147,142 @@ document.querySelector("[name='meal-remove-form']").addEventListener('submit', a
   }); 
 
 });
+
+document.querySelectorAll(".ingredient-add-button").forEach(button => {
+  button.addEventListener('click', async function() {
+    var meal = this.closest('.meal-accordion-pannel').id
+    var ingredient = this.id
+
+    data = {
+      meal : meal,
+      ingredient : ingredient,
+    }
+
+    let csrfToken = getToken(); 
+
+    await fetch(`ingredient/add/`, {
+      method: 'POST',
+      headers: { 'X-CSRFToken': csrfToken }, 
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.status == 'success'){
+        location.reload(); 
+      } else {          
+        message.style.display = 'block';        
+        message.querySelector('#message-text').innerHTML = data.message; 
+        message.querySelector('#message-error').innerHTML = data.error;
+        setTimeout(() => {
+          message.style.display = 'none'; 
+        }, 3000);
+      }
+    }); 
+
+  });
+});
+
+document.querySelectorAll(".ingredient-increment-button").forEach(button => {
+  button.addEventListener('click', async function() {
+    var meal = this.closest('.meal-accordion-pannel')
+    var ingredient = this.id
+    var ingredientContainer = this.closest('.meal-ingredient');
+
+    data = {
+      meal : meal.id,
+      ingredient : ingredient,
+    }
+
+    let csrfToken = getToken(); 
+
+    await fetch(`ingredient/increment/`, {
+      method: 'POST',
+      headers: { 'X-CSRFToken': csrfToken }, 
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.status == 'success'){
+        ingredientContainer.querySelector('.ingredient-quantity').innerHTML = data.quantity; 
+      } else {          
+        message.style.display = 'block';        
+        message.querySelector('#message-text').innerHTML = data.message; 
+        message.querySelector('#message-error').innerHTML = data.error;
+        setTimeout(() => {
+          message.style.display = 'none'; 
+        }, 3000);
+      }
+    }); 
+
+  });
+});
+
+document.querySelectorAll(".ingredient-subtract-button").forEach(button => {
+  button.addEventListener('click', async function() {
+    let meal = this.closest('.meal-accordion-pannel')
+    let ingredient = this.id
+    var ingredientContainer = this.closest('.meal-ingredient');
+
+    data = {
+      meal : meal.id,
+      ingredient : ingredient,
+    }
+
+    let csrfToken = getToken(); 
+
+    await fetch(`ingredient/subtract/`, {
+      method: 'POST',
+      headers: { 'X-CSRFToken': csrfToken }, 
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.status == 'success'){
+        ingredientContainer.querySelector('.ingredient-quantity').innerHTML = data.quantity; 
+      } else {          
+        message.style.display = 'block';        
+        message.querySelector('#message-text').innerHTML = data.message; 
+        message.querySelector('#message-error').innerHTML = data.error;
+        setTimeout(() => {
+          message.style.display = 'none'; 
+        }, 3000);
+      }
+    }); 
+
+  });
+});
+
+document.querySelectorAll(".ingredient-remove-button").forEach(button => {
+  button.addEventListener('click', async function() {
+    let meal = this.closest('.meal-accordion-pannel')
+    let ingredient = this.id
+    var ingredientContainer = this.closest('.meal-ingredient');
+
+    data = {
+      meal : meal.id,
+      ingredient : ingredient,
+    }
+
+    let csrfToken = getToken(); 
+
+    await fetch(`ingredient/remove/`, {
+      method: 'POST',
+      headers: { 'X-CSRFToken': csrfToken }, 
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.status == 'success'){
+        ingredientContainer.remove()
+      } else {          
+        message.style.display = 'block';        
+        message.querySelector('#message-text').innerHTML = data.message; 
+        message.querySelector('#message-error').innerHTML = data.error;
+        setTimeout(() => {
+          message.style.display = 'none'; 
+        }, 3000);
+      }
+    }); 
+
+  });
+});

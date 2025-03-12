@@ -61,7 +61,7 @@ class Stock(models.Model):
     from apps.workers.models import Worker
     id = models.AutoField(primary_key=True)
     date = models.DateField()
-    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total_price = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
     receiver = models.ForeignKey(Worker, on_delete=models.CASCADE)
 

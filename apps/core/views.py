@@ -345,9 +345,10 @@ def meal_remove(request):
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
 
-def ingredient_add(request, mealID, ingredientID):
-  meal_ = models.Meal.objects.get(id = mealID)
-  ingredient_ = models.Product.objects.get(id = ingredientID)
+def ingredient_add(request):
+  data = json.loads(request.body)
+  meal_ = models.Meal.objects.get(id = data.get('meal'))
+  ingredient_ = models.Product.objects.get(id = data.get('ingredient'))
 
   try:
 
@@ -360,22 +361,80 @@ def ingredient_add(request, mealID, ingredientID):
   except:
     return JsonResponse({'status': 'error', 'error': '500', 'message': 'Erro interno: '}, status=500)
   
+def ingredient_increment(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
 
-def ingredient_remove(request, mealID, ingredientID):
-  meal_ = models.Meal.objects.get(id = mealID)
-  ingredient_ = models.Product.objects.get(id = ingredientID)
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  data = json.loads(request.body)  
+  meal_ = models.Meal.objects.get(id = data.get('meal'))
+  ingredient_ = models.Product.objects.get(id = data.get('ingredient'))
 
   try:
 
-    models.Ingredient.get(meal = meal_, ingredient = ingredient_).remove()
+    entry = models.Ingredient.objects.get(meal_id = meal_, ingredient_id = ingredient_)
+    entry.quantity += 1 
+    entry.save()
+
+    return JsonResponse({'status': 'success', 'message': 'Ingrediente adicionado com sucesso!', 'quantity' : entry.quantity})
+  except:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': 'Erro interno: '}, status=500)
+
+def ingredient_subtract(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  data = json.loads(request.body)  
+  meal_ = models.Meal.objects.get(id = data.get('meal'))
+  ingredient_ = models.Product.objects.get(id = data.get('ingredient'))
+
+  try:
+
+    entry = models.Ingredient.objects.get(meal_id = meal_, ingredient_id = ingredient_)
+    entry.quantity -= 1 
+
+    if (entry.quantity < 0):
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'A quantidade não pode ser menor que zero.'}, status=400)
+
+    entry.save()
+
+    return JsonResponse({'status': 'success', 'message': 'Ingrediente subtraído com sucesso!', 'quantity' : entry.quantity})
+  except:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': 'Erro interno: '}, status=500)
+
+def ingredient_remove(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  data = json.loads(request.body)  
+  meal_ = models.Meal.objects.get(id = data.get('meal'))
+  ingredient_ = models.Product.objects.get(id = data.get('ingredient'))
+
+  try:
+
+    entry = models.Ingredient.objects.get(meal_id = meal_, ingredient_id = ingredient_)
+    entry.delete()
 
     return JsonResponse({'status': 'success', 'message': 'Ingrediente removido com sucesso!'})
   except:
     return JsonResponse({'status': 'error', 'error': '500', 'message': 'Erro interno: '}, status=500)
-
-def ingredient(request, action):
-
-  return JsonResponse({'status': 'success', 'message': 'Número de ingredientes alterado com sucesso!'})
 
 # ===== TESTS =====
 
