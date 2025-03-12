@@ -1,15 +1,31 @@
 from django.db import models
+from apps.workers.models import Worker
 from phonenumber_field.modelfields import PhoneNumberField
+from django.utils.text import slugify 
+
+class Unit(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(unique=True, blank=True)
+    image = models.ImageField(upload_to='core/units/', null=True, blank=True)
+    address = models.CharField(max_length=150)
+    phone = PhoneNumberField()
+    email = models.EmailField(max_length=150)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
 
 class Supplier(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     address = models.CharField(max_length=150)
     phone = PhoneNumberField(max_length=15)
-    email = models.EmailField(max_length=150)
-
-    def __str__(self):
-        return self.name
+    email = models.EmailField(max_length=150) 
 
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
@@ -23,9 +39,6 @@ class Category(models.Model):
         (6, 'Ticket')
     ]
     type = models.IntegerField(choices=type_choices, default=1)
-
-    def __str__(self):
-        return self.name
 
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
@@ -43,9 +56,6 @@ class Product(models.Model):
         (6, 'Pacote'),
     ]
     measurement = models.IntegerField(choices=measurement_choices, default=1)
-
-    def __str__(self):
-        return self.name
 
 class Stock(models.Model):
     from apps.workers.models import Worker
@@ -70,9 +80,6 @@ class Meal(models.Model):
     image = models.ImageField(upload_to='core/meals/', null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.name
-
 class Ingredient(models.Model):
     id = models.AutoField(primary_key=True)
     ingredient = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -88,3 +95,23 @@ class Ticket(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.TextField()
     status = models.IntegerField(default=0)
+
+class Table(models.Model):
+    id = models.AutoField(primary_key=True)
+    chairs = models.IntegerField()
+    floor = models.IntegerField()
+    description = models.TextField()
+    image = models.ImageField(upload_to='core/tables/', null=True, blank=True)
+
+class Sale(models.Model):
+    id = models.AutoField(primary_key=True)
+    discount = models.IntegerField()
+    start_date = models.DateField()
+    end_date = models.DateField()
+    meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    type_choices = [
+        (1, '%'),
+        (2, 'R$:'),
+    ]
+    type = models.IntegerField(choices=type_choices, default=1)
