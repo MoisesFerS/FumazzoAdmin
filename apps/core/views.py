@@ -281,6 +281,10 @@ def get_categories(request, id):
   categories = list(models.Category.objects.filter(type=id).values()) 
   return JsonResponse({'status': 'success', 'message': 'Categorias carregadas com sucesso', 'data': categories})
 
+def get_ingredients(request):
+  # ingredients = list(models.Product.objects.filter(category=).values()) 
+  return JsonResponse({'status': 'success', 'message': 'Categorias carregadas com sucesso', 'data': ingredients})
+
 def meal_add(request):
   if request.method != 'POST':
     return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)

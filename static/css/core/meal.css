@@ -113,7 +113,7 @@
   background-color: var(--color-detail2);
   width: 96%;
   overflow-y: scroll;
-  max-height: 350px;
+  max-height: 500px;
 }
 
 .meal-ingredient{
