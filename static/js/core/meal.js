@@ -1,3 +1,24 @@
+const buttons = document.querySelectorAll('button')
+
+fetch(`get-ingredients/`)
+  .then(response => response.json())
+  .then(data => {
+    const ingredientsSelect = document.getElementById('meal-add-ingredients');
+
+    data.data.forEach(data => {
+      const optgroup = document.createElement('optgroup');
+      optgroup.label = data.category; 
+      data.ingredients.forEach(ingredient =>{
+        const option = document.createElement('option');
+        option.value = ingredient.id;
+        option.textContent = ingredient.name; 
+        optgroup.appendChild(option);
+      });
+      ingredientsSelect.appendChild(optgroup);
+    });
+  })
+  .catch(error => console.error('Erro ao carregar categorias:', error));
+
 document.querySelector('.meal-accordion-container').addEventListener('click', function(event) {
   if (event.target.closest('.meal-type-accordion')) {
     let typeAccordion = event.target.closest('.meal-type-accordion');
@@ -7,15 +28,14 @@ document.querySelector('.meal-accordion-container').addEventListener('click', fu
   if (event.target.closest('.meal-category-accordion')) {
     let categoryAccordion = event.target.closest('.meal-category-accordion');
     expand(categoryAccordion);
-    requestAnimationFrame(() => updateParentPanelHeight(categoryAccordion));
+    updateAllParentPanels(categoryAccordion);
   }
 
   if (event.target.closest('.meal-accordion')) {
     let mealAccordion = event.target.closest('.meal-accordion');
     expand(mealAccordion);
-    requestAnimationFrame(() => updateParentPanelHeight(mealAccordion));
+    updateAllParentPanels(mealAccordion);
   }
-
 });
 
 function expand(accordion) {
@@ -33,32 +53,26 @@ function expand(accordion) {
   }
 }
 
-function updateParentPanelHeight(accordion) {
-  let parentPanel = accordion.closest('.meal-type-accordion-pannel');
+function updateAllParentPanels(element) {
+  let parentPanel = element.closest('.meal-type-accordion-pannel, .meal-category-accordion-pannel, .meal-accordion-pannel');
+  
   if (parentPanel) {
     setTimeout(() => {
       parentPanel.style.display = 'block';
       let scrollHeight = parentPanel.scrollHeight;
-      parentPanel.style.display = ''; 
+      parentPanel.style.display = '';
       parentPanel.style.maxHeight = scrollHeight + "px";
-    }, 250); 
+
+      let parentAccordion = parentPanel.previousElementSibling;
+      if (parentAccordion && (
+          parentAccordion.classList.contains('meal-type-accordion') ||
+          parentAccordion.classList.contains('meal-category-accordion') ||
+          parentAccordion.classList.contains('meal-accordion'))) {
+        updateAllParentPanels(parentAccordion);
+      }
+    }, 250);
   }
 }
-
-// fetch(`add/get-ingredients/`)
-//   .then(response => response.json())
-//   .then(data => {
-//     const ingredientsSelect = document.getElementById('meal-add-ingredients');
-
-//     data.data.forEach(ingredient => {
-//       const option = document.createElement('option'); 
-//       option.textContent = ingredient.name;
-//       option.value = ingredient.id;
-//       ingredientsSelect.appendChild(option);
-//     });
-//   })
-//   .catch(error => console.error('Erro ao carregar categorias:', error));
-
 
 /*  ============================================================
     MODALS - Modals functions   
@@ -84,11 +98,12 @@ document.querySelectorAll("[name='add'], [name='edit'], [name='ingredient'], [na
   });
 
 document.getElementById('meal-add-type').addEventListener('change', function () {
+  const categoriesSelect = document.getElementById('meal-add-categories');
+  categoriesSelect.disabled = false;
   fetch(`add/get-categories/${this.value}/`)
     .then(response => response.json())
     .then(data => {
-      const categoriesSelect = document.getElementById('meal-add-categories');
-      
+
       categoriesSelect.innerHTML = '';
 
       data.data.forEach(category => {
@@ -162,42 +177,41 @@ document.querySelector("[name='meal-remove-form']").addEventListener('submit', a
 
 });
 
-document.querySelectorAll(".ingredient-add-button").forEach(button => {
-  button.addEventListener('click', async function() {
-    var meal = this.closest('.meal-accordion-pannel').id
-    var ingredient = this.id
+document.querySelector("[name='meal-ingredient-form']").addEventListener('submit', async function(event){
+  event.preventDefault();
 
-    data = {
-      meal : meal,
-      ingredient : ingredient,
+  var formData = new FormData();
+  formData.append('meal', this.id);
+  formData.append('ingredient', this.querySelector('#meal-add-ingredients').value);
+
+  let csrfToken = getToken(); 
+  
+  await fetch(`ingredient/add/`, {
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrfToken }, 
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if(data.status == 'success'){
+      let elemento = document.querySelector('.meuElemento#meuId');
+      console.log(elemento);      
+    } else {          
+      message.style.display = 'block';        
+      message.querySelector('#message-text').innerHTML = data.message; 
+      message.querySelector('#message-error').innerHTML = data.error;
+      setTimeout(() => {
+        message.style.display = 'none'; 
+      }, 3000);
     }
+  }); 
 
-    let csrfToken = getToken(); 
-
-    await fetch(`ingredient/add/`, {
-      method: 'POST',
-      headers: { 'X-CSRFToken': csrfToken }, 
-      body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-      if(data.status == 'success'){
-        location.reload(); 
-      } else {          
-        message.style.display = 'block';        
-        message.querySelector('#message-text').innerHTML = data.message; 
-        message.querySelector('#message-error').innerHTML = data.error;
-        setTimeout(() => {
-          message.style.display = 'none'; 
-        }, 3000);
-      }
-    }); 
-
-  });
 });
+
 
 document.querySelectorAll(".ingredient-increment-button").forEach(button => {
   button.addEventListener('click', async function() {
+    buttons.forEach(button => button.disabled = true);
     var meal = this.closest('.meal-accordion-pannel')
     var ingredient = this.id
     var ingredientContainer = this.closest('.meal-ingredient');
@@ -215,7 +229,7 @@ document.querySelectorAll(".ingredient-increment-button").forEach(button => {
       body: JSON.stringify(data)
     })
     .then(response => response.json())
-    .then(data => {
+    .then(data => {      
       if(data.status == 'success'){
         ingredientContainer.querySelector('.ingredient-quantity').innerHTML = data.quantity; 
       } else {          
@@ -226,6 +240,7 @@ document.querySelectorAll(".ingredient-increment-button").forEach(button => {
           message.style.display = 'none'; 
         }, 3000);
       }
+      buttons.forEach(button => button.disabled = false)
     }); 
 
   });
@@ -233,6 +248,7 @@ document.querySelectorAll(".ingredient-increment-button").forEach(button => {
 
 document.querySelectorAll(".ingredient-subtract-button").forEach(button => {
   button.addEventListener('click', async function() {
+    buttons.forEach(button => button.disabled = true);
     let meal = this.closest('.meal-accordion-pannel')
     let ingredient = this.id
     var ingredientContainer = this.closest('.meal-ingredient');
@@ -261,6 +277,7 @@ document.querySelectorAll(".ingredient-subtract-button").forEach(button => {
           message.style.display = 'none'; 
         }, 3000);
       }
+      buttons.forEach(button => button.disabled = false)
     }); 
 
   });
@@ -268,6 +285,7 @@ document.querySelectorAll(".ingredient-subtract-button").forEach(button => {
 
 document.querySelectorAll(".ingredient-remove-button").forEach(button => {
   button.addEventListener('click', async function() {
+    buttons.forEach(button => button.disabled = true);
     let meal = this.closest('.meal-accordion-pannel')
     let ingredient = this.id
     var ingredientContainer = this.closest('.meal-ingredient');
@@ -296,6 +314,7 @@ document.querySelectorAll(".ingredient-remove-button").forEach(button => {
           message.style.display = 'none'; 
         }, 3000);
       }
+      buttons.forEach(button => button.disabled = false)
     }); 
 
   });

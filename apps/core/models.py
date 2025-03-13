@@ -36,7 +36,8 @@ class Category(models.Model):
         (3, 'Porção'),
         (4, 'Bebida'),
         (5, 'Produto'),
-        (6, 'Ticket')
+        (6, 'Ingrediente'),
+        (7, 'Ticket'),
     ]
     type = models.IntegerField(choices=type_choices, default=1)
 
@@ -81,10 +82,14 @@ class Meal(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 class Ingredient(models.Model):
-    id = models.AutoField(primary_key=True)
     ingredient = models.ForeignKey(Product, on_delete=models.CASCADE)
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['ingredient', 'meal'], name='pk_ingredient_meal')
+        ]
 
 class Ticket(models.Model):
     from apps.workers.models import Sector

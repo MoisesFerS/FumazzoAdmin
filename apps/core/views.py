@@ -54,7 +54,7 @@ def get_products(request):
   if request.session.get('workerRole', {}).get('permission', 0) < 4:
     return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
   
-  categories = models.Category.objects.filter(Q(type=5) | Q(type=4))
+  categories = models.Category.objects.filter(Q(type=4) | Q(type=5) | Q(type=6))
   products = models.Product.objects.all()
   data = []
   for category in categories:
@@ -243,31 +243,63 @@ def ticket_add(request):
 def meal(request):
   if 'worker' not in request.session:
     return redirect('workers:login')
-  
-  types = [1, 2, 3, 4] 
-  entries = { 
-    1: {"name": "LANCHES", "categories": []}, 
-    2: {"name": "SOBREMESAS", "categories": []},
-    3: {"name": "PORÇÕES", "categories": []},
-    4: {"name": "BEBIDAS", "categories": []}
-  }
 
-  for type in types:
-    categories = models.Category.objects.filter(type=type)
+  types = [
+    (1, 'LANCHES'),
+    (2, 'SOBREMESAS'),
+    (3, 'PORÇÕES'),
+    (4, 'BEBIDAS')
+  ]
+
+  entries = {type_id: {"name": type_name, "categories": []} for type_id, type_name in types}
+
+  for type_id, type_name in types:
+    categories = models.Category.objects.filter(type=type_id)
 
     for category in categories:
       category_data = {
-        "category_name": category.name,  
+        "category_name": category.name,
         "category_id": category.id,
-        "meals": []  
+        "items": [] 
       }
-        
-      meals = models.Meal.objects.filter(category=category)
-        
-      for meal in meals:
-        category_data["meals"].append(meal)
 
-      entries[type]["categories"].append(category_data)
+      if type_id in [1, 2, 3]:
+        meals = models.Meal.objects.filter(category=category)
+        for meal in meals:
+          meal_data = {
+              "id": meal.id,
+              "name": meal.name,
+              "price": meal.price,
+              "description": meal.description,
+              "image": meal.image,
+              "ingredient_set": []
+          }
+
+          ingredients = models.Ingredient.objects.filter(meal=meal)
+
+          for ingredient in ingredients:
+              meal_data["ingredient_set"].append({
+                  "product": {
+                      "id": ingredient.ingredient.id,
+                      "name": ingredient.ingredient.name,
+                      "image": ingredient.ingredient.image.url if ingredient.ingredient.image else None
+                  },
+                  "quantity": ingredient.quantity
+              })
+
+          category_data["items"].append(meal_data)
+
+      elif type_id == 4:
+        products = models.Product.objects.filter(category=category)
+        for product in products:
+          category_data["items"].append({
+            "name": product.name,
+            "price": product.individual_price,
+            "quantity": product.quantity,
+            "image": product.image
+          })
+
+      entries[type_id]["categories"].append(category_data)
 
   context = {
     'worker': request.session.get('worker'),
@@ -278,12 +310,35 @@ def meal(request):
   return render(request, 'core/meal.html', context)
 
 def get_categories(request, id):
-  categories = list(models.Category.objects.filter(type=id).values()) 
-  return JsonResponse({'status': 'success', 'message': 'Categorias carregadas com sucesso', 'data': categories})
+  try:
+    type_id = int(id)
+    if type_id not in [1, 2, 3]: 
+      return JsonResponse({'status': 'error', 'message': 'Tipo inválido', 'data': [] }, status=400)
+
+    categories = list(models.Category.objects.filter(type=type_id).values('id', 'name'))
+
+    if categories:
+      return JsonResponse({'status': 'success', 'message': 'Categorias carregadas com sucesso', 'data': categories})
+    else:
+      return JsonResponse({'status': 'success', 'message': 'Nenhuma categoria encontrada para este tipo', 'data': []})
+
+  except ValueError:
+    return JsonResponse({'status': 'error', 'message': 'ID inválido', 'data': []}, status=400)
 
 def get_ingredients(request):
-  # ingredients = list(models.Product.objects.filter(category=).values()) 
-  return JsonResponse({'status': 'success', 'message': 'Categorias carregadas com sucesso', 'data': ingredients})
+  try:
+    categories = models.Category.objects.filter(type=6).values('id', 'name')
+    ingredients_data = []
+
+    for category in categories:
+
+      products = models.Product.objects.filter(category_id=category['id']).values('id', 'name')
+      ingredients_data.append({ 'category': category['name'], 'ingredients': list(products)})
+
+    return JsonResponse({ 'status': 'success', 'message': 'Ingredientes carregados com sucesso', 'data': ingredients_data})
+
+  except Exception as e:
+    return JsonResponse({ 'status': 'error', 'message': f'Erro ao carregar ingredientes: {str(e)}', 'data': []}, status=500)
 
 def meal_add(request):
   if request.method != 'POST':
@@ -350,9 +405,8 @@ def meal_remove(request):
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
 
 def ingredient_add(request):
-  data = json.loads(request.body)
-  meal_ = models.Meal.objects.get(id = data.get('meal'))
-  ingredient_ = models.Product.objects.get(id = data.get('ingredient'))
+  meal_ = models.Meal.objects.get(id = request.POST.get('meal'))
+  ingredient_ = models.Product.objects.get(id = request.POST.get('ingredient'))
 
   try:
 
