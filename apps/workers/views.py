@@ -73,17 +73,16 @@ def authentication(request):
 		return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
 
 	try:
-		data = json.loads(request.body)
 
-		if not data.get('id') or not data.get('password'):
+		if not request.POST.get('id') or not request.POST.get('password'):
 			return JsonResponse({'status': 'error', 'error': '400', 'message': 'ID e senha são obrigatórios.'}, status=400)
 
 		try:
-			worker = models.Worker.objects.get(id=data.get('id'))
+			worker = models.Worker.objects.get(id=request.POST.get('id'))
 		except models.Worker.DoesNotExist:
 			return JsonResponse({'status': 'error', 'error': '400', 'message': 'Credenciais inválidas.'}, status=400)
 		
-		if bcrypt.checkpw(data.get('password').encode('UTF-8'), worker.password.encode('UTF-8')):
+		if bcrypt.checkpw(request.POST.get('password').encode('UTF-8'), worker.password.encode('UTF-8')):
 
 			role = worker.role
 

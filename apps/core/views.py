@@ -581,11 +581,64 @@ def products(request):
   if 'worker' not in request.session:
     return redirect('workers:login')
   
-  products = models.Product.objects.all()
+  types = [
+    (4, 'Bebida'),
+    (5, 'Produto'),
+    (6, 'Ingrediente'),
+  ]
+
+  entries = {type_id: {"name" : type_name, "categories" : []} for type_id, type_name in types}
+
+  for type_id, type_name in types:
+    categories = models.Category.objects.filter(type=type_id)
+
+    for category in categories:
+      category_data = {
+        "category_name": category.name,
+        "category_id": category.id,
+        "items": [] 
+      }
+
+      products = models.Product.objects.filter(category = category).all()
+      for product in products:
+        category_data["items"].append(product)
 
   context = {
     'worker': request.session.get('worker'),
     'workerRole': request.session.get('workerRole'),
+    'entries' : entries,
   }
 
   return render(request, 'core/products.html', context)
+
+def teste(request):
+    types = [
+        (4, 'Bebida'),
+        (5, 'Produto'),
+        (6, 'Ingrediente'),
+    ]
+
+    entries = {type_id: {"name": type_name, "categories": []} for type_id, type_name in types}
+
+    for type_id, type_name in types:
+        categories = models.Category.objects.filter(type=type_id)
+
+        for category in categories:
+            category_data = {
+                "category_name": category.name,
+                "category_id": category.id,
+                "items": []
+            }
+            print(category.id)  # Apenas para depuração
+
+            products = models.Product.objects.filter(category_id=category.id)
+            for product in products:
+                category_data["items"].append({
+                    "id": product.id,
+                    "name": product.name,
+                })
+
+            # Adiciona a categoria corretamente ao dicionário `entries`
+            entries[type_id]["categories"].append(category_data)
+
+    return JsonResponse({'entries': entries})

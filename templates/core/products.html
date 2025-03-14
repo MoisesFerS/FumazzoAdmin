@@ -13,6 +13,16 @@ Produtos
 {% block content %}
 
   <div class="main-content">
+    <h1 class="product-title">PRODUTOS EM ESTOQUE</h1>
+    <div class="product-container">
+      {% for category in entries.items.category.category_name %}
+        <div class="product-category-accordion">
+          <h1>{{category}}</h1>
+        </div>
+      {% endfor %}
+
+    </div>
+
 
   </div>
 
