@@ -564,134 +564,28 @@ def ingredient_remove(request):
   except:
     return JsonResponse({'status': 'error', 'error': '500', 'message': 'Erro interno: '}, status=500)
 
-# ===== TESTS =====
+def categories(request):
+  if 'worker' not in request.session:
+    return redirect('workers:login')
+  
+  categories = models.Category.objects.all()
 
-def category(request):
-    if 'worker' not in request.session:
+  context = {
+    'worker': request.session.get('worker'),
+    'workerRole': request.session.get('workerRole'),
+  }
 
-        form = forms.CategoryRegister()
-        form_path = 'partials/forms/core/category.html'
+  return render(request, 'core/categories.html', context)
 
-        if request.method == 'POST':
-            form = forms.CategoryRegister(request.POST)
+def products(request):
+  if 'worker' not in request.session:
+    return redirect('workers:login')
+  
+  products = models.Product.objects.all()
 
-            if form.is_valid():
-                name_ = form.cleaned_data.get('name')
-                type_ = form.cleaned_data.get('type')
+  context = {
+    'worker': request.session.get('worker'),
+    'workerRole': request.session.get('workerRole'),
+  }
 
-                category = models.Category(
-                    name = name_,
-                    type = type_,
-                )
-
-                try:
-                    category.save()
-                    messages.success(request, "Categoria registrada com sucesso!")
-                    return redirect('worker:index') 
-                except Exception as e:
-                    messages.error(request, f"Erro ao fazer o registro: {e}")
-
-        context = {
-            'workerID': request.session['workerID'],
-            'worker_first_name': request.session.get('worker_first_name', ''),
-            'worker_last_name': request.session.get('worker_last_name', ''),
-            'workerRole.permission': request.session.get('workerRole.permission', ''),
-            'worker_role': request.session.get('worker_role', ''),
-            'form': form,
-            'form_path' : form_path,
-        }
-
-        return render(request,'partials/forms/template.html', context)
-    else:
-        return redirect('workers:login')
-
-def supplier(request):
-    if 'worker' not in request.session:
-
-        form = forms.SupplierRegister()
-        form_path = 'partials/forms/core/supplier.html'
-
-        if request.method == 'POST':
-            form = forms.SupplierRegister(request.POST)
-
-            if form.is_valid():
-                name_ = form.cleaned_data.get('name')
-                quantity_ = form.cleaned_data.get('quantity')
-                measurement_ = form.cleaned_data.get('measurement')
-                image_ = form.cleaned_data.get('image')
-
-                supplier = models.Supplier(
-                    name = name_,
-                    quantity = quantity_,
-                    measurement = measurement_,
-                    image = image_,
-                )
-
-                try:
-                    supplier.save()
-                    messages.success(request, "Produto registrado com sucesso!")
-                    return redirect('worker:index') 
-                except Exception as e:
-                    messages.error(request, f"Erro ao fazer o registro: {e}")
-
-        context = {
-            'workerID': request.session['workerID'],
-            'worker_first_name': request.session.get('worker_first_name', ''),
-            'worker_last_name': request.session.get('worker_last_name', ''),
-            'workerRole.permission': request.session.get('workerRole.permission', ''),
-            'worker_role': request.session.get('worker_role', ''),
-            'form': form, 
-            'form_path' : form_path
-        }
-
-        return render(request, 'partials/forms/template.html', context)
-    else:
-        return redirect('workers:login')
-
-def product(request):
-    if 'worker' not in request.session:
-
-        form = forms.ProductRegister()
-        form_path = 'partials/forms/core/product.html'
-
-        if request.method == 'POST':
-            form = forms.ProductRegister(request.POST, request.FILES)
-
-            if form.is_valid():
-                name_ = form.cleaned_data.get('name')
-                quantity_ = form.cleaned_data.get('quantity')
-                measurement_ = form.cleaned_data.get('measurement')
-                individual_price_ = form.cleaned_data.get('individual_price')
-                category_ = form.cleaned_data.get('category')
-                image_ = form.cleaned_data.get('image')
-
-                product = models.Product(
-                    name = name_,
-                    quantity = quantity_,
-                    measurement = measurement_,
-                    individual_price = individual_price_,
-                    category = category_,
-                    image = image_,
-                )
-
-                try:
-                    product.save()
-                    messages.success(request, "Fornecedor registrado com sucesso!")
-                    return redirect('worker:index') 
-                except Exception as e:
-                    messages.error(request, f"Erro ao fazer o registro: {e}")
-
-        context = {
-            'workerID': request.session['workerID'],
-            'worker_first_name': request.session.get('worker_first_name', ''),
-            'worker_last_name': request.session.get('worker_last_name', ''),
-            'workerRole.permission': request.session.get('workerRole.permission', ''),
-            'worker_role': request.session.get('worker_role', ''),
-            'form': form, 
-            'form_path' : form_path
-        }
-
-        return render(request, 'partials/forms/template.html', context)
-    else:
-        return redirect('workers:login')
- 
+  return render(request, 'core/products.html', context)

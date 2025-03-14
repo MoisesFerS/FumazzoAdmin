@@ -7,6 +7,27 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.12.0] - 14/03/2025 - Products and Categories
+
+### ADDED
+- Addedd at `templates/core/`:
+    - `categories.html` -
+    - `products.html` - 
+- Added at `static/js/`:
+    - `categories.js` -
+    - `products.js` - 
+- Added at `static/css/`:
+    - `categories.css` -
+    - `products.css` - 
+- Added new routes in `core/urls.py` for new defs in `core/views.py`:
+    - `categories` - Render categories template.
+    - `products` - Render products template.
+
+<!-- - Added to `Stock System` the function to register a new supplier. -->
+
+### REMOVED
+- `partials/forms/*` - Was deprecated.
+
 ## [0.11.0] - 14/03/2025 - Meal System Integration
 
 ### ADDED
