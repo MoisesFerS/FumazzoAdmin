@@ -14,9 +14,11 @@
   <div class="main-content">
     <h1 class="content-main-title">REFEIÇÕES</h1>
     <div class="meal-container">
-      <div class="meal-button-add">
+      {% if workerRole.permission >= 4 %}
+        <div class="meal-button-add">
           <button class="button-secondary" name="add">Adicionar</button>
-      </div>
+        </div>
+      {% endif %}
       <div class="meal-accordion-container">
         {% for type_id, type_data in entries.items %}
           <div class="meal-type-accordion" id="accordion">
@@ -49,22 +51,26 @@
                             <p class="ingredient-label subtitle" id="{{ ingredient.product.id }}">{{ ingredient.product.name }}</p>
                             <div class="ingredient-quantity-container">
                               <p class="ingredient-quantity subtitle">{{ ingredient.quantity }}</p>
-                              <button class="ingredient-increment-button" id="{{ ingredient.product.id }}" name="ingredient-increment"></button>
-                              <button class="ingredient-subtract-button" id="{{ ingredient.product.id }}" name="ingredient-subtract"></button>
-                              <button class="ingredient-remove-button" id="{{ ingredient.product.id }}" name="ingredient-remove"></button>
+                              {% if workerRole.permission >= 4 %}
+                                <button class="ingredient-increment-button" id="{{ ingredient.product.id }}" name="ingredient-increment"></button>
+                                <button class="ingredient-subtract-button" id="{{ ingredient.product.id }}" name="ingredient-subtract"></button>
+                                <button class="ingredient-remove-button" id="{{ ingredient.product.id }}" name="ingredient-remove"></button>
+                              {% endif %}
                             </div>
                           </div>
                         {% endfor %}
                       {% endif %}
                     </div>
                     <div class="meal-accordion-pannel-buttons">
-                      {% if type_id != 4 %}
-                        <button class="meal-button ingredient" name="ingredient" id="{{ item.id }}"></button>
-                        <button class="meal-button edit" name="edit" id="{{ item.id }}"></button>
-                        <button class="meal-button delete" name="remove" id="{{ item.id }}"></button>
-                      {% else %}
-                        <button class="meal-button edit" name="edit" id="{{ item.id }}"></button>
-                        <button class="meal-button delete" name="remove" id="{{ item.id }}"></button>
+                      {% if workerRole.permission >= 4 %}
+                        {% if type_id != 4 %}
+                          <button class="meal-button ingredient" name="ingredient" id="{{ item.id }}"></button>
+                          <button class="meal-button edit" name="edit" id="{{ item.id }}"></button>
+                          <button class="meal-button delete" name="remove" id="{{ item.id }}"></button>
+                        {% else %}
+                          <button class="meal-button edit" name="edit" id="{{ item.id }}"></button>
+                          <button class="meal-button delete" name="remove" id="{{ item.id }}"></button>
+                        {% endif %}
                       {% endif %}
                     </div>
                     <hr class="accordion-division">
@@ -82,132 +88,133 @@
     </div>
   </div>
 
-  <!-- Modals -->
-
-  <div class="meal-modal-container" id="modal-add">
-    <div class="meal-modal-content">
-      <div class="meal-modal-header">
-          <h1 class="meal-modal-title-add">ADICIONAR REFEIÇÃO</h1>
-      </div>
-      <div class="meal-modal-body">
-        <div class="modal-add-form">
-          <form action="POST" name="meal-add-form" enctype="multipart/form-data">
-            <div class="meal-form-data">
-              <p class="meal-form-label subtitle">TIPO: </p>
-              <select id="meal-add-type" class="form-input-select">
-                <option value="" selected disabled hidden>SELECIONE UM TIPO</option>
-                <option value="1">LANCHES</option>
-                <option value="2">SOBREMESAS</option>
-                <option value="3">PORÇÕES</option>
-              </select>
-            </div>
-            <div class="meal-form-data">
-              <p class="meal-form-label subtitle">CATEGORIA: </p>
-              <select id="meal-add-categories" class="form-input-select" disabled>
-                <option value="">SELECIONE UM TIPO PRIMEIRO</option>
-              </select>
-            </div>
-            <div class="meal-form-data">
-              <p class="meal-form-label subtitle">NOME: </p>
-              <input id="meal-add-name" placeholder="Digite o nome da refeição">
-            </div>
-            <div class="meal-form-data">
-              <p class="meal-form-label subtitle">DESCRIÇÃO: </p>
-              <textarea id="meal-add-description" placeholder="Digite a descrição da refeição"></textarea>
-            </div>
-            <div class="meal-form-data">
-              <p class="meal-form-label subtitle">PREÇO: </p>
-              <input type="number" id="meal-add-price" step="0.01" placeholder="Digite o preço">
-            </div>
-            <div class="meal-form-data">
-              <p class="meal-form-label subtitle">IMAGEM: </p>
-              <input type="file" id="meal-add-image" accept="image/*">
-            </div>
-            <div class="modal-confirm-button">
-              <button class="button-primary" id="confirm-add" type="submit">CONFIRMAR</button>
-            </div>
-          </form>
+  {% if workerRole.permission >= 4 %}
+    <!-- Modals -->
+    <div class="meal-modal-container" id="modal-add">
+      <div class="meal-modal-content">
+        <div class="meal-modal-header">
+            <h1 class="meal-modal-title-add">ADICIONAR REFEIÇÃO</h1>
+        </div>
+        <div class="meal-modal-body">
+          <div class="modal-add-form">
+            <form action="POST" name="meal-add-form" enctype="multipart/form-data">
+              <div class="meal-form-data">
+                <p class="meal-form-label subtitle">TIPO: </p>
+                <select id="meal-add-type" class="form-input-select">
+                  <option value="" selected disabled hidden>SELECIONE UM TIPO</option>
+                  <option value="1">LANCHES</option>
+                  <option value="2">SOBREMESAS</option>
+                  <option value="3">PORÇÕES</option>
+                </select>
+              </div>
+              <div class="meal-form-data">
+                <p class="meal-form-label subtitle">CATEGORIA: </p>
+                <select id="meal-add-categories" class="form-input-select" disabled>
+                  <option value="">SELECIONE UM TIPO PRIMEIRO</option>
+                </select>
+              </div>
+              <div class="meal-form-data">
+                <p class="meal-form-label subtitle">NOME: </p>
+                <input id="meal-add-name" placeholder="Digite o nome da refeição">
+              </div>
+              <div class="meal-form-data">
+                <p class="meal-form-label subtitle">DESCRIÇÃO: </p>
+                <textarea id="meal-add-description" placeholder="Digite a descrição da refeição"></textarea>
+              </div>
+              <div class="meal-form-data">
+                <p class="meal-form-label subtitle">PREÇO: </p>
+                <input type="number" id="meal-add-price" step="0.01" placeholder="Digite o preço">
+              </div>
+              <div class="meal-form-data">
+                <p class="meal-form-label subtitle">IMAGEM: </p>
+                <input type="file" id="meal-add-image" accept="image/*">
+              </div>
+              <div class="modal-confirm-button">
+                <button class="button-primary" id="confirm-add" type="submit">CONFIRMAR</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="meal-modal-container" id="modal-edit">
-    <div class="meal-modal-content">
-      <div class="meal-modal-header">
-        <h1 class="meal-modal-title-edit">EDITAR REGISTRO</h1>
-      </div>
-      <div class="meal-modal-body">
-        <div class="modal-edit-form">
-          <form method="POST" id="" name="meal-edit-form">
-            <div class="meal-form-data">
-              <p class="meal-form-label subtitle">NOME: </p>
-              <input id="meal-edit-name" placeholder="Digite o nome da refeição">
-            </div>
-            <div class="meal-form-data">
-              <p class="meal-form-label subtitle">DESCRIÇÃO: </p>
-              <textarea id="meal-edit-description" placeholder="Digite a descrição da refeição"></textarea>
-            </div>
-            <div class="meal-form-data">
-              <p class="meal-form-label subtitle">PREÇO: </p>
-              <input type="number" id="meal-edit-price" step="0.01" placeholder="Digite o preço">
-            </div>
-            <div class="meal-form-data">
-              <p class="meal-form-label subtitle">IMAGEM: </p>
-              <img id="meal-edit-image" class="meal-accordion-image" src="" alt="">
-              <input type="file" id="meal-new-image" accept="image/*">
-            </div>
-            <div>
-              <button class="button-primary" type="submit">CONFIRMAR</button>
-            </div>
-          </form>
+    <div class="meal-modal-container" id="modal-edit">
+      <div class="meal-modal-content">
+        <div class="meal-modal-header">
+          <h1 class="meal-modal-title-edit">EDITAR REGISTRO</h1>
+        </div>
+        <div class="meal-modal-body">
+          <div class="modal-edit-form">
+            <form method="POST" id="" name="meal-edit-form">
+              <div class="meal-form-data">
+                <p class="meal-form-label subtitle">NOME: </p>
+                <input id="meal-edit-name" placeholder="Digite o nome da refeição">
+              </div>
+              <div class="meal-form-data">
+                <p class="meal-form-label subtitle">DESCRIÇÃO: </p>
+                <textarea id="meal-edit-description" placeholder="Digite a descrição da refeição"></textarea>
+              </div>
+              <div class="meal-form-data">
+                <p class="meal-form-label subtitle">PREÇO: </p>
+                <input type="number" id="meal-edit-price" step="0.01" placeholder="Digite o preço">
+              </div>
+              <div class="meal-form-data">
+                <p class="meal-form-label subtitle">IMAGEM: </p>
+                <img id="meal-edit-image" class="meal-accordion-image" src="" alt="">
+                <input type="file" id="meal-new-image" accept="image/*">
+              </div>
+              <div>
+                <button class="button-primary" type="submit">CONFIRMAR</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="meal-modal-container" id="modal-remove">
-    <div class="meal-modal-content">
-      <div class="meal-modal-header">
-        <h1 class="meal-modal-title-remove">REMOVER REGISTRO</h1>
-      </div>
-      <div class="meal-modal-body">
-        <div class="modal-remove-form">
-          <form method="POST" id="" name="meal-remove-form">
-            <div class="form-text">
-              <p>Você tem certeza que deseja remover</p>
-              <p id="remove-meal">REFEIÇÃO</p>
-            </div>
-            <div>
-              <button class="button-primary" type="submit">CONFIRMAR</button>
-            </div>
-          </form>
+    <div class="meal-modal-container" id="modal-remove">
+      <div class="meal-modal-content">
+        <div class="meal-modal-header">
+          <h1 class="meal-modal-title-remove">REMOVER REGISTRO</h1>
+        </div>
+        <div class="meal-modal-body">
+          <div class="modal-remove-form">
+            <form method="POST" id="" name="meal-remove-form">
+              <div class="form-text">
+                <p>Você tem certeza que deseja remover</p>
+                <p id="remove-meal">REFEIÇÃO</p>
+              </div>
+              <div>
+                <button class="button-primary" type="submit">CONFIRMAR</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="meal-modal-container" id="modal-ingredient">
-    <div class="meal-modal-content">
-      <div class="meal-modal-header">
-        <h1 class="meal-modal-title-ingredient">ADICIONAR INGREDIENTE</h1>
-      </div>
-      <div class="meal-modal-body">
-        <div class="modal-ingredient-form">
-          <form method="POST" id="" name="meal-ingredient-form">
-            <div class="form-text">
-              <select id="meal-add-ingredients">
-                <option value="" selected disabled hidden>SELECIONE UM INGREDIENTE</option>
-              </select>
-            </div>
-            <div>
-              <button class="button-primary" type="submit">ADICIONAR</button>
-            </div>
-          </form>
+    <div class="meal-modal-container" id="modal-ingredient">
+      <div class="meal-modal-content">
+        <div class="meal-modal-header">
+          <h1 class="meal-modal-title-ingredient">ADICIONAR INGREDIENTE</h1>
+        </div>
+        <div class="meal-modal-body">
+          <div class="modal-ingredient-form">
+            <form method="POST" id="" name="meal-ingredient-form">
+              <div class="form-text">
+                <select id="meal-add-ingredients">
+                  <option value="" selected disabled hidden>SELECIONE UM INGREDIENTE</option>
+                </select>
+              </div>
+              <div>
+                <button class="button-primary" type="submit">ADICIONAR</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  {% endif %}
 
   <script src="{% static 'js/core/meal.js' %}"></script>
 

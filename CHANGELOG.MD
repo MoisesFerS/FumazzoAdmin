@@ -7,17 +7,28 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
-## [0.11.0] - 24/02/2025 - Adding the Stock System
+## [0.11.0] - 14/03/2025 - Meal System Integration
 
 ### ADDED
-- Added `meal.html` to `templates/core/`.
-- Added `meal.css` to `css/core/`.
-- Added `meal.js` to `js/core/`.
-- Added the link to meal system on the `navbar`.
-- Added defs to `core/views.py`:
-    - `meal` - Renders the meal system page.
-    - `get_categories` - Retrieve the categories when selecting a type in `meal add modal`.
-    - `meal_add` - Register a meal entry. 
+- Added `meal.html`: the HTML template for the meal system page.
+- Added `meal.css`: styles for the meal management page.
+- Added `meal.js`: JavaScript for meal-related dynamic interactions.
+- Added Navbar Link to the meal system in the main navigation bar.
+- Added new routes in `core/urls.py` for new defs in `core/views.py`:
+  - `meal`: Renders the meal management page.
+  - `get_categories`: Retrieves categories when selecting a type in the "meal add" modal.
+  - `meal_add`: Registers a new meal entry.
+  - `meal_data`: Retrieves meal information for editing.
+  - `meal_edit`: Updates the meal information.
+  - `meal_remove`: Removes a meal entry.
+  - Ingredient Operations: Added routes to manage meal ingredients:
+    - `ingredient_add`: Adds an ingredient to a meal.
+    - `ingredient_increment`: Increases the quantity of a selected ingredient.
+    - `ingredient_subtract`: Decreases the quantity of a selected ingredient.
+    - `ingredient_remove`: Removes an ingredient from a meal.
+
+### CHANGED
+- Model Update: Renamed the `meal_product` model to `Ingredient` for clearer representation in the context of meals.
 
 ## [0.10.0] - 27/02/2025 - Developing the index's Pages
 
