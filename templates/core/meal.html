@@ -49,13 +49,11 @@
                             <p class="ingredient-label subtitle" id="{{ ingredient.product.id }}">{{ ingredient.product.name }}</p>
                             <div class="ingredient-quantity-container">
                               <p class="ingredient-quantity subtitle">{{ ingredient.quantity }}</p>
-                              <button class="ingredient-increment-button" id="{{ ingredient.product.id }}"></button>
-                              <button class="ingredient-subtract-button" id="{{ ingredient.product.id }}"></button>
-                              <button class="ingredient-remove-button" id="{{ ingredient.product.id }}"></button>
+                              <button class="ingredient-increment-button" id="{{ ingredient.product.id }}" name="ingredient-increment"></button>
+                              <button class="ingredient-subtract-button" id="{{ ingredient.product.id }}" name="ingredient-subtract"></button>
+                              <button class="ingredient-remove-button" id="{{ ingredient.product.id }}" name="ingredient-remove"></button>
                             </div>
                           </div>
-                        {% empty %}
-                          <p>Nenhum ingrediente encontrado.</p>
                         {% endfor %}
                       {% endif %}
                     </div>

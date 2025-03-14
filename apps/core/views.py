@@ -415,7 +415,15 @@ def ingredient_add(request):
       ingredient = ingredient_,
     )
 
-    return JsonResponse({'status': 'success', 'message': 'Ingrediente adicionado com sucesso!'})
+    ingredientData = {
+      'id' : ingredient_.id,
+      'name' : ingredient_.name,
+      'quantity' : ingredient_.quantity,
+      'image' : request.build_absolute_uri(ingredient_.image.url) if ingredient_.image else None,
+      'mealID' : meal_.id,
+    }
+
+    return JsonResponse({'status': 'success', 'message': 'Ingrediente adicionado com sucesso!', 'ingredient' : ingredientData})
   except:
     return JsonResponse({'status': 'error', 'error': '500', 'message': 'Erro interno: '}, status=500)
   

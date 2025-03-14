@@ -194,8 +194,44 @@ document.querySelector("[name='meal-ingredient-form']").addEventListener('submit
   .then(response => response.json())
   .then(data => {
     if(data.status == 'success'){
-      let elemento = document.querySelector('.meuElemento#meuId');
-      console.log(elemento);      
+      let ingredientsContainer = document.querySelector(`.meal-ingredients-container[id="${data.ingredient.mealID}"]`);
+      
+      let mealIngredient = document.createElement('div')
+      mealIngredient.classList.add('meal-ingredient')
+
+      let ingredientImage = document.createElement('img')
+      ingredientImage.src = data.ingredient.image
+      ingredientImage.classList.add('ingredient-image')
+      mealIngredient.append(ingredientImage)
+
+      let ingredientLabel = document.createElement('p')
+      ingredientLabel.innerHTML = data.ingredient.name
+      ingredientLabel.classList.add('ingredient-label')
+      ingredientLabel.classList.add('subtitle')
+      mealIngredient.append(ingredientLabel)
+
+      let qunatityContainer = document.createElement('div')
+      qunatityContainer.classList.add('ingredient-quantity-container')
+
+      let ingredientQuantity = document.createElement('p')
+      ingredientQuantity.innerHTML = data.ingredient.quantity
+      ingredientQuantity.classList.add('ingredient-quantity')
+      ingredientQuantity.classList.add('subtitle')
+      qunatityContainer.append(ingredientQuantity)
+
+      let buttonTypes = ['ingredient-increment', 'ingredient-subtract', 'ingredient-remove'];
+
+      buttonTypes.forEach(action => {
+        let ingredientButton = document.createElement('button');
+        ingredientButton.classList.add(`${action}-button`);  
+        ingredientButton.name = action;  
+        ingredientButton.id = data.ingredient.id
+        qunatityContainer.append(ingredientButton);
+      });
+
+      mealIngredient.append(qunatityContainer)
+      ingredientsContainer.append(mealIngredient)
+
     } else {          
       message.style.display = 'block';        
       message.querySelector('#message-text').innerHTML = data.message; 
@@ -208,114 +244,57 @@ document.querySelector("[name='meal-ingredient-form']").addEventListener('submit
 
 });
 
+document.querySelectorAll('.meal-ingredients-container')
+.forEach(mealContent => {
+  mealContent.addEventListener('click', async function(event) {
+    const target = event.target;
 
-document.querySelectorAll(".ingredient-increment-button").forEach(button => {
-  button.addEventListener('click', async function() {
-    buttons.forEach(button => button.disabled = true);
-    var meal = this.closest('.meal-accordion-pannel')
-    var ingredient = this.id
-    var ingredientContainer = this.closest('.meal-ingredient');
-
-    data = {
-      meal : meal.id,
-      ingredient : ingredient,
+    if (target && target.tagName === 'BUTTON' && target.name) {
+      const action = target.name.split('-')[1]; 
+      handleButtonClick(target, action);
     }
-
-    let csrfToken = getToken(); 
-
-    await fetch(`ingredient/increment/`, {
-      method: 'POST',
-      headers: { 'X-CSRFToken': csrfToken }, 
-      body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {      
-      if(data.status == 'success'){
-        ingredientContainer.querySelector('.ingredient-quantity').innerHTML = data.quantity; 
-      } else {          
-        message.style.display = 'block';        
-        message.querySelector('#message-text').innerHTML = data.message; 
-        message.querySelector('#message-error').innerHTML = data.error;
-        setTimeout(() => {
-          message.style.display = 'none'; 
-        }, 3000);
-      }
-      buttons.forEach(button => button.disabled = false)
-    }); 
 
   });
 });
 
-document.querySelectorAll(".ingredient-subtract-button").forEach(button => {
-  button.addEventListener('click', async function() {
-    buttons.forEach(button => button.disabled = true);
-    let meal = this.closest('.meal-accordion-pannel')
-    let ingredient = this.id
-    var ingredientContainer = this.closest('.meal-ingredient');
+async function handleButtonClick(button, action) {
+  const buttons = button.closest('.meal-ingredient').querySelectorAll('button');
+  buttons.forEach(btn => btn.disabled = true);
 
-    data = {
-      meal : meal.id,
-      ingredient : ingredient,
-    }
+  const meal = button.closest('.meal-accordion-pannel');
+  const ingredient = button.id; 
+  const ingredientContainer = button.closest('.meal-ingredient');
 
-    let csrfToken = getToken(); 
+  const data = {
+    meal: meal.id,
+    ingredient: ingredient,
+  };
 
-    await fetch(`ingredient/subtract/`, {
-      method: 'POST',
-      headers: { 'X-CSRFToken': csrfToken }, 
-      body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-      if(data.status == 'success'){
-        ingredientContainer.querySelector('.ingredient-quantity').innerHTML = data.quantity; 
-      } else {          
-        message.style.display = 'block';        
-        message.querySelector('#message-text').innerHTML = data.message; 
-        message.querySelector('#message-error').innerHTML = data.error;
-        setTimeout(() => {
-          message.style.display = 'none'; 
-        }, 3000);
+  let csrfToken = getToken();
+  
+  const url = `ingredient/${action}/`;
+
+  await fetch(url, {
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrfToken },
+    body: JSON.stringify(data),
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'success') {
+      if (action === 'remove') {
+        ingredientContainer.remove(); 
+      } else {
+        ingredientContainer.querySelector('.ingredient-quantity').innerHTML = data.quantity;
       }
-      buttons.forEach(button => button.disabled = false)
-    }); 
-
-  });
-});
-
-document.querySelectorAll(".ingredient-remove-button").forEach(button => {
-  button.addEventListener('click', async function() {
-    buttons.forEach(button => button.disabled = true);
-    let meal = this.closest('.meal-accordion-pannel')
-    let ingredient = this.id
-    var ingredientContainer = this.closest('.meal-ingredient');
-
-    data = {
-      meal : meal.id,
-      ingredient : ingredient,
+    } else {
+      message.style.display = 'block';
+      message.querySelector('#message-text').innerHTML = data.message;
+      message.querySelector('#message-error').innerHTML = data.error;
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 3000);
     }
-
-    let csrfToken = getToken(); 
-
-    await fetch(`ingredient/remove/`, {
-      method: 'POST',
-      headers: { 'X-CSRFToken': csrfToken }, 
-      body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-      if(data.status == 'success'){
-        ingredientContainer.remove()
-      } else {          
-        message.style.display = 'block';        
-        message.querySelector('#message-text').innerHTML = data.message; 
-        message.querySelector('#message-error').innerHTML = data.error;
-        setTimeout(() => {
-          message.style.display = 'none'; 
-        }, 3000);
-      }
-      buttons.forEach(button => button.disabled = false)
-    }); 
-
+    buttons.forEach(btn => btn.disabled = false); 
   });
-});
+}
