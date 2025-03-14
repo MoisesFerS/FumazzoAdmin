@@ -135,14 +135,27 @@
   <div class="meal-modal-container" id="modal-edit">
     <div class="meal-modal-content">
       <div class="meal-modal-header">
-        <h1 class="meal-modal-title-edit">editR REGISTRO</h1>
+        <h1 class="meal-modal-title-edit">EDITAR REGISTRO</h1>
       </div>
       <div class="meal-modal-body">
         <div class="modal-edit-form">
           <form method="POST" id="" name="meal-edit-form">
-            <div class="form-text">
-              <p>Você tem certeza que deseja editr</p>
-              <p id="edit-meal">REFEIÇÃO</p>
+            <div class="meal-form-data">
+              <p class="meal-form-label subtitle">NOME: </p>
+              <input id="meal-edit-name" placeholder="Digite o nome da refeição">
+            </div>
+            <div class="meal-form-data">
+              <p class="meal-form-label subtitle">DESCRIÇÃO: </p>
+              <textarea id="meal-edit-description" placeholder="Digite a descrição da refeição"></textarea>
+            </div>
+            <div class="meal-form-data">
+              <p class="meal-form-label subtitle">PREÇO: </p>
+              <input type="number" id="meal-edit-price" step="0.01" placeholder="Digite o preço">
+            </div>
+            <div class="meal-form-data">
+              <p class="meal-form-label subtitle">IMAGEM: </p>
+              <img id="meal-edit-image" class="meal-accordion-image" src="" alt="">
+              <input type="file" id="meal-new-image" accept="image/*">
             </div>
             <div>
               <button class="button-primary" type="submit">CONFIRMAR</button>

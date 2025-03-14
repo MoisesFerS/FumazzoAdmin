@@ -124,7 +124,8 @@ document.querySelector("[name='meal-add-form']").addEventListener('submit', asyn
   formData.append('name', document.querySelector('#meal-add-name').value);
   formData.append('description', document.querySelector('#meal-add-description').value);
   formData.append('price', document.querySelector('#meal-add-price').value);
-  formData.append('image', document.querySelector('#meal-add-image').files[0]); 
+  let imageFile = document.querySelector('#meal-add-image').files[0];
+  formData.append('image', imageFile ? imageFile : null);
 
   let csrfToken = getToken(); 
 
@@ -147,6 +148,40 @@ document.querySelector("[name='meal-add-form']").addEventListener('submit', asyn
     }
   }); 
 });
+
+document.querySelector("[name='meal-edit-form']").addEventListener('submit', async function(event){
+  event.preventDefault();
+
+  var formData = new FormData();
+  formData.append('mealID', this.id)
+  formData.append('name', document.querySelector('#meal-edit-name').value);
+  formData.append('description', document.querySelector('#meal-edit-description').value);
+  formData.append('price', document.querySelector('#meal-edit-price').value);
+  let imageFile = document.querySelector('#meal-new-image').files[0];
+  formData.append('image', imageFile ? imageFile : null);
+
+  let csrfToken = getToken(); 
+
+  await fetch(`edit/`, {
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrfToken }, 
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if(data.status == 'success'){
+      location.reload(); 
+    } else {          
+      message.style.display = 'block';        
+      message.querySelector('#message-text').innerHTML = data.message; 
+      message.querySelector('#message-error').innerHTML = data.error;
+      setTimeout(() => {
+        message.style.display = 'none'; 
+      }, 3000);
+    }
+  }); 
+});
+
 
 document.querySelector("[name='meal-remove-form']").addEventListener('submit', async function(event){
   event.preventDefault();
@@ -232,6 +267,9 @@ document.querySelector("[name='meal-ingredient-form']").addEventListener('submit
       mealIngredient.append(qunatityContainer)
       ingredientsContainer.append(mealIngredient)
 
+      const modal = document.getElementById(`modal-ingredient`);
+      modal.style.display = 'none';
+
     } else {          
       message.style.display = 'block';        
       message.querySelector('#message-text').innerHTML = data.message; 
@@ -271,10 +309,8 @@ async function handleButtonClick(button, action) {
   };
 
   let csrfToken = getToken();
-  
-  const url = `ingredient/${action}/`;
 
-  await fetch(url, {
+  await fetch(`ingredient/${action}/`, {
     method: 'POST',
     headers: { 'X-CSRFToken': csrfToken },
     body: JSON.stringify(data),
@@ -298,3 +334,43 @@ async function handleButtonClick(button, action) {
     buttons.forEach(btn => btn.disabled = false); 
   });
 }
+
+document.querySelectorAll('.meal-button.edit').forEach(button => {
+  button.addEventListener('click', async function(){
+
+    var formData = new FormData();
+    formData.append('meal', this.id)
+
+    let csrfToken = getToken();
+
+    await fetch(`data/`, {
+      method: 'POST',
+      headers: { 'X-CSRFToken': csrfToken },
+      body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'success') {
+        let info = ['name', 'description', 'price', 'image']
+
+        info.forEach(input => {
+          let editInfo = document.querySelector(`#meal-edit-${input}`)
+          if(input == 'image'){
+            editInfo.src = data.mealData[input]
+          } else {
+            editInfo.value = data.mealData[input]
+          }
+        });
+
+      } else {
+        message.style.display = 'block';
+        message.querySelector('#message-text').innerHTML = data.message;
+        message.querySelector('#message-error').innerHTML = data.error;
+        setTimeout(() => {
+          message.style.display = 'none';
+        }, 3000);
+      }
+      buttons.forEach(btn => btn.disabled = false); 
+    });
+  });
+});

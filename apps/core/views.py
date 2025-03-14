@@ -384,6 +384,68 @@ def meal_add(request):
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
   
+def meal_edit(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  try:
+    name_ = request.POST.get('name')
+    description_ = request.POST.get('description')
+    price_ = request.POST.get('price')
+    image_file = request.FILES.get('image')
+
+    try:
+      price_ = float(price_)
+      if price_ <= 0:
+        return JsonResponse({'status': 'error', 'error': '400', 'message': 'O preço não pode ser zero ou negativo.'}, status=400)
+    except ValueError:
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço inválido.'}, status=400)
+
+    meal = models.Meal.objects.get(id=request.POST.get('mealID'))
+    meal.name = name_
+    meal.description = description_
+    meal.price = price_
+    if image_file:
+      meal.image = image_file
+    meal.save()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro editado com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
+def meal_data(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  try:
+    meal_id = request.POST.get('meal')
+    meal = models.Meal.objects.get(id=meal_id)
+
+    mealData = {
+      'name' : meal.name,
+      'description' : meal.description,
+      'image' : request.build_absolute_uri(meal.image.url) if meal.image else None,
+      'price' : meal.price,
+    }
+
+    return JsonResponse({'status': 'success', 'message': 'Infromação encontrada com sucesso!', 'mealData' : mealData})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
 def meal_remove(request):
   if request.method != 'POST':
     return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
