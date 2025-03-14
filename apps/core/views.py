@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.db.models import Q
 import json
 from apps.workers.models import Worker, Sector
+from django.core.files.base import ContentFile
 
 #   ============================================================
 #   INDEX - Defs related to Index page(manage)
@@ -53,7 +54,7 @@ def get_products(request):
   if request.session.get('workerRole', {}).get('permission', 0) < 4:
     return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
   
-  categories = models.Category.objects.filter(Q(type=5) | Q(type=4))
+  categories = models.Category.objects.filter(Q(type=4) | Q(type=5) | Q(type=6))
   products = models.Product.objects.all()
   data = []
   for category in categories:
@@ -88,7 +89,7 @@ def stock_add(request):
 
     date_ = data.get('date')                    
     supplier_ = models.Supplier.objects.filter(id = data.get('supplier')).first()
-    receiver_ =  models.Worker.objects.filter(id = data.get('receiver')).first()
+    receiver_ =  Worker.objects.filter(id = data.get('receiver')).first()
 
     models.Stock.objects.create(
       date = date_,
@@ -239,6 +240,330 @@ def ticket_add(request):
   except json.JSONDecodeError:
     return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
 
+def meal(request):
+  if 'worker' not in request.session:
+    return redirect('workers:login')
+
+  types = [
+    (1, 'LANCHES'),
+    (2, 'SOBREMESAS'),
+    (3, 'PORÇÕES'),
+    (4, 'BEBIDAS')
+  ]
+
+  entries = {type_id: {"name": type_name, "categories": []} for type_id, type_name in types}
+
+  for type_id, type_name in types:
+    categories = models.Category.objects.filter(type=type_id)
+
+    for category in categories:
+      category_data = {
+        "category_name": category.name,
+        "category_id": category.id,
+        "items": [] 
+      }
+
+      if type_id in [1, 2, 3]:
+        meals = models.Meal.objects.filter(category=category)
+        for meal in meals:
+          meal_data = {
+              "id": meal.id,
+              "name": meal.name,
+              "price": meal.price,
+              "description": meal.description,
+              "image": meal.image,
+              "ingredient_set": []
+          }
+
+          ingredients = models.Ingredient.objects.filter(meal=meal)
+
+          for ingredient in ingredients:
+              meal_data["ingredient_set"].append({
+                  "product": {
+                      "id": ingredient.ingredient.id,
+                      "name": ingredient.ingredient.name,
+                      "image": ingredient.ingredient.image.url if ingredient.ingredient.image else None
+                  },
+                  "quantity": ingredient.quantity
+              })
+
+          category_data["items"].append(meal_data)
+
+      elif type_id == 4:
+        products = models.Product.objects.filter(category=category)
+        for product in products:
+          category_data["items"].append({
+            "name": product.name,
+            "price": product.individual_price,
+            "quantity": product.quantity,
+            "image": product.image
+          })
+
+      entries[type_id]["categories"].append(category_data)
+
+  context = {
+    'worker': request.session.get('worker'),
+    'workerRole': request.session.get('workerRole'),
+    'entries': entries,
+  }
+
+  return render(request, 'core/meal.html', context)
+
+def get_categories(request, id):
+  try:
+    type_id = int(id)
+    if type_id not in [1, 2, 3]: 
+      return JsonResponse({'status': 'error', 'message': 'Tipo inválido', 'data': [] }, status=400)
+
+    categories = list(models.Category.objects.filter(type=type_id).values('id', 'name'))
+
+    if categories:
+      return JsonResponse({'status': 'success', 'message': 'Categorias carregadas com sucesso', 'data': categories})
+    else:
+      return JsonResponse({'status': 'success', 'message': 'Nenhuma categoria encontrada para este tipo', 'data': []})
+
+  except ValueError:
+    return JsonResponse({'status': 'error', 'message': 'ID inválido', 'data': []}, status=400)
+
+def get_ingredients(request):
+  try:
+    categories = models.Category.objects.filter(type=6).values('id', 'name')
+    ingredients_data = []
+
+    for category in categories:
+
+      products = models.Product.objects.filter(category_id=category['id']).values('id', 'name')
+      ingredients_data.append({ 'category': category['name'], 'ingredients': list(products)})
+
+    return JsonResponse({ 'status': 'success', 'message': 'Ingredientes carregados com sucesso', 'data': ingredients_data})
+
+  except Exception as e:
+    return JsonResponse({ 'status': 'error', 'message': f'Erro ao carregar ingredientes: {str(e)}', 'data': []}, status=500)
+
+def meal_add(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  try:
+    category_id = request.POST.get('category')
+    name_ = request.POST.get('name')
+    description_ = request.POST.get('description')
+    price_ = request.POST.get('price')
+    image_file = request.FILES.get('image')
+
+    if not category_id or not name_ or not description_ or not price_:
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
+
+    try:
+      price_ = float(price_)
+      if price_ <= 0:
+        return JsonResponse({'status': 'error', 'error': '400', 'message': 'O preço não pode ser zero ou negativo.'}, status=400)
+    except ValueError:
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço inválido.'}, status=400)
+
+    category_ = models.Category.objects.filter(id=category_id).first()
+    if not category_:
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Categoria inválida.'}, status=400)
+
+    models.Meal.objects.create(
+      category=category_,
+      name=name_,
+      description=description_,
+      price=price_,
+      image=image_file  
+    )
+
+    return JsonResponse({'status': 'success', 'message': 'Registro criado com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+  
+def meal_edit(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  try:
+    name_ = request.POST.get('name')
+    description_ = request.POST.get('description')
+    price_ = request.POST.get('price')
+    image_file = request.FILES.get('image')
+
+    try:
+      price_ = float(price_)
+      if price_ <= 0:
+        return JsonResponse({'status': 'error', 'error': '400', 'message': 'O preço não pode ser zero ou negativo.'}, status=400)
+    except ValueError:
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço inválido.'}, status=400)
+
+    meal = models.Meal.objects.get(id=request.POST.get('mealID'))
+    meal.name = name_
+    meal.description = description_
+    meal.price = price_
+    if image_file:
+      meal.image = image_file
+    meal.save()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro editado com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
+def meal_data(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  try:
+    meal_id = request.POST.get('meal')
+    meal = models.Meal.objects.get(id=meal_id)
+
+    mealData = {
+      'name' : meal.name,
+      'description' : meal.description,
+      'image' : request.build_absolute_uri(meal.image.url) if meal.image else None,
+      'price' : meal.price,
+    }
+
+    return JsonResponse({'status': 'success', 'message': 'Infromação encontrada com sucesso!', 'mealData' : mealData})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
+def meal_remove(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  try:
+    meal_id = request.POST.get('meal')
+
+    models.Meal.objects.get(id=meal_id).delete()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro removido com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
+def ingredient_add(request):
+  meal_ = models.Meal.objects.get(id = request.POST.get('meal'))
+  ingredient_ = models.Product.objects.get(id = request.POST.get('ingredient'))
+
+  try:
+
+    models.Ingredient.objects.create(
+      meal = meal_,
+      ingredient = ingredient_,
+    )
+
+    ingredientData = {
+      'id' : ingredient_.id,
+      'name' : ingredient_.name,
+      'quantity' : ingredient_.quantity,
+      'image' : request.build_absolute_uri(ingredient_.image.url) if ingredient_.image else None,
+      'mealID' : meal_.id,
+    }
+
+    return JsonResponse({'status': 'success', 'message': 'Ingrediente adicionado com sucesso!', 'ingredient' : ingredientData})
+  except:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': 'Erro interno: '}, status=500)
+  
+def ingredient_increment(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  data = json.loads(request.body)  
+  meal_ = models.Meal.objects.get(id = data.get('meal'))
+  ingredient_ = models.Product.objects.get(id = data.get('ingredient'))
+
+  try:
+
+    entry = models.Ingredient.objects.get(meal_id = meal_, ingredient_id = ingredient_)
+    entry.quantity += 1 
+    entry.save()
+
+    return JsonResponse({'status': 'success', 'message': 'Ingrediente adicionado com sucesso!', 'quantity' : entry.quantity})
+  except:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': 'Erro interno: '}, status=500)
+
+def ingredient_subtract(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  data = json.loads(request.body)  
+  meal_ = models.Meal.objects.get(id = data.get('meal'))
+  ingredient_ = models.Product.objects.get(id = data.get('ingredient'))
+
+  try:
+
+    entry = models.Ingredient.objects.get(meal_id = meal_, ingredient_id = ingredient_)
+    entry.quantity -= 1 
+
+    if (entry.quantity < 0):
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'A quantidade não pode ser menor que zero.'}, status=400)
+
+    entry.save()
+
+    return JsonResponse({'status': 'success', 'message': 'Ingrediente subtraído com sucesso!', 'quantity' : entry.quantity})
+  except:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': 'Erro interno: '}, status=500)
+
+def ingredient_remove(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  data = json.loads(request.body)  
+  meal_ = models.Meal.objects.get(id = data.get('meal'))
+  ingredient_ = models.Product.objects.get(id = data.get('ingredient'))
+
+  try:
+
+    entry = models.Ingredient.objects.get(meal_id = meal_, ingredient_id = ingredient_)
+    entry.delete()
+
+    return JsonResponse({'status': 'success', 'message': 'Ingrediente removido com sucesso!'})
+  except:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': 'Erro interno: '}, status=500)
+
 # ===== TESTS =====
 
 def category(request):
@@ -370,51 +695,3 @@ def product(request):
     else:
         return redirect('workers:login')
  
-def meal(request):
-    if 'worker' not in request.session:
-
-        form = forms.MealRegister()
-        form_path = 'partials/forms/core/meal.html'
-
-        if request.method == 'POST':
-            form = forms.MealRegister(request.POST, request.FILES)
-
-
-            if form.is_valid():
-                name_ = form.cleaned_data.get('name')
-                price_ = form.cleaned_data.get('price')
-                category_ = form.cleaned_data.get('category')
-                description_ = form.cleaned_data.get('description')
-                calories_ = form.cleaned_data.get('calories')
-                image_ = form.cleaned_data.get('image')
-
-                meal = models.Meal(
-                    name = name_,
-                    price = price_,
-                    category = category_,
-                    description = description_,
-                    calories = calories_,
-                    image = image_,
-                )
-
-                try:
-                    meal.save()
-                    messages.success(request, "Refeição registrado com sucesso!")
-                    return redirect('worker:index') 
-                except Exception as e:
-                    messages.error(request, f"Erro ao fazer o registro: {e}")
-
-        context = {
-            'workerID': request.session['workerID'],
-            'worker_first_name': request.session.get('worker_first_name', ''),
-            'worker_last_name': request.session.get('worker_last_name', ''),
-            'workerRole.permission': request.session.get('workerRole.permission', ''),
-            'worker_role': request.session.get('worker_role', ''),
-            'form': form,
-            'form_path' : form_path,
-        }
-
-
-        return render(request, 'partials/forms/template.html', context)
-    else:
-        return redirect('workers:login')

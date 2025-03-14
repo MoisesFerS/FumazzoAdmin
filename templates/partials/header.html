@@ -23,7 +23,7 @@
           <img class="navbar-dropdown-toggle-icon" src="{% static 'icons/down-arrow.ico' %}" alt="Ícone de seta para baixo">
         </a>
         <ul class="navbar-dropdown-menu">
-          <li class="navbar-dropdown-item"><a class="navbar-dropdown-item-link" href="#">Refeições</a></li>
+          <li class="navbar-dropdown-item"><a class="navbar-dropdown-item-link" href="{% url 'core:meal' %}">Refeições</a></li>
           <li class="navbar-dropdown-item"><a class="navbar-dropdown-item-link" href="#">Categorias</a></li>
           <li class="navbar-dropdown-item"><a class="navbar-dropdown-item-link" href="{% url 'core:stock' %}">Estoque</a></li>
           <li class="navbar-dropdown-item"><a class="navbar-dropdown-item-link" href="#">Produtos</a></li>
