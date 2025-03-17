@@ -87,9 +87,9 @@ Produtos
                 <p class="product-form-label subtitle">TIPO: </p>
                 <select id="product-add-type" class="form-input-select">
                   <option value="" selected disabled hidden>SELECIONE UM TIPO</option>
-                  <option value="1">LANCHES</option>
-                  <option value="2">SOBREMESAS</option>
-                  <option value="3">PORÇÕES</option>
+                  <option value="4">BEBIDAS</option>
+                  <option value="5">PRODUTOS</option>
+                  <option value="6">INGREDIENTES</option>
                 </select>
               </div>
               <div class="product-form-data">
@@ -100,15 +100,11 @@ Produtos
               </div>
               <div class="product-form-data">
                 <p class="product-form-label subtitle">NOME: </p>
-                <input id="product-add-name" placeholder="Digite o nome da refeição">
+                <input id="product-add-name" placeholder="Digite o nome do produto">
               </div>
-              <div class="product-form-data">
-                <p class="product-form-label subtitle">DESCRIÇÃO: </p>
-                <textarea id="product-add-description" placeholder="Digite a descrição da refeição"></textarea>
-              </div>
-              <div class="product-form-data">
+              <div class="product-form-data" id="product-sell-price" style="display: none;">
                 <p class="product-form-label subtitle">PREÇO: </p>
-                <input type="number" id="product-add-price" step="0.01" placeholder="Digite o preço">
+                <input type="number" id="product-add-price" step="0.01" placeholder="Digite o preço de venda">
               </div>
               <div class="product-form-data">
                 <p class="product-form-label subtitle">IMAGEM: </p>
@@ -135,11 +131,7 @@ Produtos
                 <p class="product-form-label subtitle">NOME: </p>
                 <input id="product-edit-name" placeholder="Digite o nome da refeição">
               </div>
-              <div class="product-form-data">
-                <p class="product-form-label subtitle">DESCRIÇÃO: </p>
-                <textarea id="product-edit-description" placeholder="Digite a descrição da refeição"></textarea>
-              </div>
-              <div class="product-form-data">
+              <div class="product-form-data" id="product-edit-price-container">
                 <p class="product-form-label subtitle">PREÇO: </p>
                 <input type="number" id="product-edit-price" step="0.01" placeholder="Digite o preço">
               </div>

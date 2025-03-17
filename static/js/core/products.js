@@ -76,24 +76,27 @@ document.querySelectorAll("[name='add'], [name='edit'], [name='remove']")
     });
   });
 
-// document.getElementById('product-add-type').addEventListener('change', function () {
-//   const categoriesSelect = document.getElementById('product-add-categories');
-//   categoriesSelect.disabled = false;
-//   fetch(`add/get-categories/${this.value}/`)
-//     .then(response => response.json())
-//     .then(data => {
+document.getElementById('product-add-type').addEventListener('change', function () {
+  const categoriesSelect = document.getElementById('product-add-categories');
+  categoriesSelect.disabled = false;
+  const priceInput = document.getElementById('product-sell-price');
+  fetch(`add/get-categories/${this.value}/`)
+    .then(response => response.json())
+    .then(data => {      
 
-//       categoriesSelect.innerHTML = '';
+      this.value == 4 ? priceInput.style.display = 'block' : priceInput.style.display = 'none';
+        
+      categoriesSelect.innerHTML = '';
 
-//       data.data.forEach(category => {
-//         const option = document.createElement('option'); 
-//         option.textContent = category.name;
-//         option.value = category.id;
-//         categoriesSelect.appendChild(option);
-//       });
-//     })
-//     .catch(error => console.error('Erro ao carregar categorias:', error));
-// });
+      data.data.forEach(category => {
+        const option = document.createElement('option'); 
+        option.textContent = category.name;
+        option.value = category.id;
+        categoriesSelect.appendChild(option);
+      });
+    })
+    .catch(error => console.error('Erro ao carregar categorias:', error));
+});
 
 document.querySelector("[name='product-add-form']").addEventListener('submit', async function(event){
   event.preventDefault();
@@ -101,8 +104,8 @@ document.querySelector("[name='product-add-form']").addEventListener('submit', a
   var formData = new FormData();
   formData.append('category', document.querySelector('#product-add-categories').value);
   formData.append('name', document.querySelector('#product-add-name').value);
-  formData.append('description', document.querySelector('#product-add-description').value);
-  formData.append('price', document.querySelector('#product-add-price').value);
+  let sellPrice = document.querySelector('#product-add-price').value
+  sellPrice ? formData.append('price', sellPrice) : null;
   let imageFile = document.querySelector('#product-add-image').files[0];
   formData.append('image', imageFile ? imageFile : null);
 
@@ -134,7 +137,6 @@ document.querySelector("[name='product-edit-form']").addEventListener('submit', 
   var formData = new FormData();
   formData.append('productID', this.id)
   formData.append('name', document.querySelector('#product-edit-name').value);
-  formData.append('description', document.querySelector('#product-edit-description').value);
   formData.append('price', document.querySelector('#product-edit-price').value);
   let imageFile = document.querySelector('#product-new-image').files[0];
   formData.append('image', imageFile ? imageFile : null);
@@ -160,7 +162,6 @@ document.querySelector("[name='product-edit-form']").addEventListener('submit', 
     }
   }); 
 });
-
 
 document.querySelector("[name='product-remove-form']").addEventListener('submit', async function(event){
   event.preventDefault();
@@ -189,4 +190,79 @@ document.querySelector("[name='product-remove-form']").addEventListener('submit'
     }
   }); 
 
+});
+
+document.querySelector("[name='product-remove-form']").addEventListener('submit', async function(event){
+  event.preventDefault();
+
+  var formData = new FormData();
+  formData.append('product', this.id)
+
+  let csrfToken = getToken(); 
+  
+  await fetch(`remove/`, {
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrfToken }, 
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if(data.status == 'success'){
+      location.reload(); 
+    } else {          
+      message.style.display = 'block';        
+      message.querySelector('#message-text').innerHTML = data.message; 
+      message.querySelector('#message-error').innerHTML = data.error;
+      setTimeout(() => {
+        message.style.display = 'none'; 
+      }, 3000);
+    }
+  }); 
+
+});
+
+document.querySelectorAll('.product-button.edit').forEach(button => {
+  button.addEventListener('click', async function(){
+
+    var formData = new FormData();
+    formData.append('product', this.id)
+
+    let csrfToken = getToken();
+
+    const editPrice = document.getElementById('product-edit-price-container');
+
+    await fetch(`data/`, {
+      method: 'POST',
+      headers: { 'X-CSRFToken': csrfToken },
+      body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'success') {
+        let info = ['name', 'price', 'image']
+
+        info.forEach(input => {
+          let editInfo = document.querySelector(`#product-edit-${input}`)
+          if(input == 'image'){
+            editInfo.src = data.productData[input]
+          } else {
+            editInfo.value = data.productData[input]
+          }
+
+          if(input == 'price'){
+            data.productData[input] ? editPrice.style.display = 'block' : editPrice.style.display = 'none'; 
+          }
+
+        });
+
+      } else {
+        message.style.display = 'block';
+        message.querySelector('#message-text').innerHTML = data.message;
+        message.querySelector('#message-error').innerHTML = data.error;
+        setTimeout(() => {
+          message.style.display = 'none';
+        }, 3000);
+      }      
+    });
+  });
 });

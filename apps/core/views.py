@@ -309,48 +309,19 @@ def meal(request):
 
   return render(request, 'core/meal.html', context)
 
-from django.http import JsonResponse
-from django.db.models import Q
-from . import models  # Importação do seu modelo
-
-def get_categories(request):
+def get_categories(request, id):
   try:
-    requested_types = request.POST.getlist('types') or []
-    requested_types = list(map(int, requested_types)) 
+    type_id = id
 
-    categories_types = {
-      1: "LANCHES",
-      2: "SOBREMESAS",
-      3: "PORÇÕES",
-      4: "BEBIDAS",
-      5: "PRODUTO",
-      6: "INGREDIENTE",
-      7: "TICKET",
-    }
+    categories = list(models.Category.objects.filter(type=type_id).values('id', 'name'))
 
-    categoriesData = {
-      requested_type: {"name": categories_types[requested_type], "categories": []}
-      for requested_type in requested_types if requested_type in categories_types
-    }
+    if categories:
+      return JsonResponse({'status': 'success', 'message': 'Categorias carregadas com sucesso', 'data': categories})
+    else:
+      return JsonResponse({'status': 'success', 'message': 'Nenhuma categoria encontrada para este tipo'})
 
-    categories = models.Category.objects.filter(type__in=requested_types)
-
-    for category in categories:
-      category_data = {
-        "category_name": category.name,
-        "category_id": category.id,
-      }
-      categoriesData[category.type]["categories"].append(category_data)
-
-    return JsonResponse({
-      'status': 'success',
-      'message': 'Categorias carregadas com sucesso',
-      'data': categoriesData
-    })
-
-  except Exception as e:
-    return JsonResponse({'status': 'error', 'message': str(e), 'data': []}, status=500)
-
+  except ValueError:
+    return JsonResponse({'status': 'error', 'message': 'ID inválido'}, status=400)
 
 def get_ingredients(request):
   try:
@@ -645,3 +616,136 @@ def products(request):
   }
 
   return render(request, 'core/products.html', context)
+
+def product_add(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  try:
+    category_id = request.POST.get('category')
+    name_ = request.POST.get('name')
+    sell_price_ = request.POST.get('price')
+    image_file = request.FILES.get('image')
+
+    if not category_id or not name_:
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos obrigatórios.'}, status=400)
+
+    category_ = models.Category.objects.filter(id=category_id).first()
+    if not category_:
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Categoria inválida.'}, status=400)
+
+    if category_.type == 4:
+      if not sell_price_:
+        return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço obrigatório para esta categoria.'}, status=400)
+      try:
+        sell_price_ = float(sell_price_)
+        if sell_price_ <= 0:
+          return JsonResponse({'status': 'error', 'error': '400', 'message': 'O preço não pode ser zero ou negativo.'}, status=400)
+      except ValueError:
+        return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço inválido.'}, status=400)
+    else:
+      sell_price_ = None
+
+    product = models.Product.objects.create(
+      category=category_,
+      name=name_,
+      sell_price=sell_price_,
+      image=image_file  
+    )
+
+    return JsonResponse({'status': 'success', 'message': 'Registro criado com sucesso!', 'product_id': product.id})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+  
+def product_edit(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  try:
+    name_ = request.POST.get('name')
+    sell_price_ = request.POST.get('price')
+    image_file = request.FILES.get('image')
+
+    product = models.Product.objects.get(id=request.POST.get('productID'))
+    category_ = product.category
+
+    if category_.type == 4:
+      if not sell_price_:
+        return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço obrigatório para esta categoria.'}, status=400)
+      try:
+        sell_price_ = float(sell_price_)
+        if sell_price_ <= 0:
+          return JsonResponse({'status': 'error', 'error': '400', 'message': 'O preço não pode ser zero ou negativo.'}, status=400)
+      except ValueError:
+        return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço inválido.'}, status=400)
+    else:
+      sell_price_ = None
+
+    product.name = name_
+    product.sell_price = sell_price_
+    if image_file:
+      product.image = image_file
+    product.save()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro editado com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
+def product_data(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  try:
+    product_id = request.POST.get('product')
+    product = models.Product.objects.get(id=product_id)
+
+    productData = {
+      'name' : product.name,
+      'image' : request.build_absolute_uri(product.image.url) if product.image else None,
+      'price' : product.sell_price,
+    }
+
+    return JsonResponse({'status': 'success', 'message': 'Infromação encontrada com sucesso!', 'productData' : productData})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
+def product_remove(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  try:
+    product_id = request.POST.get('product')
+
+    models.Product.objects.get(id=product_id).delete()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro removido com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)

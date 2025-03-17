@@ -100,7 +100,7 @@ document.querySelectorAll("[name='add'], [name='edit'], [name='ingredient'], [na
 document.getElementById('meal-add-type').addEventListener('change', function () {
   const categoriesSelect = document.getElementById('meal-add-categories');
   categoriesSelect.disabled = false;
-  fetch(`add/get-categories/`)
+  fetch(`add/get-categories/${this.value}/`)
     .then(response => response.json())
     .then(data => {
 

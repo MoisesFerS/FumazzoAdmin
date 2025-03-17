@@ -4,15 +4,19 @@ from . import views
 app_name = 'core'
 urlpatterns = [
     path('', views.index, name='index'),
+
+    #Stock system
     path('stock/', views.stock, name='stock'),
     path('stock/edit/get-products/', views.get_products, name="get-products"),
     path('stock/edit/load-product/<int:id>/', views.load_product, name="load-product"),
     path('stock/edit/save/<int:id>/', views.stock_edit_save, name='stock-edit-save'),
     path('stock/add/', views.stock_add, name='stock-add'),
     path('stock/remove/<int:id>/', views.stock_remove, name='stock-remove'),
+
+    #Meal system
     path('meal/', views.meal, name='meal'),
     path('meal/get-ingredients/', views.get_ingredients, name="get-ingredients"),
-    path('meal/add/get-categories/', views.get_categories, name="get-categories"),
+    path('meal/add/get-categories/<int:id>/', views.get_categories, name="get-categories"),
     path('meal/add/', views.meal_add, name="meal-add"),
     path('meal/data/', views.meal_data, name="meal-data"),
     path('meal/edit/', views.meal_edit, name="meal-edit"),
@@ -21,7 +25,18 @@ urlpatterns = [
     path('meal/ingredient/increment/', views.ingredient_increment, name="ingredient-increment"),
     path('meal/ingredient/subtract/', views.ingredient_subtract, name="ingredient-subtract"),
     path('meal/ingredient/remove/', views.ingredient_remove, name="ingredient-remove"),
+
+    #Category system
     path('categories/', views.categories, name='categories'),
+
+    #Products system
     path('products/', views.products, name='products'),
+    path('products/add/get-categories/<int:id>/', views.get_categories, name="get-categories"),
+    path('products/add/', views.product_add, name="product-add"),
+    path('products/data/', views.product_data, name="product-data"),
+    path('products/edit/', views.product_edit, name="product-edit"),
+    path('products/remove/', views.product_remove, name="product-remove"),
+
+    #Ticket system
     path('ticket/add/', views.ticket_add, name="ticket-add"),
 ]
