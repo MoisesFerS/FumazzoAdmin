@@ -566,14 +566,38 @@ def categories(request):
   if 'worker' not in request.session:
     return redirect('workers:login')
   
-  categories = models.Category.objects.all()
+  types = [
+    (1, 'LANCHES'),
+    (2, 'SOBREMESAS'),
+    (3, 'PORÇÕES'),
+    (4, 'BEBIDAS'),
+    (5, 'PRODUTOS'),
+    (6, 'INGREDIENTES'),
+    (7, 'TICKETS')
+  ]
+
+  entries = {type_id: {"name": type_name, "categories": []} for type_id, type_name in types}
+
+  for type_id, type_name in types:
+    categories = models.Category.objects.filter(type=type_id)
+
+    for category in categories:
+        category_data = {
+          "category_name": category.name,
+          "category_id": category.id,
+          "items": []
+        }
+
+        entries[type_id]["categories"].append(category_data)
 
   context = {
     'worker': request.session.get('worker'),
     'workerRole': request.session.get('workerRole'),
+    'entries' : entries,
   }
 
   return render(request, 'core/categories.html', context)
+
 
 def products(request):
   if 'worker' not in request.session:

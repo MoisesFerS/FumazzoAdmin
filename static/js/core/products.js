@@ -192,35 +192,6 @@ document.querySelector("[name='product-remove-form']").addEventListener('submit'
 
 });
 
-document.querySelector("[name='product-remove-form']").addEventListener('submit', async function(event){
-  event.preventDefault();
-
-  var formData = new FormData();
-  formData.append('product', this.id)
-
-  let csrfToken = getToken(); 
-  
-  await fetch(`remove/`, {
-    method: 'POST',
-    headers: { 'X-CSRFToken': csrfToken }, 
-    body: formData
-  })
-  .then(response => response.json())
-  .then(data => {
-    if(data.status == 'success'){
-      location.reload(); 
-    } else {          
-      message.style.display = 'block';        
-      message.querySelector('#message-text').innerHTML = data.message; 
-      message.querySelector('#message-error').innerHTML = data.error;
-      setTimeout(() => {
-        message.style.display = 'none'; 
-      }, 3000);
-    }
-  }); 
-
-});
-
 document.querySelectorAll('.product-button.edit').forEach(button => {
   button.addEventListener('click', async function(){
 
