@@ -14,22 +14,24 @@
   <div class="main-content">
     <h1 class="content-main-title">REFEIÇÕES</h1>
     <div class="meal-container">
+
       {% if workerRole.permission >= 4 %}
         <div class="meal-button-add">
           <button class="button-secondary" name="add">Adicionar</button>
         </div>
       {% endif %}
+
       <div class="meal-accordion-container">
         {% for type_id, type_data in entries.items %}
           <div class="meal-type-accordion" id="accordion">
             <p class="subtitle">{{ type_data.name }}</p>
           </div>
-          <div class="meal-type-accordion-pannel">
+          <div class="meal-type-accordion-panel">
             {% for category in type_data.categories %}
               <div class="meal-category-accordion" id="accordion">
                 <p class="subtitle">{{ category.category_name }}</p>
               </div>
-              <div class="meal-category-accordion-pannel">
+              <div class="meal-category-accordion-panel">
                 {% for item in category.items %}
                   <div class="meal-accordion" id="accordion">
                     {% if item.image %}
@@ -38,7 +40,7 @@
                     <p class="meal-accordion-name subtitle" id="{{ item.id }}">{{ item.name }}</p>
                     <p class="meal-accordion-price subtitle">{{ item.price }}</p>
                   </div>
-                  <div class="meal-accordion-pannel" id="{{ item.id }}">
+                  <div class="meal-accordion-panel" id="{{ item.id }}">
                       <div class="meal-ingredients-container" id="{{ item.id }}">
                       {% if type_id == 4 %}
                         <p>Nenhum ingrediente necessário para bebidas.</p>
@@ -61,7 +63,7 @@
                         {% endfor %}
                       {% endif %}
                     </div>
-                    <div class="meal-accordion-pannel-buttons">
+                    <div class="meal-accordion-panel-buttons">
                       {% if workerRole.permission >= 4 %}
                         {% if type_id != 4 %}
                           <button class="meal-button ingredient" name="ingredient" id="{{ item.id }}"></button>
@@ -75,8 +77,6 @@
                     </div>
                     <hr class="accordion-division">
                   </div>
-                {% empty %}
-                  <p>Nenhum item encontrado para esta categoria.</p>
                 {% endfor %}
                 <hr class="accordion-division">
               </div>

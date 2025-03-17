@@ -22,8 +22,10 @@ The format is based on:
 - Added new routes in `core/urls.py` for new defs in `core/views.py`:
     - `categories` - Render categories template.
     - `products` - Render products template.
-
 <!-- - Added to `Stock System` the function to register a new supplier. -->
+
+### CHANGED
+- Renamed the field `individual_price` to `sell_price` in the `Products` model.
 
 ### REMOVED
 - `partials/forms/*` - Was deprecated.

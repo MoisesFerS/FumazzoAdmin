@@ -13,18 +13,171 @@ Produtos
 {% block content %}
 
   <div class="main-content">
-    <h1 class="product-title">PRODUTOS EM ESTOQUE</h1>
-    <div class="product-container">
-      {% for category in entries.items.category.category_name %}
-        <div class="product-category-accordion">
-          <h1>{{category}}</h1>
+    <h1 class="products-title">PRODUTOS EM ESTOQUE</h1>
+    <div class="products-container">
+
+      {% if workerRole.permission >= 4 %}
+        <div class="product-button-add">
+          <button class="button-secondary" name="add">Cadastrar</button>
         </div>
-      {% endfor %}
+      {% endif %}
+
+      <div class="products-accordion-container">
+        {% for type_id, type_data in entries.items %}
+          <div class="product-type-accordion" id="accordion">
+            <p class="product-typ-label subtitle">{{ type_data.name }}</p>
+          </div>
+          <div class="product-type-accordion-panel">
+            {% for category in type_data.categories %}
+              <div class="product-category-accordion" id="accordion">
+                <p class="product-category-label subtitle">{{ category.category_name }}</p>
+              </div>
+              <div class="product-category-accordion-panel">
+                {% for item in category.items %}
+                  <div class="product-accordion" id="accordion">
+                    {% if item.image %}
+                      <img class="product-accordion-image" src="{{ item.image.url }}" alt="{{ item.image.name|cut:'core/products/' }}">
+                    {% endif %}
+                    <p class="product-accordion-name subtitle" id="{{ item.id }}">{{ item.name }}</p>
+                  </div>
+                  <div class="product-accordion-panel">
+                    <div class="product-data">
+                      <div class="product-quantity-container">
+                        <p class="product-quantity-label">QUANTIDADE EM ESTOQUE:</p>
+                        <p class="product-quantity">{{ item.quantity }}</p>
+                      </div>
+                      {% if type_id == 4 %}
+                        <div class="product-price-container">
+                          <p class="product-price-label">PREÇO DE VENDA:</p>
+                          <p class="product-price">{{ item.price }}</p>
+                        </div>     
+                      {% endif %}                 
+                    </div>
+                    <div class="product-accordion-panel-buttons">
+                      {% if workerRole.permission >= 4 %}
+                          <button class="product-button edit" name="edit" id="{{ item.id }}"></button>
+                          <button class="product-button delete" name="remove" id="{{ item.id }}"></button>
+                      {% endif %}
+                    </div>   
+                    <hr class="accordion-division">
+                  </div>                
+                {% endfor %}
+                <hr class="accordion-division">
+              </div>
+            {% endfor %}
+          </div>
+          <hr class="accordion-division">
+        {% endfor %}    
+      </div>
 
     </div>
-
-
   </div>
+
+  {% if workerRole.permission >= 4 %}
+    <!-- Modals -->
+    <div class="product-modal-container" id="modal-add">
+      <div class="product-modal-content">
+        <div class="product-modal-header">
+            <h1 class="product-modal-title-add">ADICIONAR REFEIÇÃO</h1>
+        </div>
+        <div class="product-modal-body">
+          <div class="modal-add-form">
+            <form action="POST" name="product-add-form" enctype="multipart/form-data">
+              <div class="product-form-data">
+                <p class="product-form-label subtitle">TIPO: </p>
+                <select id="product-add-type" class="form-input-select">
+                  <option value="" selected disabled hidden>SELECIONE UM TIPO</option>
+                  <option value="1">LANCHES</option>
+                  <option value="2">SOBREMESAS</option>
+                  <option value="3">PORÇÕES</option>
+                </select>
+              </div>
+              <div class="product-form-data">
+                <p class="product-form-label subtitle">CATEGORIA: </p>
+                <select id="product-add-categories" class="form-input-select" disabled>
+                  <option value="">SELECIONE UM TIPO PRIMEIRO</option>
+                </select>
+              </div>
+              <div class="product-form-data">
+                <p class="product-form-label subtitle">NOME: </p>
+                <input id="product-add-name" placeholder="Digite o nome da refeição">
+              </div>
+              <div class="product-form-data">
+                <p class="product-form-label subtitle">DESCRIÇÃO: </p>
+                <textarea id="product-add-description" placeholder="Digite a descrição da refeição"></textarea>
+              </div>
+              <div class="product-form-data">
+                <p class="product-form-label subtitle">PREÇO: </p>
+                <input type="number" id="product-add-price" step="0.01" placeholder="Digite o preço">
+              </div>
+              <div class="product-form-data">
+                <p class="product-form-label subtitle">IMAGEM: </p>
+                <input type="file" id="product-add-image" accept="image/*">
+              </div>
+              <div class="modal-confirm-button">
+                <button class="button-primary" id="confirm-add" type="submit">CONFIRMAR</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-modal-container" id="modal-edit">
+      <div class="product-modal-content">
+        <div class="product-modal-header">
+          <h1 class="product-modal-title-edit">EDITAR REGISTRO</h1>
+        </div>
+        <div class="product-modal-body">
+          <div class="modal-edit-form">
+            <form method="POST" id="" name="product-edit-form">
+              <div class="product-form-data">
+                <p class="product-form-label subtitle">NOME: </p>
+                <input id="product-edit-name" placeholder="Digite o nome da refeição">
+              </div>
+              <div class="product-form-data">
+                <p class="product-form-label subtitle">DESCRIÇÃO: </p>
+                <textarea id="product-edit-description" placeholder="Digite a descrição da refeição"></textarea>
+              </div>
+              <div class="product-form-data">
+                <p class="product-form-label subtitle">PREÇO: </p>
+                <input type="number" id="product-edit-price" step="0.01" placeholder="Digite o preço">
+              </div>
+              <div class="product-form-data">
+                <p class="product-form-label subtitle">IMAGEM: </p>
+                <img id="product-edit-image" class="product-accordion-image" src="" alt="">
+                <input type="file" id="product-new-image" accept="image/*">
+              </div>
+              <div>
+                <button class="button-primary" type="submit">CONFIRMAR</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-modal-container" id="modal-remove">
+      <div class="product-modal-content">
+        <div class="product-modal-header">
+          <h1 class="product-modal-title-remove">REMOVER REGISTRO</h1>
+        </div>
+        <div class="product-modal-body">
+          <div class="modal-remove-form">
+            <form method="POST" id="" name="product-remove-form">
+              <div class="form-text">
+                <p>Você tem certeza que deseja remover</p>
+                <p id="remove-product">REFEIÇÃO</p>
+              </div>
+              <div>
+                <button class="button-primary" type="submit">CONFIRMAR</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
 
   <script src="{% static 'js/core/products.js' %}"></script>
 

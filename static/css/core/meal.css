@@ -15,7 +15,7 @@
   width: 1024px;
 } 
 
-.meal-type-accordion-pannel, .meal-category-accordion-pannel, .meal-accordion-pannel{
+.meal-type-accordion-panel, .meal-category-accordion-panel, .meal-accordion-panel{
   overflow: hidden;
   max-height: 0;
   transition: max-height 0.2s ease;
@@ -30,7 +30,7 @@
   background-color: var(--color-detail1);
 }
 
-.meal-type-accordion-pannel{
+.meal-type-accordion-panel{
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -67,7 +67,7 @@
   border-radius: 0px 0px 3px 3px;
 }
 
-.meal-category-accordion-pannel{
+.meal-category-accordion-panel{
   width: 92%;
 }
 
@@ -92,13 +92,13 @@
   transition: 0.4s ease;
 }
 
-.meal-accordion-pannel{
+.meal-accordion-panel{
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.meal-accordion-pannel-buttons{
+.meal-accordion-panel-buttons{
   background-color: var(--color-detail2);
   height: 100px;
   border-radius: 0px 0px 3px 3px;

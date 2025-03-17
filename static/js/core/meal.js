@@ -54,7 +54,7 @@ function expand(accordion) {
 }
 
 function updateAllParentPanels(element) {
-  let parentPanel = element.closest('.meal-type-accordion-pannel, .meal-category-accordion-pannel, .meal-accordion-pannel');
+  let parentPanel = element.closest('.meal-type-accordion-panel, .meal-category-accordion-panel, .meal-accordion-panel');
   
   if (parentPanel) {
     setTimeout(() => {
@@ -100,7 +100,7 @@ document.querySelectorAll("[name='add'], [name='edit'], [name='ingredient'], [na
 document.getElementById('meal-add-type').addEventListener('change', function () {
   const categoriesSelect = document.getElementById('meal-add-categories');
   categoriesSelect.disabled = false;
-  fetch(`add/get-categories/${this.value}/`)
+  fetch(`add/get-categories/`)
     .then(response => response.json())
     .then(data => {
 
@@ -299,7 +299,7 @@ async function handleButtonClick(button, action) {
   const buttons = button.closest('.meal-ingredient').querySelectorAll('button');
   buttons.forEach(btn => btn.disabled = true);
 
-  const meal = button.closest('.meal-accordion-pannel');
+  const meal = button.closest('.meal-accordion-panel');
   const ingredient = button.id; 
   const ingredientContainer = button.closest('.meal-ingredient');
 

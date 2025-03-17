@@ -294,7 +294,7 @@ def meal(request):
         for product in products:
           category_data["items"].append({
             "name": product.name,
-            "price": product.individual_price,
+            "price": product.sell_price,
             "quantity": product.quantity,
             "image": product.image
           })
@@ -309,21 +309,48 @@ def meal(request):
 
   return render(request, 'core/meal.html', context)
 
-def get_categories(request, id):
+from django.http import JsonResponse
+from django.db.models import Q
+from . import models  # Importação do seu modelo
+
+def get_categories(request):
   try:
-    type_id = int(id)
-    if type_id not in [1, 2, 3]: 
-      return JsonResponse({'status': 'error', 'message': 'Tipo inválido', 'data': [] }, status=400)
+    requested_types = request.POST.getlist('types') or []
+    requested_types = list(map(int, requested_types)) 
 
-    categories = list(models.Category.objects.filter(type=type_id).values('id', 'name'))
+    categories_types = {
+      1: "LANCHES",
+      2: "SOBREMESAS",
+      3: "PORÇÕES",
+      4: "BEBIDAS",
+      5: "PRODUTO",
+      6: "INGREDIENTE",
+      7: "TICKET",
+    }
 
-    if categories:
-      return JsonResponse({'status': 'success', 'message': 'Categorias carregadas com sucesso', 'data': categories})
-    else:
-      return JsonResponse({'status': 'success', 'message': 'Nenhuma categoria encontrada para este tipo', 'data': []})
+    categoriesData = {
+      requested_type: {"name": categories_types[requested_type], "categories": []}
+      for requested_type in requested_types if requested_type in categories_types
+    }
 
-  except ValueError:
-    return JsonResponse({'status': 'error', 'message': 'ID inválido', 'data': []}, status=400)
+    categories = models.Category.objects.filter(type__in=requested_types)
+
+    for category in categories:
+      category_data = {
+        "category_name": category.name,
+        "category_id": category.id,
+      }
+      categoriesData[category.type]["categories"].append(category_data)
+
+    return JsonResponse({
+      'status': 'success',
+      'message': 'Categorias carregadas com sucesso',
+      'data': categoriesData
+    })
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'message': str(e), 'data': []}, status=500)
+
 
 def get_ingredients(request):
   try:
@@ -582,26 +609,34 @@ def products(request):
     return redirect('workers:login')
   
   types = [
-    (4, 'Bebida'),
-    (5, 'Produto'),
-    (6, 'Ingrediente'),
+    (4, 'BEBIDAS'),
+    (5, 'PRODUTOS'),
+    (6, 'INGREDIENTES'),
   ]
 
-  entries = {type_id: {"name" : type_name, "categories" : []} for type_id, type_name in types}
+  entries = {type_id: {"name": type_name, "categories": []} for type_id, type_name in types}
 
   for type_id, type_name in types:
     categories = models.Category.objects.filter(type=type_id)
 
     for category in categories:
-      category_data = {
-        "category_name": category.name,
-        "category_id": category.id,
-        "items": [] 
-      }
+        category_data = {
+          "category_name": category.name,
+          "category_id": category.id,
+          "items": []
+        }
 
-      products = models.Product.objects.filter(category = category).all()
-      for product in products:
-        category_data["items"].append(product)
+        products = models.Product.objects.filter(category_id=category.id)
+        for product in products:
+          category_data["items"].append({
+            "id": product.id,
+            "name": product.name,
+            "image" : product.image.url if product.image else None,
+            "quantity" : product.quantity,
+            "price" : product.sell_price,
+          })
+
+        entries[type_id]["categories"].append(category_data)
 
   context = {
     'worker': request.session.get('worker'),
@@ -610,35 +645,3 @@ def products(request):
   }
 
   return render(request, 'core/products.html', context)
-
-def teste(request):
-    types = [
-        (4, 'Bebida'),
-        (5, 'Produto'),
-        (6, 'Ingrediente'),
-    ]
-
-    entries = {type_id: {"name": type_name, "categories": []} for type_id, type_name in types}
-
-    for type_id, type_name in types:
-        categories = models.Category.objects.filter(type=type_id)
-
-        for category in categories:
-            category_data = {
-                "category_name": category.name,
-                "category_id": category.id,
-                "items": []
-            }
-            print(category.id)  # Apenas para depuração
-
-            products = models.Product.objects.filter(category_id=category.id)
-            for product in products:
-                category_data["items"].append({
-                    "id": product.id,
-                    "name": product.name,
-                })
-
-            # Adiciona a categoria corretamente ao dicionário `entries`
-            entries[type_id]["categories"].append(category_data)
-
-    return JsonResponse({'entries': entries})

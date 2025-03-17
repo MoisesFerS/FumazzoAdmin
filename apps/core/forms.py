@@ -74,11 +74,11 @@ class ProductRegister(forms.Form):
         widget=forms.RadioSelect(attrs={'class': 'form-input-measurement'}),
     )
 
-    individual_price = forms.DecimalField(
+    sell_price = forms.DecimalField(
         min_value=0.01,
         max_digits=10,
         decimal_places=2,
-        widget=forms.NumberInput(attrs={'class': 'form-input-individual_price'}),
+        widget=forms.NumberInput(attrs={'class': 'form-input-sell_price'}),
     )
 
     category = forms.ModelChoiceField(
@@ -97,11 +97,11 @@ class ProductRegister(forms.Form):
             raise forms.ValidationError('A quantidade deve ser positiva.')
         return quantity
 
-    def clean_individual_price(self):
-        individual_price = self.cleaned_data.get('individual_price')
-        if individual_price is not None and individual_price < 0:
+    def clean_sell_price(self):
+        sell_price = self.cleaned_data.get('sell_price')
+        if sell_price is not None and sell_price < 0:
             raise forms.ValidationError('O preço deve ser positivo.')
-        return individual_price
+        return sell_price
 
 class CategoryRegister(forms.Form):
     name = forms.CharField(
