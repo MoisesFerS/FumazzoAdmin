@@ -11,82 +11,84 @@
 
 {% block content %}
 
-  <div class="main-content">
-    <h1 class="content-main-title">REFEIÇÕES</h1>
-    <div class="meal-container">
+<div class="main-content">
+  <h1 class="content-main-title">REFEIÇÕES</h1>
+  <div class="meal-container">
 
-      {% if workerRole.permission >= 4 %}
-        <div class="meal-button-add">
-          <button class="button-secondary" name="add">Adicionar</button>
-        </div>
-      {% endif %}
-
-      <div class="meal-accordion-container">
-        {% for type_id, type_data in entries.items %}
-          <div class="meal-type-accordion" id="accordion">
-            <p class="subtitle">{{ type_data.name }}</p>
-          </div>
-          <div class="meal-type-accordion-panel">
-            {% for category in type_data.categories %}
-              <div class="meal-category-accordion" id="accordion">
-                <p class="subtitle">{{ category.category_name }}</p>
-              </div>
-              <div class="meal-category-accordion-panel">
-                {% for item in category.items %}
-                  <div class="meal-accordion" id="accordion">
-                    {% if item.image %}
-                      <img class="meal-accordion-image" src="{{ item.image.url }}" alt="{{ item.image.name|cut:'core/meals/' }}">
-                    {% endif %}
-                    <p class="meal-accordion-name subtitle" id="{{ item.id }}">{{ item.name }}</p>
-                    <p class="meal-accordion-price subtitle">{{ item.price }}</p>
-                  </div>
-                  <div class="meal-accordion-panel" id="{{ item.id }}">
-                      <div class="meal-ingredients-container" id="{{ item.id }}">
-                      {% if type_id == 4 %}
-                        <p>Nenhum ingrediente necessário para bebidas.</p>
-                      {% else %}
-                        {% for ingredient in item.ingredient_set %}
-                          <div class="meal-ingredient">
-                            {% if ingredient.product.image %}
-                              <img src="{{ ingredient.product.image }}" alt="" class="ingredient-image">
-                            {% endif %}
-                            <p class="ingredient-label subtitle" id="{{ ingredient.product.id }}">{{ ingredient.product.name }}</p>
-                            <div class="ingredient-quantity-container">
-                              <p class="ingredient-quantity subtitle">{{ ingredient.quantity }}</p>
-                              {% if workerRole.permission >= 4 %}
-                                <button class="ingredient-increment-button" id="{{ ingredient.product.id }}" name="ingredient-increment"></button>
-                                <button class="ingredient-subtract-button" id="{{ ingredient.product.id }}" name="ingredient-subtract"></button>
-                                <button class="ingredient-remove-button" id="{{ ingredient.product.id }}" name="ingredient-remove"></button>
-                              {% endif %}
-                            </div>
-                          </div>
-                        {% endfor %}
-                      {% endif %}
-                    </div>
-                    <div class="meal-accordion-panel-buttons">
-                      {% if workerRole.permission >= 4 %}
-                        {% if type_id != 4 %}
-                          <button class="meal-button ingredient" name="ingredient" id="{{ item.id }}"></button>
-                          <button class="meal-button edit" name="edit" id="{{ item.id }}"></button>
-                          <button class="meal-button delete" name="remove" id="{{ item.id }}"></button>
-                        {% else %}
-                          <button class="meal-button edit" name="edit" id="{{ item.id }}"></button>
-                          <button class="meal-button delete" name="remove" id="{{ item.id }}"></button>
-                        {% endif %}
-                      {% endif %}
-                    </div>
-                    <hr class="accordion-division">
-                  </div>
-                {% endfor %}
-                <hr class="accordion-division">
-              </div>
-            {% endfor %}
-          </div>
-          <hr class="accordion-division">
-        {% endfor %}
+    {% if workerRole.permission >= 4 %}
+      <div class="meal-button-add">
+        <button class="button-secondary" name="add">Adicionar</button>
       </div>
+    {% endif %}
+
+    <div class="meal-accordion-container">
+      {% for type_id, type_data in entries.items %}
+        <div class="meal-type-accordion" id="accordion">
+          <p class="subtitle">{{ type_data.name }}</p>
+        </div>
+        <div class="meal-type-accordion-panel">
+          {% for category in type_data.categories %}
+            <div class="meal-category-accordion" id="accordion">
+              <p class="subtitle">{{ category.category_name }}</p>
+            </div>
+            <div class="meal-category-accordion-panel">
+              {% for item in category.items %}
+                <div class="meal-accordion" id="accordion">
+                  {% if item.image %}
+                    <img class="meal-accordion-image" src="{{ item.image }}" alt="{{ item.image.name|cut:'core/meals/' }}">
+                  {% endif %}
+                  <p class="meal-accordion-name subtitle" id="{{ item.id }}">{{ item.name }}</p>
+                  <p class="meal-accordion-price subtitle">{{ item.price }}</p>
+                </div>
+                <div class="meal-accordion-panel" id="{{ item.id }}">
+                    <div class="meal-ingredients-container" id="{{ item.id }}">
+                    {% if type_id == 4 %}
+                      <p>Nenhum ingrediente necessário para bebidas.</p>
+                    {% else %}
+                      {% for ingredient in item.ingredient_set %}
+                        <div class="meal-ingredient">
+                          {% if ingredient.product.image %}
+                            <img src="{{ ingredient.product.image }}" alt="" class="ingredient-image">
+                          {% endif %}
+                          <p class="ingredient-label subtitle" id="{{ ingredient.product.id }}">{{ ingredient.product.name }}</p>
+                          <div class="ingredient-quantity-container">
+                            <p class="ingredient-quantity subtitle">{{ ingredient.quantity }}</p>
+                            {% if workerRole.permission >= 4 %}
+                              <button class="ingredient-increment-button" id="{{ ingredient.product.id }}" name="ingredient-increment"></button>
+                              <button class="ingredient-subtract-button" id="{{ ingredient.product.id }}" name="ingredient-subtract"></button>
+                              <button class="ingredient-remove-button" id="{{ ingredient.product.id }}" name="ingredient-remove"></button>
+                            {% endif %}
+                          </div>
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+                  </div>
+                  <div class="meal-accordion-panel-buttons">
+                    {% if workerRole.permission >= 4 %}
+                      {% if type_id != 4 %}
+                        <button class="meal-button ingredient" name="ingredient" id="{{ item.id }}"></button>
+                        <button class="meal-button edit" name="edit" id="{{ item.id }}"></button>
+                        <button class="meal-button delete" name="remove" id="{{ item.id }}"></button>
+                      {% else %}
+                        <button class="meal-button edit" name="edit" id="{{ item.id }}"></button>
+                        <button class="meal-button delete" name="remove" id="{{ item.id }}"></button>
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                  <hr class="accordion-division">
+                </div>
+              {% endfor %}
+              <hr class="accordion-division">
+            </div>
+          {% endfor %}
+        </div>
+        <hr class="accordion-division">
+      {% endfor %}
+
     </div>
   </div>
+</div>
+
 
   {% if workerRole.permission >= 4 %}
     <!-- Modals -->
@@ -100,8 +102,8 @@
             <form action="POST" name="meal-add-form" enctype="multipart/form-data">
               <div class="meal-form-data">
                 <p class="meal-form-label subtitle">TIPO: </p>
-                <select id="meal-add-type" class="form-input-select">
-                  <option value="" selected disabled hidden>SELECIONE UM TIPO</option>
+                <select id="add-category-type" class="form-input-select">
+                  <option value="" selected>SELECIONE UM TIPO</option>
                   <option value="1">LANCHES</option>
                   <option value="2">SOBREMESAS</option>
                   <option value="3">PORÇÕES</option>
@@ -109,8 +111,8 @@
               </div>
               <div class="meal-form-data">
                 <p class="meal-form-label subtitle">CATEGORIA: </p>
-                <select id="meal-add-categories" class="form-input-select" disabled>
-                  <option value="">SELECIONE UM TIPO PRIMEIRO</option>
+                <select id="add-categories-select" class="form-input-select" disabled>
+                  <option value="">SEM CATEGORIA</option>
                 </select>
               </div>
               <div class="meal-form-data">
@@ -153,6 +155,21 @@
               <div class="meal-form-data">
                 <p class="meal-form-label subtitle">DESCRIÇÃO: </p>
                 <textarea id="meal-edit-description" placeholder="Digite a descrição da refeição"></textarea>
+              </div>
+              <div class="meal-form-data">
+                <p class="meal-form-label subtitle">TIPO: </p>
+                <select id="meal-edit-type" class="form-input-select">
+                  <option value="" selected>SELECIONE UM TIPO</option>
+                  <option value="1">LANCHES</option>
+                  <option value="2">SOBREMESAS</option>
+                  <option value="3">PORÇÕES</option>
+                </select>
+              </div>
+              <div class="meal-form-data">
+                <p class="meal-form-label subtitle">CATEGORIA: </p>
+                <select id="meal-edit-category" class="form-input-select">
+                  <option value="">SEM CATEGORIA</option>
+                </select>
               </div>
               <div class="meal-form-data">
                 <p class="meal-form-label subtitle">PREÇO: </p>

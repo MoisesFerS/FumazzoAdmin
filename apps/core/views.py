@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from . import models
-from . import forms
 from django.contrib import messages 
-from django.db.models import Q
+from django.db.models import Q, Count
 import json
 from apps.workers.models import Worker, Sector
 from django.core.files.base import ContentFile
@@ -260,32 +259,30 @@ def meal(request):
       category_data = {
         "category_name": category.name,
         "category_id": category.id,
-        "items": [] 
+        "items": []
       }
 
       if type_id in [1, 2, 3]:
-        meals = models.Meal.objects.filter(category=category)
+        meals = models.Meal.objects.filter(category=category).prefetch_related("ingredient_set__ingredient")
         for meal in meals:
           meal_data = {
-              "id": meal.id,
-              "name": meal.name,
-              "price": meal.price,
-              "description": meal.description,
-              "image": meal.image,
-              "ingredient_set": []
+            "id": meal.id,
+            "name": meal.name,
+            "price": meal.price,
+            "description": meal.description,
+            "image": meal.image.url if meal.image else None,
+            "ingredient_set": []
           }
 
-          ingredients = models.Ingredient.objects.filter(meal=meal)
-
-          for ingredient in ingredients:
-              meal_data["ingredient_set"].append({
-                  "product": {
-                      "id": ingredient.ingredient.id,
-                      "name": ingredient.ingredient.name,
-                      "image": ingredient.ingredient.image.url if ingredient.ingredient.image else None
-                  },
-                  "quantity": ingredient.quantity
-              })
+          for ingredient in meal.ingredient_set.all():
+            meal_data["ingredient_set"].append({
+              "product": {
+                "id": ingredient.ingredient.id,
+                "name": ingredient.ingredient.name,
+                "image": ingredient.ingredient.image.url if ingredient.ingredient.image else None
+              },
+              "quantity": ingredient.quantity
+            })
 
           category_data["items"].append(meal_data)
 
@@ -296,10 +293,46 @@ def meal(request):
             "name": product.name,
             "price": product.sell_price,
             "quantity": product.quantity,
-            "image": product.image
+            "image": product.image.url if product.image else None
           })
 
       entries[type_id]["categories"].append(category_data)
+
+  uncategorized_meals = models.Meal.objects.filter(category=None).prefetch_related("ingredient_set__ingredient")
+
+  if uncategorized_meals.exists():
+    uncategorized_data = {
+      "category_name": "SEM CATEGORIA",
+      "category_id": None,
+      "items": []
+    }
+
+    for meal in uncategorized_meals:
+      meal_data = {
+        "id": meal.id,
+        "name": meal.name,
+        "price": meal.price,
+        "description": meal.description,
+        "image": meal.image.url if meal.image else None,
+        "ingredient_set": []
+      }
+
+      for ingredient in meal.ingredient_set.all():
+          meal_data["ingredient_set"].append({
+            "product": {
+              "id": ingredient.ingredient.id,
+              "name": ingredient.ingredient.name,
+              "image": ingredient.ingredient.image.url if ingredient.ingredient.image else None
+            },
+            "quantity": ingredient.quantity
+          })
+
+      uncategorized_data["items"].append(meal_data)
+
+    entries[0] = {
+      "name": "SEM CATEGORIA",
+      "categories": [uncategorized_data]
+    }
 
   context = {
     'worker': request.session.get('worker'),
@@ -349,13 +382,13 @@ def meal_add(request):
     return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
 
   try:
-    category_id = request.POST.get('category')
+    category_id = request.POST.get('category') or None
     name_ = request.POST.get('name')
     description_ = request.POST.get('description')
     price_ = request.POST.get('price')
     image_file = request.FILES.get('image')
 
-    if not category_id or not name_ or not description_ or not price_:
+    if not name_ or not description_ or not price_:
       return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
 
     try:
@@ -365,9 +398,11 @@ def meal_add(request):
     except ValueError:
       return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço inválido.'}, status=400)
 
-    category_ = models.Category.objects.filter(id=category_id).first()
-    if not category_:
-      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Categoria inválida.'}, status=400)
+    if category_id is not None:
+      category_ = models.Category.objects.get(id=category_id)
+    else:
+      category_ = None
+
 
     models.Meal.objects.create(
       category=category_,
@@ -396,6 +431,7 @@ def meal_edit(request):
     name_ = request.POST.get('name')
     description_ = request.POST.get('description')
     price_ = request.POST.get('price')
+    category_ = request.POST.get('category')
     image_file = request.FILES.get('image')
 
     try:
@@ -409,8 +445,15 @@ def meal_edit(request):
     meal.name = name_
     meal.description = description_
     meal.price = price_
+
+    if category_ == 'null':
+      meal.category = None      
+    else:
+      meal.category = models.Category.objects.get(id=category_)
+
     if image_file:
       meal.image = image_file
+      
     meal.save()
 
     return JsonResponse({'status': 'success', 'message': 'Registro editado com sucesso!'})
@@ -431,12 +474,19 @@ def meal_data(request):
   try:
     meal_id = request.POST.get('meal')
     meal = models.Meal.objects.get(id=meal_id)
+    if meal.category:
+      category = meal.category
+    else:
+      category = None
 
     mealData = {
       'name' : meal.name,
       'description' : meal.description,
       'image' : request.build_absolute_uri(meal.image.url) if meal.image else None,
       'price' : meal.price,
+      'category' : {'type' : category.type, 
+                    'id' : category.id,
+                    'name' : category.name} if category else None,      
     }
 
     return JsonResponse({'status': 'success', 'message': 'Infromação encontrada com sucesso!', 'mealData' : mealData})
@@ -582,13 +632,23 @@ def categories(request):
     categories = models.Category.objects.filter(type=type_id)
 
     for category in categories:
-        category_data = {
-          "category_name": category.name,
-          "category_id": category.id,
-          "items": []
-        }
+        
+      if category.type in [1, 2, 3]:
+        category_items = models.Meal.objects.filter(category=category.id).count()
+      
+      elif category.type in [4, 5, 6]:
+        category_items = models.Product.objects.filter(category=category.id).count()
 
-        entries[type_id]["categories"].append(category_data)
+      elif category.type in [7]:
+        category_items = models.Ticket.objects.filter(category=category.id).count()
+
+      category_data = {
+        "category_name": category.name,
+        "category_id": category.id,
+        "category_items" : category_items,
+      }
+
+      entries[type_id]["categories"].append(category_data)
 
   context = {
     'worker': request.session.get('worker'),
@@ -684,12 +744,34 @@ def category_remove(request):
   try:
     category_id = request.POST.get('category')
 
-    models.Category.objects.get(id=category_id).delete()
+    category = models.Category.objects.get(id=category_id)
+
+    if category.type in [1, 2, 3]: 
+      meals = models.Meal.objects.filter(category=category.id)
+      for meal in meals:
+        meal.category = None
+        meal.save()  
+
+    elif category.type in [4, 5, 6]:  
+      products = models.Product.objects.filter(category=category.id)
+      for product in products:
+        product.category = None
+        product.save()  
+
+    elif category.type == 7: 
+      tickets = models.Ticket.objects.filter(category=category.id)
+      for ticket in tickets:
+        ticket.category = None
+        ticket.save()  
 
     return JsonResponse({'status': 'success', 'message': 'Registro removido com sucesso!'})
 
+  except models.Category.DoesNotExist:
+    return JsonResponse({'status': 'error', 'error': '404', 'message': 'Categoria não encontrada.'}, status=404)
+
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
 
 def products(request):
   if 'worker' not in request.session:
