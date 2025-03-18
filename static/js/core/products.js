@@ -76,17 +76,20 @@ document.querySelectorAll("[name='add'], [name='edit'], [name='remove']")
     });
   });
 
-document.getElementById('product-add-type').addEventListener('change', function () {
-  const categoriesSelect = document.getElementById('product-add-categories');
+function loadCategories(selectId, fetchUrl) {
+  const categoriesSelect = document.getElementById(selectId);
   categoriesSelect.disabled = false;
-  const priceInput = document.getElementById('product-sell-price');
-  fetch(`add/get-categories/${this.value}/`)
-    .then(response => response.json())
-    .then(data => {      
+  const priceInput = document.getElementById('product-sell-price'); 
+  selectId == 4 ? priceInput.style.display = 'block' : priceInput.style.display = 'none';   
 
-      this.value == 4 ? priceInput.style.display = 'block' : priceInput.style.display = 'none';
-        
+  fetch(fetchUrl)
+    .then(response => response.json())
+    .then(data => {
       categoriesSelect.innerHTML = '';
+      const defaultOption = document.createElement('option'); 
+      defaultOption.textContent = 'SEM CATEGORIA';
+      defaultOption.value = null;
+      categoriesSelect.appendChild(defaultOption);
 
       data.data.forEach(category => {
         const option = document.createElement('option'); 
@@ -96,6 +99,16 @@ document.getElementById('product-add-type').addEventListener('change', function 
       });
     })
     .catch(error => console.error('Erro ao carregar categorias:', error));
+}
+
+document.getElementById('product-add-type').addEventListener('change', function () {
+  const fetchUrl = `add/get-categories/${this.value}/`;
+  loadCategories('dproduct-add-category', fetchUrl);
+});
+
+document.getElementById('product-edit-type').addEventListener('change', function () {
+  const fetchUrl = `add/get-categories/${this.value}/`;
+  loadCategories('dproduct-edit-category', fetchUrl);
 });
 
 document.querySelector("[name='product-add-form']").addEventListener('submit', async function(event){

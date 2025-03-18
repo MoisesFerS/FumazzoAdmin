@@ -120,9 +120,9 @@ function loadCategories(selectId, fetchUrl) {
     .catch(error => console.error('Erro ao carregar categorias:', error));
 }
 
-document.getElementById('add-category-type').addEventListener('change', function () {
+document.getElementById('meal-add-type').addEventListener('change', function () {
   const fetchUrl = `add/get-categories/${this.value}/`;
-  loadCategories('add-categories-select', fetchUrl);
+  loadCategories('meal-add-category', fetchUrl);
 });
 
 document.getElementById('meal-edit-type').addEventListener('change', function () {

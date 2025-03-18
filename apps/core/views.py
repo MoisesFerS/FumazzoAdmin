@@ -453,7 +453,7 @@ def meal_edit(request):
 
     if image_file:
       meal.image = image_file
-      
+
     meal.save()
 
     return JsonResponse({'status': 'success', 'message': 'Registro editado com sucesso!'})
@@ -806,6 +806,29 @@ def products(request):
           })
 
         entries[type_id]["categories"].append(category_data)
+
+  uncategorized_products = models.Product.objects.filter(category=None)
+
+  if uncategorized_products.exists():
+    uncategorized_data = {
+      "category_name": "SEM CATEGORIA",
+      "category_id": None,
+      "items": []
+    }
+
+    for product in uncategorized_products:
+      product_data = {
+        "id": product.id,
+        "name": product.name,
+        "image": product.image.url if product.image else None,
+      }
+
+      uncategorized_data["items"].append(product_data)
+
+    entries[0] = {
+      "name": "SEM CATEGORIA",
+      "categories": [uncategorized_data]
+    }
 
   context = {
     'worker': request.session.get('worker'),

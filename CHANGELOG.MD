@@ -35,11 +35,10 @@ The format is based on:
 
 ### CHANGED
 - Model Update: Renamed the field `individual_price` to `sell_price` in the `Products` model.
-- Meals can now have the field `category` null, allowing to chhange its category to another or to be uncategorized.
+- `Meals` and `Products` can now have the field `category` null, allowing to change its category to another or to be uncategorized.
 
 ### REMOVED
 - Deprecated Files: Removed `partials/forms/*`, `core/forms.py` and `workers/forms.py`, as they were no longer in use.
-
 
 ## [0.11.0] - 14/03/2025 - Meal System Integration
 
