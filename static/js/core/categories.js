@@ -80,7 +80,7 @@ document.querySelector("[name='category-add-form']").addEventListener('submit', 
   event.preventDefault();
 
   var formData = new FormData();
-  formData.append('category', document.querySelector('#category-add-categories').value);
+  formData.append('type', document.querySelector('#category-add-type').value);
   formData.append('name', document.querySelector('#category-add-name').value);
 
   let csrfToken = getToken(); 

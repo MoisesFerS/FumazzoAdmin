@@ -26,19 +26,21 @@ Categorias
       <div class="categories-accordion-container">
         {% for type_id, type_data in entries.items %}
           <div class="category-type-accordion" id="accordion">
-            <p class="category-type-label subtitle">{{ type_data.name }}</p>
+            <p class="category-type-label subtitle">TIPO {{ forloop.counter }} : {{ type_data.name }}</p>
           </div>
           <div class="category-type-accordion-panel">
             {% for category in type_data.categories %}
-              <div class="category-category-accordion" id="accordion">
-                <p class="category-category-label subtitle">{{ category.category_name }}</p>
+              <div class="category-accordion" id="accordion">
+                <p class="category-label subtitle">{{ category.category_name }}</p>
               </div>
-              <div class="category-category-accordion-panel">
-                  <h1>teste</h1>
+              <div class="category-accordion-panel">
+                  <div class="category-data">
+                    <p class="subtitle">teste</p>
+                  </div>
                   <div class="category-accordion-panel-buttons">
                     {% if workerRole.permission >= 4 %}
-                        <button class="category-button edit" name="edit" id="{{ item.id }}"></button>
-                        <button class="category-button delete" name="remove" id="{{ item.id }}"></button>
+                        <button class="category-button edit" name="edit" id="{{ category.category_id }}"></button>
+                        <button class="category-button delete" name="remove" id="{{ category.category_id }}"></button>
                     {% endif %}
                   </div>   
                 <hr class="accordion-division">

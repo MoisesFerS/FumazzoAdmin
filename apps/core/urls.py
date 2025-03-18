@@ -28,6 +28,10 @@ urlpatterns = [
 
     #Category system
     path('categories/', views.categories, name='categories'),
+    path('categories/add/', views.category_add, name="category-add"),
+    path('categories/data/', views.category_data, name="category-data"),
+    path('categories/edit/', views.category_edit, name="category-edit"),
+    path('categories/remove/', views.category_remove, name="category-remove"),
 
     #Products system
     path('products/', views.products, name='products'),

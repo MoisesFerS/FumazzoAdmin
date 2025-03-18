@@ -598,6 +598,98 @@ def categories(request):
 
   return render(request, 'core/categories.html', context)
 
+def category_add(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  try:
+    type_ = request.POST.get('type')
+    name_ = request.POST.get('name')
+
+    if not type_ or not name_:
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos obrigatórios.'}, status=400)
+
+    product = models.Category.objects.create(
+      name=name_,
+      type=type_,
+    )
+
+    return JsonResponse({'status': 'success', 'message': 'Registro criado com sucesso!', 'category_id': product.id})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+  
+def category_edit(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  try:
+    name_ = request.POST.get('name')
+
+    category_ = models.Category.objects.get(id=request.POST.get('categoryID'))
+
+    category_.name = name_
+    category_.save()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro editado com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
+def category_data(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  try:
+    category_id = request.POST.get('category')
+    category = models.Category.objects.get(id=category_id)
+
+    categoryData = {
+      'name' : category.name,
+    }
+
+    return JsonResponse({'status': 'success', 'message': 'Infromação encontrada com sucesso!', 'categoryData' : categoryData})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
+def category_remove(request):
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  try:
+    category_id = request.POST.get('category')
+
+    models.Category.objects.get(id=category_id).delete()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro removido com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
 
 def products(request):
   if 'worker' not in request.session:
