@@ -1,11 +1,19 @@
+# ============================================================
+# IMPORTS - Modules used in the project
+# ============================================================
+
+# Standard Library
+import json
+
+# Django Modules
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from . import models
-from django.contrib import messages 
 from django.db.models import Q, Count
-import json
-from apps.workers.models import Worker, Sector
 from django.core.files.base import ContentFile
+
+# Project Modules
+from . import models
+from apps.workers.models import Worker, Sector
 
 #   ============================================================
 #   INDEX - Defs related to Index page(manage)
@@ -71,15 +79,10 @@ def get_products(request):
 # Add a stock entry
 def stock_add(request):
 
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
 
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
-  
   try:
     data = json.loads(request.body)
 
@@ -96,7 +99,7 @@ def stock_add(request):
       receiver = receiver_,
     )
 
-    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
+    return JsonResponse({'status': 'success', 'message': 'Registro adicionado com sucesso!'})
 
   except json.JSONDecodeError:
     return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
@@ -119,17 +122,12 @@ def load_product(request, id):
   
   return JsonResponse({'status': 'success', 'message': 'Produtos carregados com sucesso', 'data' : data})
 
-# Save a stock entry edit
+# Updates a stock entry edit
 def stock_edit_save(request, id):
 
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
-
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
 
   try:
     data = json.loads(request.body)
@@ -183,14 +181,9 @@ def stock_edit_save(request, id):
 # Removes a Stock entry
 def stock_remove(request, id):
 
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
-
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
   
   try:
 
@@ -201,6 +194,10 @@ def stock_remove(request, id):
 
   except json.JSONDecodeError:
     return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
+
+#   ============================================================
+#   TICKET SYSTEM - Defs related to Tickets page
+#   ============================================================ 
 
 # Add a Ticket entry
 def ticket_add(request):
@@ -239,6 +236,11 @@ def ticket_add(request):
   except json.JSONDecodeError:
     return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
 
+#   ============================================================
+#   MEAL SYSTEM - Defs related to Meals page
+#   ============================================================ 
+
+# Render the Meals page
 def meal(request):
   if 'worker' not in request.session:
     return redirect('workers:login')
@@ -342,20 +344,7 @@ def meal(request):
 
   return render(request, 'core/meal.html', context)
 
-def get_categories(request, id):
-  try:
-    type_id = id
-
-    categories = list(models.Category.objects.filter(type=type_id).values('id', 'name'))
-
-    if categories:
-      return JsonResponse({'status': 'success', 'message': 'Categorias carregadas com sucesso', 'data': categories})
-    else:
-      return JsonResponse({'status': 'success', 'message': 'Nenhuma categoria encontrada para este tipo'})
-
-  except ValueError:
-    return JsonResponse({'status': 'error', 'message': 'ID inválido'}, status=400)
-
+# Retrieve the ingredients of the meals
 def get_ingredients(request):
   try:
     categories = models.Category.objects.filter(type=6).values('id', 'name')
@@ -371,15 +360,12 @@ def get_ingredients(request):
   except Exception as e:
     return JsonResponse({ 'status': 'error', 'message': f'Erro ao carregar ingredientes: {str(e)}', 'data': []}, status=500)
 
+# Add a meal entry
 def meal_add(request):
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
 
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
 
   try:
     category_id = request.POST.get('category') or None
@@ -416,15 +402,12 @@ def meal_add(request):
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
   
+# Updates a meal entry
 def meal_edit(request):
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
-
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+  
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
 
   try:
     name_ = request.POST.get('name')
@@ -460,15 +443,8 @@ def meal_edit(request):
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
 
+# Retrieves the meal data
 def meal_data(request):
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
-
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
 
   try:
     meal_id = request.POST.get('meal')
@@ -493,15 +469,12 @@ def meal_data(request):
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
 
+# Removes a meal entry
 def meal_remove(request):
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
 
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
 
   try:
     meal_id = request.POST.get('meal')
@@ -513,7 +486,13 @@ def meal_remove(request):
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
 
+# Add an ingredient to a meal
 def ingredient_add(request):
+
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
+
   meal_ = models.Meal.objects.get(id = request.POST.get('meal'))
   ingredient_ = models.Product.objects.get(id = request.POST.get('ingredient'))
 
@@ -536,15 +515,12 @@ def ingredient_add(request):
   except:
     return JsonResponse({'status': 'error', 'error': '500', 'message': 'Erro interno: '}, status=500)
   
+# Increment 1 of a meal ingredient
 def ingredient_increment(request):
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
 
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
 
   data = json.loads(request.body)  
   meal_ = models.Meal.objects.get(id = data.get('meal'))
@@ -560,15 +536,12 @@ def ingredient_increment(request):
   except:
     return JsonResponse({'status': 'error', 'error': '500', 'message': 'Erro interno: '}, status=500)
 
+# Subtract 1 of a meal ingredient
 def ingredient_subtract(request):
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
-
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+  
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
 
   data = json.loads(request.body)  
   meal_ = models.Meal.objects.get(id = data.get('meal'))
@@ -588,15 +561,12 @@ def ingredient_subtract(request):
   except:
     return JsonResponse({'status': 'error', 'error': '500', 'message': 'Erro interno: '}, status=500)
 
+# Remove an ingredient from a meal
 def ingredient_remove(request):
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
 
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
 
   data = json.loads(request.body)  
   meal_ = models.Meal.objects.get(id = data.get('meal'))
@@ -611,6 +581,11 @@ def ingredient_remove(request):
   except:
     return JsonResponse({'status': 'error', 'error': '500', 'message': 'Erro interno: '}, status=500)
 
+#   ============================================================
+#   CATEGORY SYSTEM - Defs related to Categories page
+#   ============================================================ 
+
+# Renders the Categories page
 def categories(request):
   if 'worker' not in request.session:
     return redirect('workers:login')
@@ -657,15 +632,12 @@ def categories(request):
 
   return render(request, 'core/categories.html', context)
 
+# Add a category entry
 def category_add(request):
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
 
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
 
   try:
     type_ = request.POST.get('type')
@@ -684,15 +656,12 @@ def category_add(request):
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
   
+# Updates a category entry
 def category_edit(request):
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
 
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
 
   try:
     name_ = request.POST.get('name')
@@ -707,15 +676,8 @@ def category_edit(request):
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
 
+# Retrieves the category data
 def category_data(request):
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
-
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
 
   try:
     category_id = request.POST.get('category')
@@ -730,15 +692,12 @@ def category_data(request):
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
 
+# Removes a category entry
 def category_remove(request):
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
 
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
 
   try:
     category_id = request.POST.get('category')
@@ -771,7 +730,11 @@ def category_remove(request):
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
 
+#   ============================================================
+#   PRODUCT SYSTEM - Defs related to Products page
+#   ============================================================ 
 
+# Renders the Products page
 def products(request):
   if 'worker' not in request.session:
     return redirect('workers:login')
@@ -837,15 +800,12 @@ def products(request):
 
   return render(request, 'core/products.html', context)
 
+# Add a product entry
 def product_add(request):
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
 
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
 
   try:
     category_id = request.POST.get('category')
@@ -884,15 +844,12 @@ def product_add(request):
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
   
+# Updates a product entry
 def product_edit(request):
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
 
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
 
   try:
     name_ = request.POST.get('name')
@@ -933,15 +890,8 @@ def product_edit(request):
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
 
+# Retrieves the product data
 def product_data(request):
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
-
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
 
   try:
     product_id = request.POST.get('product')
@@ -965,15 +915,12 @@ def product_data(request):
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
 
+# Removes a product entry
 def product_remove(request):
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
 
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  if request.session.get('workerRole', {}).get('permission', 0) < 4:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
 
   try:
     product_id = request.POST.get('product')
@@ -984,3 +931,36 @@ def product_remove(request):
 
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
+#   ============================================================
+#   GLOBAL DEFS - Defs used by various requests
+#   ============================================================ 
+
+# Verifies the user method and permission
+def validation_insert(request):
+
+  if 'worker' not in request.session:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
+
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  return None
+
+# Retrieve categories from a specified type
+def get_categories(request, id):
+  try:
+    type_id = id
+
+    categories = list(models.Category.objects.filter(type=type_id).values('id', 'name'))
+
+    if categories:
+      return JsonResponse({'status': 'success', 'message': 'Categorias carregadas com sucesso', 'data': categories})
+    else:
+      return JsonResponse({'status': 'success', 'message': 'Nenhuma categoria encontrada para este tipo'})
+
+  except ValueError:
+    return JsonResponse({'status': 'error', 'message': 'ID inválido'}, status=400)

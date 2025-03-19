@@ -20,6 +20,7 @@ The format is based on:
   - `categories.css` - Styles for the category management page.
   - `products.css` - Styles for the product management page.
 - New routes added in `core/urls.py` for the corresponding views in `core/views.py`:
+  - `get_categorires` - Retrieves the categories from a specific type.
   - Categories:
     - `categories` - Renders the categories template.
     - `category_add` - Adds a new `category` entry.
@@ -34,8 +35,10 @@ The format is based on:
     - `product_remove` - Deletes a `product` entry.
 
 ### CHANGED
-- Model Update: Renamed the field `individual_price` to `sell_price` in the `Products` model.
-- `Meals` and `Products` can now have the field `category` null, allowing to change its category to another or to be uncategorized.
+- Model Updates:
+  - Renamed the field `individual_price` to `sell_price` in the `Products` model.
+  - `Meals` and `Products` can now have the field `category` set to `null`, allowing them to be reassigned to a different category or remain uncategorized.
+
 
 ### REMOVED
 - Deprecated Files: Removed `partials/forms/*`, `core/forms.py` and `workers/forms.py`, as they were no longer in use.
