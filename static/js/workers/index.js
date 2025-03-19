@@ -59,7 +59,7 @@ document.getElementById('ticket-form').addEventListener('submit', async function
 
   let csrfToken = getToken();
 
-  await fetch(`manage/ticket/add/`, {
+  await fetch(`manage/tickets/add/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken,

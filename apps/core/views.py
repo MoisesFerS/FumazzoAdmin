@@ -196,47 +196,6 @@ def stock_remove(request, id):
     return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
 
 #   ============================================================
-#   TICKET SYSTEM - Defs related to Tickets page
-#   ============================================================ 
-
-# Add a Ticket entry
-def ticket_add(request):
-
-  if request.method != 'POST':
-    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
-
-  if 'worker' not in request.session:
-    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autenticado.'}, status=403)
-
-  try:
-    data = json.loads(request.body)
-
-    if not data.get('reason'):
-      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
-
-    if not data.get('description'):
-      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
-
-    reason_ = data.get('reason')
-    sector_ = Sector.objects.filter(id = data.get('sector')).first()
-    priority_ = data.get('priority')
-    category_ = models.Category.objects.filter(id = data.get('category')).first()
-    description_ = data.get('description')
-
-    models.Ticket.objects.create(
-      reason = reason_,
-      sector = sector_,
-      priority = priority_,
-      category = category_,
-      description = description_,
-    )
-
-    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
-
-  except json.JSONDecodeError:
-    return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
-
-#   ============================================================
 #   MEAL SYSTEM - Defs related to Meals page
 #   ============================================================ 
 
@@ -931,6 +890,59 @@ def product_remove(request):
 
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
+#   ============================================================
+#   TICKETS SYSTEM - Defs related to Products page
+#   ============================================================ 
+
+def tickets(request):
+  if 'worker' not in request.session:
+    return redirect('workers:login')
+
+  tickets = models.Ticket.objects.all().order_by('-date', '-status')
+  sectors = Sector.objects.all()
+  categories = models.Category.objects.filter(type=7)
+
+  context = {
+    'worker': request.session.get('worker'),
+    'workerRole': request.session.get('workerRole'),
+    'tickets' : tickets,
+    'sectors' : sectors,
+    'categories' : categories,
+  }
+
+  return render(request, 'core/tickets.html', context)
+
+# Add a Ticket entry
+def ticket_add(request):
+
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
+
+  try:
+
+    if not request.POST.get('reason') or not request.POST.get('description'):
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
+    
+    reason_ = request.POST.get('reason')
+    sector_ = Sector.objects.filter(id = request.POST.get('sector')).first()
+    priority_ = request.POST.get('priority')
+    category_ = models.Category.objects.filter(id = request.POST.get('category')).first()
+    description_ = request.POST.get('description')
+
+    models.Ticket.objects.create(
+      reason = reason_,
+      sector = sector_,
+      priority = priority_,
+      category = category_,
+      description = description_,
+    )
+
+    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
+
+  except json.JSONDecodeError:
+    return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
 
 #   ============================================================
 #   GLOBAL DEFS - Defs used by various requests

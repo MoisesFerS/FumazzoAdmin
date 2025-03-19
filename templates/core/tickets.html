@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Tickets
+{% endblock %}
+
+{% load static %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/core/tickets.css' %}">
+{% endblock %}
+
+{% block content %}
+  
+  <div class="main-content">
+
+    <h1 class="tickets-title">TICKETS</h1>
+    <div class="tickets-container">
+      {% if workerRole.permission >= 4 %}
+        <div class="ticket-button-add">
+          <button class="button-secondary" name="add">Cadastrar</button>
+        </div>
+      {% endif %}
+      <div class="tickets-accordion-container">
+        {% for ticket in tickets %}
+          <div class="ticket-accordion">
+            <div class="ticket-data-container">
+              <div class="ticket-data">
+                <p class="ticket-data-label">MOTIVO:</p>
+                <p>{{ ticket.reason }}</p>
+              </div>
+              <div class="ticket-data">
+                <p class="ticket-data-label">DATA:</p>
+                <p>{{ ticket.date | date:'d-m-Y' }}</p>
+              </div>
+              <div class="ticket-data">
+                <p class="ticket-data-label">SETOR:</p>
+                <p>{{ ticket.sector.name }}</p>
+              </div>
+              <div class="ticket-data">
+                <p class="ticket-data-label">STATUS:</p>
+                <select id="{{ ticket.id }}">
+                  <option value="1">ABERTO</option>
+                  <option value="2">EM ANDAMENTO</option>
+                  <option value="3">FECHADO</option>
+                </select>
+              </div> 
+            </div> 
+            <hr class="ticket-priority-bar               
+            {% if not ticket.priority %} 1
+            {% elif ticket.priority == 1 %} low-priority
+            {% elif ticket.priority == 2 %} medium-priority
+            {% elif ticket.priority == 3 %} high-priority
+            {% endif %}">
+          </div>
+          <div class="ticket-accordion-panel">
+            <div class="ticket-description-container">
+              <p>{{ ticket.description }}<p>
+            </div>            
+              <div class="ticket-panel-buttons">
+                {% if workerRole.permission >= 4 %}
+                  <button class="ticket-button delete" name="remove" id="{{ ticket.id }}"></button>
+                {% endif %}
+              </div>   
+              <hr class="accordion-division">
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {% if workerRole.permission >= 4 %}
+    <!-- Modals -->
+    <div class="ticket-modal-container" id="modal-add">
+      <div class="ticket-modal-content">
+        <div class="ticket-modal-header">
+            <h1 class="ticket-modal-title-add">ADICIONAR CATEGORIA</h1>
+        </div>
+        <div class="ticket-modal-body">
+          <div class="modal-add-form">
+            <form action="POST" name="ticket-add-form" enctype="multipart/form-data">
+              <div class="ticket-form-data">
+                <p class="ticket-form-label subtitle">SETOR:</p>
+                <select id="ticket-add-sector" class="form-input-select">
+                  <option value="" selected disabled hidden>SELECIONE UM SETOR:</option>
+                    {% for sector in sectors %}
+                      <option value="{{ sector.id }}">{{ sector.name }}</option>
+                    {% endfor %}
+                </select>
+              </div>
+              <div class="ticket-form-data">
+                <p class="ticket-form-label subtitle">MOTIVO:</p>
+                <input id="ticket-add-reason" placeholder="Digite o motivo">
+              </div>
+              <div class="ticket-form-data">
+                <p class="ticket-form-label subtitle">PRIORIDADE:</p>
+                <select id="ticket-add-priority">
+                  <option value="1">BAIXA</option>
+                  <option value="2">MÉDIA</option>
+                  <option value="3">ALTA</option>
+                </select>
+              </div>
+              <div class="ticket-form-data">
+                <p class="ticket-form-label subtitle">CATEGORIA:</p>
+                <select id="ticket-add-category">
+                  {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                  {% endfor %}
+                  </select>
+              </div>
+              <div class="ticket-form-data">
+                <p class="ticket-form-label subtitle">DESCRIÇÃO:</p>
+                <textarea class="ticket-add-description" id="ticket-add-description"></textarea>
+              </div>
+              <div class="modal-confirm-button">
+                <button class="button-primary" id="confirm-add" type="submit">CONFIRMAR</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ticket-modal-container" id="modal-remove">
+      <div class="ticket-modal-content">
+        <div class="ticket-modal-header">
+          <h1 class="ticket-modal-title-remove">REMOVER REGISTRO</h1>
+        </div>
+        <div class="ticket-modal-body">
+          <div class="modal-remove-form">
+            <form method="POST" id="" name="ticket-remove-form">
+              <div class="form-text">
+                <p>Você tem certeza que deseja remover</p>
+                <p id="remove-ticket">CATEGORIA</p>
+              </div>
+              <div>
+                <button class="button-primary" type="submit">CONFIRMAR</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <script src="{% static 'js/core/tickets.js' %}"></script>
+
+{% endblock %}
