@@ -82,10 +82,10 @@ Produtos
         </div>
         <div class="product-modal-body">
           <div class="modal-add-form">
-            <form action="POST" name="product-add-form" enctype="multipart/form-data">
+            <form action="POST" name="product-add-form" enctype="multipart/form-data" class="product-add-form">
               <div class="product-form-data">
                 <p class="product-form-label subtitle">TIPO: </p>
-                <select id="product-add-type" class="form-input-select">
+                <select id="product-add-type" class="form-input-select select-primary">
                   <option value="" selected>SELECIONE UM TIPO</option>
                   <option value="4">BEBIDAS</option>
                   <option value="5">PRODUTOS</option>
@@ -94,25 +94,25 @@ Produtos
               </div>
               <div class="product-form-data">
                 <p class="product-form-label subtitle">CATEGORIA: </p>
-                <select id="product-add-category" class="form-input-select">
+                <select id="product-add-category" class="form-input-select select-primary">
                   <option value="">SEM CATEGORIA</option>
                 </select>
               </div>
               <div class="product-form-data">
                 <p class="product-form-label subtitle">NOME: </p>
-                <input id="product-add-name" placeholder="Digite o nome do produto">
+                <input id="product-add-name" placeholder="Digite o nome do produto" class="select-primary">
               </div>
               <div class="product-form-data" id="product-sell-price" style="display: none;">
                 <p class="product-form-label subtitle">PREÇO: </p>
-                <input type="number" id="product-add-price" step="0.01" placeholder="Digite o preço de venda">
+                <input type="number" id="product-add-price" step="0.01" placeholder="Digite o preço de venda" class="select-primary">
               </div>
               <div class="product-form-data">
                 <p class="product-form-label subtitle">IMAGEM: </p>
                 <input type="file" id="product-add-image" accept="image/*">
-              </div>
-              <div class="modal-confirm-button">
-                <button class="button-primary" id="confirm-add" type="submit">CONFIRMAR</button>
-              </div>
+              </div>  
+              <div class="form-confirm-button">       
+                <button class="button-primary" id="confirm-add" type="submit">CONFIRMAR</button> 
+              </div>            
             </form>
           </div>
         </div>
