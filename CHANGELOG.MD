@@ -7,6 +7,42 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.12.0] - 18/03/2025 - Products and Categories
+
+### ADDED
+- Templates (`templates/core/`):
+  - `categories.html` - Template for managing categories.
+  - `products.html` - Template for managing products.
+- JavaScript (`static/js/`):
+  - `categories.js` - Scripts for handling category-related interactions.
+  - `products.js` - Scripts for handling product-related interactions.
+- CSS (`static/css/`):
+  - `categories.css` - Styles for the category management page.
+  - `products.css` - Styles for the product management page.
+- New routes added in `core/urls.py` for the corresponding views in `core/views.py`:
+  - `get_categorires` - Retrieves the categories from a specific type.
+  - Categories:
+    - `categories` - Renders the categories template.
+    - `category_add` - Adds a new `category` entry.
+    - `category_data` - Retrieves data for editing an entry.
+    - `category_edit` - Updates an existing `category` entry.
+    - `category_remove` - Deletes a `category` entry.
+  - Products:
+    - `products` - Renders the products template.
+    - `product_add` - Adds a new `product` entry.
+    - `product_data` - Retrieves data for editing an entry.
+    - `product_edit` - Updates an existing `product` entry.
+    - `product_remove` - Deletes a `product` entry.
+
+### CHANGED
+- Model Updates:
+  - Renamed the field `individual_price` to `sell_price` in the `Products` model.
+  - `Meals` and `Products` can now have the field `category` set to `null`, allowing them to be reassigned to a different category or remain uncategorized.
+
+
+### REMOVED
+- Deprecated Files: Removed `partials/forms/*`, `core/forms.py` and `workers/forms.py`, as they were no longer in use.
+
 ## [0.11.0] - 14/03/2025 - Meal System Integration
 
 ### ADDED

@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Categorias
+{% endblock %}
+
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/core/categories.css' %}">
+{% endblock %}
+
+{% block content %}
+  
+  <div class="main-content">
+
+    <h1 class="categories-title">CATEGORIAS</h1>
+    <div class="categories-container">
+
+      {% if workerRole.permission >= 4 %}
+        <div class="category-button-add">
+          <button class="button-secondary" name="add">Cadastrar</button>
+        </div>
+      {% endif %}
+
+      <div class="categories-accordion-container">
+        {% for type_id, type_data in entries.items %}
+          <div class="category-type-accordion" id="accordion">
+            <p class="category-type-label subtitle">TIPO {{ forloop.counter }} : {{ type_data.name }}</p>
+          </div>
+          <div class="category-type-accordion-panel">
+            {% for category in type_data.categories %}
+              <div class="category-accordion" id="accordion">
+                <p class="category-label subtitle">{{ category.category_name }}</p>
+              </div>
+              <div class="category-accordion-panel">
+                  <div class="category-data">
+                    <p class="subtitle">ITENS NA CATEGORIA: {{ category.category_items }}</p>
+                  </div>
+                  <div class="category-accordion-panel-buttons">
+                    {% if workerRole.permission >= 4 %}
+                        <button class="category-button edit" name="edit" id="{{ category.category_id }}"></button>
+                        <button class="category-button delete" name="remove" id="{{ category.category_id }}"></button>
+                    {% endif %}
+                  </div>   
+                <hr class="accordion-division">
+              </div>
+            {% endfor %}
+          </div>
+          <hr class="accordion-division">
+        {% endfor %}    
+      </div>
+
+    </div>
+
+  </div>
+
+  {% if workerRole.permission >= 4 %}
+    <!-- Modals -->
+    <div class="category-modal-container" id="modal-add">
+      <div class="category-modal-content">
+        <div class="category-modal-header">
+            <h1 class="category-modal-title-add">ADICIONAR CATEGORIA</h1>
+        </div>
+        <div class="category-modal-body">
+          <div class="modal-add-form">
+            <form action="POST" name="category-add-form" enctype="multipart/form-data">
+              <div class="category-form-data">
+                <p class="category-form-label subtitle">TIPO: </p>
+                <select id="category-add-type" class="form-input-select">
+                  <option value="" selected disabled hidden>SELECIONE UM TIPO</option>
+                  <option value="1">LANCHES</option>
+                  <option value="2">SOBREMESAS</option>
+                  <option value="3">PORÇÕES</option>
+                  <option value="4">BEBIDAS</option>
+                  <option value="5">PRODUTOS</option>
+                  <option value="6">INGREDIENTES</option>
+                  <option value="7">TICKETS</option>
+                </select>
+              </div>
+              <div class="category-form-data">
+                <p class="category-form-label subtitle">NOME: </p>
+                <input id="category-add-name" placeholder="Digite o nome da categoria">
+              </div>
+              <div class="modal-confirm-button">
+                <button class="button-primary" id="confirm-add" type="submit">CONFIRMAR</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="category-modal-container" id="modal-edit">
+      <div class="category-modal-content">
+        <div class="category-modal-header">
+          <h1 class="category-modal-title-edit">EDITAR REGISTRO</h1>
+        </div>
+        <div class="category-modal-body">
+          <div class="modal-edit-form">
+            <form method="POST" id="" name="category-edit-form">
+              <div class="category-form-data">
+                <p class="category-form-label subtitle">NOME: </p>
+                <input id="category-edit-name" placeholder="Digite o nome da categoria.">
+              </div>
+              <div>
+                <button class="button-primary" type="submit">CONFIRMAR</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="category-modal-container" id="modal-remove">
+      <div class="category-modal-content">
+        <div class="category-modal-header">
+          <h1 class="category-modal-title-remove">REMOVER REGISTRO</h1>
+        </div>
+        <div class="category-modal-body">
+          <div class="modal-remove-form">
+            <form method="POST" id="" name="category-remove-form">
+              <div class="form-text">
+                <p>Você tem certeza que deseja remover</p>
+                <p id="remove-category">CATEGORIA</p>
+              </div>
+              <div>
+                <button class="button-primary" type="submit">CONFIRMAR</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <script src="{% static 'js/core/categories.js' %}"></script>
+
+{% endblock %}

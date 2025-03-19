@@ -54,7 +54,7 @@ function expand(accordion) {
 }
 
 function updateAllParentPanels(element) {
-  let parentPanel = element.closest('.meal-type-accordion-pannel, .meal-category-accordion-pannel, .meal-accordion-pannel');
+  let parentPanel = element.closest('.meal-type-accordion-panel, .meal-category-accordion-panel, .meal-accordion-panel');
   
   if (parentPanel) {
     setTimeout(() => {
@@ -97,14 +97,18 @@ document.querySelectorAll("[name='add'], [name='edit'], [name='ingredient'], [na
     });
   });
 
-document.getElementById('meal-add-type').addEventListener('change', function () {
-  const categoriesSelect = document.getElementById('meal-add-categories');
+function loadCategories(selectId, fetchUrl) {
+  const categoriesSelect = document.getElementById(selectId);
   categoriesSelect.disabled = false;
-  fetch(`add/get-categories/${this.value}/`)
+
+  fetch(fetchUrl)
     .then(response => response.json())
     .then(data => {
-
       categoriesSelect.innerHTML = '';
+      const defaultOption = document.createElement('option'); 
+      defaultOption.textContent = 'SEM CATEGORIA';
+      defaultOption.value = null;
+      categoriesSelect.appendChild(defaultOption);
 
       data.data.forEach(category => {
         const option = document.createElement('option'); 
@@ -114,16 +118,27 @@ document.getElementById('meal-add-type').addEventListener('change', function () 
       });
     })
     .catch(error => console.error('Erro ao carregar categorias:', error));
+}
+
+document.getElementById('meal-add-type').addEventListener('change', function () {
+  const fetchUrl = `add/get-categories/${this.value}/`;
+  loadCategories('meal-add-category', fetchUrl);
+});
+
+document.getElementById('meal-edit-type').addEventListener('change', function () {
+  const fetchUrl = `add/get-categories/${this.value}/`;
+  loadCategories('meal-edit-category', fetchUrl);
 });
 
 document.querySelector("[name='meal-add-form']").addEventListener('submit', async function(event){
   event.preventDefault();
 
   var formData = new FormData();
-  formData.append('category', document.querySelector('#meal-add-categories').value);
   formData.append('name', document.querySelector('#meal-add-name').value);
   formData.append('description', document.querySelector('#meal-add-description').value);
   formData.append('price', document.querySelector('#meal-add-price').value);
+  let category = document.querySelector('#meal-add-category').value;
+  formData.append('category', category ? category : null);
   let imageFile = document.querySelector('#meal-add-image').files[0];
   formData.append('image', imageFile ? imageFile : null);
 
@@ -157,6 +172,8 @@ document.querySelector("[name='meal-edit-form']").addEventListener('submit', asy
   formData.append('name', document.querySelector('#meal-edit-name').value);
   formData.append('description', document.querySelector('#meal-edit-description').value);
   formData.append('price', document.querySelector('#meal-edit-price').value);
+  let category = document.querySelector('#meal-edit-category').value;
+  formData.append('category', category ? category : null);
   let imageFile = document.querySelector('#meal-new-image').files[0];
   formData.append('image', imageFile ? imageFile : null);
 
@@ -299,7 +316,7 @@ async function handleButtonClick(button, action) {
   const buttons = button.closest('.meal-ingredient').querySelectorAll('button');
   buttons.forEach(btn => btn.disabled = true);
 
-  const meal = button.closest('.meal-accordion-pannel');
+  const meal = button.closest('.meal-accordion-panel');
   const ingredient = button.id; 
   const ingredientContainer = button.closest('.meal-ingredient');
 
@@ -359,8 +376,27 @@ document.querySelectorAll('.meal-button.edit').forEach(button => {
             editInfo.src = data.mealData[input]
           } else {
             editInfo.value = data.mealData[input]
-          }
+          }          
         });
+
+        let categorySelect = document.querySelector(`#meal-edit-category`);
+        categorySelect.innerHTML = '';
+        const nullCategory = document.createElement('option');
+        nullCategory.value = null;
+        nullCategory.textContent = "SEM CATEGORIA";         
+        categorySelect.appendChild(nullCategory);
+
+        if (data.mealData.category){
+          document.querySelector(`#meal-edit-type`).value = data.mealData.category.type;   
+          const option = document.createElement('option');
+          option.value = data.mealData.category.id;
+          option.textContent = data.mealData.category.name; 
+          option.selected = true;
+          categorySelect.appendChild(option);
+        } else {
+          document.querySelector(`#meal-edit-type`).value = "";
+          nullCategory.selected = true;
+        }
 
       } else {
         message.style.display = 'block';

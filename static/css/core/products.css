@@ -1,4 +1,4 @@
-.meal-container{
+.products-container{
   width: 1024px;
   background-color: var(--color-detail3);
   border-radius: 3px;
@@ -7,7 +7,7 @@
   gap: 20px;
 }
 
-.meal-accordion-container{
+.products-accordion-container{
   display: flex;
   flex-direction: column;   
   align-items: center;
@@ -15,13 +15,13 @@
   width: 1024px;
 } 
 
-.meal-type-accordion-panel, .meal-category-accordion-panel, .meal-accordion-panel{
+.product-type-accordion-panel, .product-category-accordion-panel, .product-accordion-panel{
   overflow: hidden;
   max-height: 0;
   transition: max-height 0.2s ease;
 }
 
-.meal-type-accordion{
+.product-type-accordion{
   width: 100%;
   height: 150px;
   display: flex;
@@ -30,14 +30,14 @@
   background-color: var(--color-detail1);
 }
 
-.meal-type-accordion-panel{
+.product-type-accordion-panel{
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.meal-category-accordion{
+.product-category-accordion{
   width: 96%;
   height: 100px;
   background-color: var(--color-detail1);
@@ -51,7 +51,7 @@
   border: 25px solid transparent;
 }
 
-.meal-button-add{
+.product-button-add{
   height: fit-content;
   width: 100%;
   display: flex;
@@ -59,7 +59,7 @@
   justify-content: end;
 }
 
-.meal-accordion{
+.product-accordion{
   display: grid;
   grid-template-columns: auto 1fr auto;
   background-color: var(--color-detail1);
@@ -67,23 +67,23 @@
   border-radius: 0px 0px 3px 3px;
 }
 
-.meal-category-accordion-panel{
+.product-category-accordion-panel{
   width: 92%;
 }
 
-.meal-accordion-name{
+.product-accordion-name{
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.meal-accordion-image{
+.product-accordion-image{
   height: 150px;
   width: 150px;
   padding-left: 15px;
 }
 
-.meal-accordion-price{
+.product-accordion-price{
   padding: 15px;
 }
 
@@ -92,13 +92,13 @@
   transition: 0.4s ease;
 }
 
-.meal-accordion-panel{
+.product-accordion-panel{
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.meal-accordion-panel-buttons{
+.product-accordion-panel-buttons{
   background-color: var(--color-detail2);
   height: 100px;
   border-radius: 0px 0px 3px 3px;
@@ -110,73 +110,28 @@
   align-items: center;
 }
 
-.meal-ingredients-container{
+.product-data{
+  width: 92%;
   background-color: var(--color-detail2);
-  width: 96%;
-  overflow-y: scroll;
-  max-height: 500px;
-}
-
-.meal-ingredient{
   padding: 20px;
-  display: grid;
-  grid-template-columns: auto 1fr 1fr;
+  display: flex;
+  flex-direction: row;
+  gap: 100px;
   align-items: center;
-  justify-items: center;
+  justify-content: center;
 }
 
-.ingredient-image{
-  width: 75px;
-  height: 75px;
-}
-
-.ingredient-quantity-container{
-  width: 100%;
+.product-quantity-container, .product-price-container{
   display: flex;
   flex-direction: row;
   gap: 15px;
-  justify-content: end;
-  align-items: center;
 }
 
-.ingredient-increment-button{
-  width: 50px;
-  height: 50px;
-  background-size: cover; 
-  background-position: center;
-  background-image: url('../../images/buttons/increment.png');
-  border-radius: 3px;
-}
-
-.ingredient-subtract-button{
-  width: 50px;
-  height: 50px;
-  background-size: cover; 
-  background-position: center;
-  background-image: url('../../images/buttons/subtract.png');
-  border-radius: 3px;
-}
-
-.ingredient-remove-button{
-  width: 50px;
-  height: 50px;
-  background-size: cover; 
-  background-position: center;
-  background-image: url('../../images/buttons/remove.png');
-  border-radius: 3px;
-}
-
-.meal-button{
+.product-button{
   height: 50px;
   width: 180px;
   border-radius: 5px;
   cursor: pointer;
-}
-
-.ingredient{
-  background-size: cover; 
-  background-position: center;
-  background-image: url(../../images/buttons/ingredient.png);
 }
 
 .edit{
@@ -198,7 +153,7 @@
 /* ===== CONTAINER ===== */
 
 /* Dark background */
-.meal-modal-container{
+.product-modal-container{
   display: none; 
   position: fixed; 
   z-index: 1;
@@ -215,7 +170,7 @@
 /* ===== CONTENT ===== */
 
 /* Modal content */
-.meal-modal-content {
+.product-modal-content {
   position: relative;
   background-color: var(--color-primary);
   margin: auto;
@@ -231,7 +186,7 @@
 }
 
 /* Modal header, where is located the title */
-.meal-modal-header {
+.product-modal-header {
   height: 150px;
   display: flex;
   justify-content: center;
@@ -239,7 +194,7 @@
 }
 
 /* Modal body, where is located the information */
-.meal-modal-body {
+.product-modal-body {
   display: flex;
   flex-direction: column;
   justify-content: center;

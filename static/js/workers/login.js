@@ -1,23 +1,18 @@
 document.getElementById('login-form').addEventListener('submit', function(event){
   event.preventDefault();
 
-  var id = this.querySelector('#id').value;
-  var password = this.querySelector('#password').value;
+  var formData = new FormData();
+  formData.append('id', document.querySelector('#worker-id').value);
+  formData.append('password', document.querySelector('#worker-password').value);
 
-  var data = {
-    id : id,
-    password : password,
-  }
+  console.log(formData)
 
   let csrfToken = getToken();
-  const message = document.getElementById('message');
 
   fetch('authentication/', { 
     method: 'POST',
-    headers: { 'Content-Type': 'application/json',
-      'X-CSRFToken': csrfToken,
-    },
-    body: JSON.stringify(data)
+    headers: { 'X-CSRFToken': csrfToken }, 
+    body: formData
   })
   .then(response => response.json())
   .then(data => {

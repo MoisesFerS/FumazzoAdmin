@@ -45,9 +45,9 @@ class Product(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     quantity = models.IntegerField(default=0)
-    individual_price = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    sell_price = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     image = models.ImageField(upload_to='core/products/', null=True, blank=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     measurement_choices = [
         (1, 'Kilogramas'),
         (2, 'Gramas'),
@@ -79,7 +79,7 @@ class Meal(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2)
     description = models.TextField()
     image = models.ImageField(upload_to='core/meals/', null=True, blank=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
 
 class Ingredient(models.Model):
     ingredient = models.ForeignKey(Product, on_delete=models.CASCADE)

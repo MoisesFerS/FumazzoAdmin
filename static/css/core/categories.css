@@ -1,4 +1,4 @@
-.meal-container{
+.categories-container{
   width: 1024px;
   background-color: var(--color-detail3);
   border-radius: 3px;
@@ -7,7 +7,7 @@
   gap: 20px;
 }
 
-.meal-accordion-container{
+.categories-accordion-container{
   display: flex;
   flex-direction: column;   
   align-items: center;
@@ -15,13 +15,13 @@
   width: 1024px;
 } 
 
-.meal-type-accordion-panel, .meal-category-accordion-panel, .meal-accordion-panel{
+.category-type-accordion-panel, .category-accordion-panel{
   overflow: hidden;
   max-height: 0;
   transition: max-height 0.2s ease;
 }
 
-.meal-type-accordion{
+.category-type-accordion{
   width: 100%;
   height: 150px;
   display: flex;
@@ -30,14 +30,14 @@
   background-color: var(--color-detail1);
 }
 
-.meal-type-accordion-panel{
+.category-type-accordion-panel{
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.meal-category-accordion{
+.category-accordion{
   width: 96%;
   height: 100px;
   background-color: var(--color-detail1);
@@ -47,11 +47,18 @@
   border-radius: 0px 0px 3px 3px;
 }
 
+.category-accordion-panel{
+  width: 96%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .accordion-division{
   border: 25px solid transparent;
 }
 
-.meal-button-add{
+.category-button-add{
   height: fit-content;
   width: 100%;
   display: flex;
@@ -59,46 +66,12 @@
   justify-content: end;
 }
 
-.meal-accordion{
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  background-color: var(--color-detail1);
-  width: 100%;
-  border-radius: 0px 0px 3px 3px;
-}
-
-.meal-category-accordion-panel{
-  width: 92%;
-}
-
-.meal-accordion-name{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.meal-accordion-image{
-  height: 150px;
-  width: 150px;
-  padding-left: 15px;
-}
-
-.meal-accordion-price{
-  padding: 15px;
-}
-
 .active{
   background-color: var(--color-detail2);
   transition: 0.4s ease;
 }
 
-.meal-accordion-panel{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.meal-accordion-panel-buttons{
+.category-accordion-panel-buttons{
   background-color: var(--color-detail2);
   height: 100px;
   border-radius: 0px 0px 3px 3px;
@@ -110,73 +83,21 @@
   align-items: center;
 }
 
-.meal-ingredients-container{
+.category-data{
+  width: 92%;
   background-color: var(--color-detail2);
-  width: 96%;
-  overflow-y: scroll;
-  max-height: 500px;
-}
-
-.meal-ingredient{
   padding: 20px;
-  display: grid;
-  grid-template-columns: auto 1fr 1fr;
-  align-items: center;
-  justify-items: center;
-}
-
-.ingredient-image{
-  width: 75px;
-  height: 75px;
-}
-
-.ingredient-quantity-container{
-  width: 100%;
   display: flex;
   flex-direction: row;
-  gap: 15px;
-  justify-content: end;
   align-items: center;
+  justify-content: center;
 }
 
-.ingredient-increment-button{
-  width: 50px;
-  height: 50px;
-  background-size: cover; 
-  background-position: center;
-  background-image: url('../../images/buttons/increment.png');
-  border-radius: 3px;
-}
-
-.ingredient-subtract-button{
-  width: 50px;
-  height: 50px;
-  background-size: cover; 
-  background-position: center;
-  background-image: url('../../images/buttons/subtract.png');
-  border-radius: 3px;
-}
-
-.ingredient-remove-button{
-  width: 50px;
-  height: 50px;
-  background-size: cover; 
-  background-position: center;
-  background-image: url('../../images/buttons/remove.png');
-  border-radius: 3px;
-}
-
-.meal-button{
+.category-button{
   height: 50px;
   width: 180px;
   border-radius: 5px;
   cursor: pointer;
-}
-
-.ingredient{
-  background-size: cover; 
-  background-position: center;
-  background-image: url(../../images/buttons/ingredient.png);
 }
 
 .edit{
@@ -198,7 +119,7 @@
 /* ===== CONTAINER ===== */
 
 /* Dark background */
-.meal-modal-container{
+.category-modal-container{
   display: none; 
   position: fixed; 
   z-index: 1;
@@ -215,7 +136,7 @@
 /* ===== CONTENT ===== */
 
 /* Modal content */
-.meal-modal-content {
+.category-modal-content {
   position: relative;
   background-color: var(--color-primary);
   margin: auto;
@@ -231,7 +152,7 @@
 }
 
 /* Modal header, where is located the title */
-.meal-modal-header {
+.category-modal-header {
   height: 150px;
   display: flex;
   justify-content: center;
@@ -239,7 +160,7 @@
 }
 
 /* Modal body, where is located the information */
-.meal-modal-body {
+.category-modal-body {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -247,24 +168,22 @@
 }
 
 .modal-confirm-button{
-
   margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   justify-self: end;
   height: 150px;
-
 }
 
 /* ===== ANIMATION ===== */
 
 @-webkit-keyframes animatetop {
-from {top:-300px; opacity:0} 
-to {top:0; opacity:1}
+  from {top:-300px; opacity:0} 
+  to {top:0; opacity:1}
 }
 
 @keyframes animatetop {
-from {top:-300px; opacity:0}
-to {top:0; opacity:1}
+  from {top:-300px; opacity:0}
+  to {top:0; opacity:1}
 }
