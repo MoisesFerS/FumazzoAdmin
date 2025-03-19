@@ -944,6 +944,38 @@ def ticket_add(request):
   except json.JSONDecodeError:
     return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
 
+def ticket_status(request):
+  
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
+  
+  try:
+    ticket = models.Ticket.objects.get(id=request.POST.get('ticket'))
+    ticket.status = request.POST.get('status')
+    ticket.save()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro removido com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
+def ticket_remove(request):
+  
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
+  
+  try:
+    ticket_id = request.POST.get('ticket')
+
+    models.Ticket.objects.get(id=ticket_id).delete()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro removido com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+  
 #   ============================================================
 #   GLOBAL DEFS - Defs used by various requests
 #   ============================================================ 

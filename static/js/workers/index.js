@@ -47,24 +47,19 @@ function startCountdown(data) {
 document.getElementById('ticket-form').addEventListener('submit', async function(event){
   event.preventDefault();
 
-  var formData = this.querySelectorAll('#form-data');
-  
-  var data = {
-    reason : formData[0].value,
-    priority : formData[1].value,
-    sector : formData[2].value,
-    category : formData[3].value,
-    description : formData[4].value,
-  }
+  var formData = new FormData();
+  formData.append('sector', document.querySelector('#ticket-add-sector').value);
+  formData.append('reason', document.querySelector('#ticket-add-reason').value);
+  formData.append('priority', document.querySelector('#ticket-add-priority').value);
+  formData.append('category', document.querySelector('#ticket-add-category').value);
+  formData.append('description', document.querySelector('#ticket-add-description').value);
 
   let csrfToken = getToken();
 
-  await fetch(`manage/tickets/add/`, {
+  await fetch(`/manage/tickets/add/`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken,
-      },
-    body: JSON.stringify(data)
+    headers: { 'X-CSRFToken': csrfToken }, 
+    body: formData
   })
   .then(response => response.json())
   .then(data => {

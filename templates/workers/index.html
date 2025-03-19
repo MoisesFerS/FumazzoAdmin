@@ -96,49 +96,42 @@ Página Inicial
         <p class="ticket-title title">TICKET</p>
       </div>
       <div class="ticket-form-container">
-        <form action="POST" id="ticket-form">
-          <div class="ticket-form-content">
-            <div class="ticket-form-data-container">
-              <div class="ticket-form-data">
-                <p class="subtitle">MOTIVO</p> 
-                <input type="text" class="input-primary" id="form-data">
-              </div>
-              <div class="ticket-form-data">
-                <p class="subtitle">PRIORIDADE</p>
-                <select class="select-primary" id="form-data">
-                  <option value="1">BAIXA</option>
-                  <option value="2">MÉDIA</option>
-                  <option value="3">ALTA</option>
-                </select> 
-              </div>
-            </div>
-            <div class="ticket-form-data-container">
-              <div class="ticket-form-data">
-                <p class="subtitle">SETOR</p>
-                <select class="select-primary" id="form-data">
-                  {% for sector in sectors %}
-                    <option value="{{ sector.id }}">{{ sector.name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <div class="ticket-form-data">
-                <p class="subtitle">CATEGORIA</p>
-                <select class="select-primary" id="form-data">
-                  {% for category in tickets_categories %}
-                    <option value="{{ category.id }}">{{ category.name }}</option>
-                  {% endfor %}
-                </select>
-              </div> 
-            </div>
-            <div class="ticket-form-data-container ">
-              <div class="ticket-form-data form-description">
-                <p class="subtitle">DESCRIÇÃO</p>
-                <textarea class="ticket-form-description" id="form-data"></textarea>
-              </div>
-            </div>
-            <div class="ticket-form-button-container">
-              <button class="button-secondary" type="submit">ENVIAR</button>
-            </div>
+        <form action="POST" id="ticket-form" class="ticket-form">
+          <div class="ticket-form-data">
+            <p class="ticket-form-label subtitle">SETOR:</p>
+            <select id="ticket-add-sector" class="form-input-select select-primary">
+              <option value="" selected disabled hidden>SELECIONE UM SETOR:</option>
+              {% for sector in sectors %}
+                <option value="{{ sector.id }}">{{ sector.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="ticket-form-data">
+            <p class="ticket-form-label subtitle">MOTIVO:</p>
+            <input id="ticket-add-reason" placeholder="Digite o motivo" class="input-primary">
+          </div>
+          <div class="ticket-form-data">
+            <p class="ticket-form-label subtitle">PRIORIDADE:</p>
+            <select id="ticket-add-priority" class="select-primary">
+              <option value="1">BAIXA</option>
+              <option value="2">MÉDIA</option>
+              <option value="3">ALTA</option>
+            </select>
+          </div>
+          <div class="ticket-form-data">
+            <p class="ticket-form-label subtitle">CATEGORIA:</p>
+            <select id="ticket-add-category" class="select-primary">
+              {% for category in tickets_categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+              {% endfor %}
+              </select>
+          </div>
+          <div class="ticket-form-data ticket-description">
+            <p class="ticket-form-label subtitle">DESCRIÇÃO:</p>
+            <textarea class="ticket-add-description" id="ticket-add-description"></textarea>
+          </div>
+          <div class="modal-confirm-button">
+            <button class="button-primary" id="confirm-add" type="submit">CONFIRMAR</button>
           </div>
         </form>
       </div>  

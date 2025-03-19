@@ -135,3 +135,35 @@ document.querySelector("[name='ticket-remove-form']").addEventListener('submit',
     }
   }); 
 });
+
+document.querySelectorAll('.ticket-status-select')
+  .forEach(select =>{
+    select.addEventListener('change', async function(){
+
+    var formData = new FormData();
+    formData.append('ticket', select.value);
+    formData.append('status', document.querySelector('.ticket-status-select').value);
+
+    let csrfToken = getToken(); 
+
+    await fetch(`status/`, {
+      method: 'POST',
+      headers: { 'X-CSRFToken': csrfToken }, 
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.status == 'success'){
+        location.reload(); 
+      } else {          
+        message.style.display = 'block';        
+        message.querySelector('#message-text').innerHTML = data.message; 
+        message.querySelector('#message-error').innerHTML = data.error;
+        setTimeout(() => {
+          message.style.display = 'none'; 
+        }, 3000);
+      }
+
+    });
+  });
+});
