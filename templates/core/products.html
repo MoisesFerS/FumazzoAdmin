@@ -128,6 +128,21 @@ Produtos
           <div class="modal-edit-form">
             <form method="POST" id="" name="product-edit-form">
               <div class="product-form-data">
+                <p class="product-form-label subtitle">TIPO: </p>
+                <select id="product-edit-type" class="form-input-select">
+                  <option value="" selected>SELECIONE UM TIPO</option>
+                  <option value="4">BEBIDAS</option>
+                  <option value="5">PRODUTOS</option>
+                  <option value="6">INGREDIENTES</option>
+                </select>
+              </div>
+              <div class="product-form-data">
+                <p class="product-form-label subtitle">CATEGORIA: </p>
+                <select id="product-edit-category" class="form-input-select" disabled>
+                  <option value="">SEM CATEGORIA</option>
+                </select>
+              </div>
+              <div class="product-form-data">
                 <p class="product-form-label subtitle">NOME: </p>
                 <input id="product-edit-name" placeholder="Digite o nome da refeição">
               </div>

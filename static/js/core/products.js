@@ -103,12 +103,12 @@ function loadCategories(selectId, fetchUrl) {
 
 document.getElementById('product-add-type').addEventListener('change', function () {
   const fetchUrl = `add/get-categories/${this.value}/`;
-  loadCategories('dproduct-add-category', fetchUrl);
+  loadCategories('product-add-category', fetchUrl);
 });
 
 document.getElementById('product-edit-type').addEventListener('change', function () {
   const fetchUrl = `add/get-categories/${this.value}/`;
-  loadCategories('dproduct-edit-category', fetchUrl);
+  loadCategories('product-edit-category', fetchUrl);
 });
 
 document.querySelector("[name='product-add-form']").addEventListener('submit', async function(event){
@@ -151,6 +151,8 @@ document.querySelector("[name='product-edit-form']").addEventListener('submit', 
   formData.append('productID', this.id)
   formData.append('name', document.querySelector('#product-edit-name').value);
   formData.append('price', document.querySelector('#product-edit-price').value);
+  let category = document.querySelector('#meal-edit-category').value;
+  formData.append('category', category ? category : null);
   let imageFile = document.querySelector('#product-new-image').files[0];
   formData.append('image', imageFile ? imageFile : null);
 
@@ -235,6 +237,25 @@ document.querySelectorAll('.product-button.edit').forEach(button => {
 
           if(input == 'price'){
             data.productData[input] ? editPrice.style.display = 'block' : editPrice.style.display = 'none'; 
+          }
+
+          let categorySelect = document.querySelector(`#meal-edit-category`);
+          categorySelect.innerHTML = '';
+          const nullCategory = document.createElement('option');
+          nullCategory.value = null;
+          nullCategory.textContent = "SEM CATEGORIA";         
+          categorySelect.appendChild(nullCategory);
+  
+          if (data.mealData.category){
+            document.querySelector(`#meal-edit-type`).value = data.mealData.category.type;   
+            const option = document.createElement('option');
+            option.value = data.mealData.category.id;
+            option.textContent = data.mealData.category.name; 
+            option.selected = true;
+            categorySelect.appendChild(option);
+          } else {
+            document.querySelector(`#meal-edit-type`).value = "";
+            nullCategory.selected = true;
           }
 
         });

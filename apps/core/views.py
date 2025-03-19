@@ -849,7 +849,7 @@ def product_add(request):
     return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
 
   try:
-    category_id = request.POST.get('category')
+    category_id = request.POST.get('category') or None
     name_ = request.POST.get('name')
     sell_price_ = request.POST.get('price')
     image_file = request.FILES.get('image')
@@ -857,9 +857,10 @@ def product_add(request):
     if not category_id or not name_:
       return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos obrigatórios.'}, status=400)
 
-    category_ = models.Category.objects.filter(id=category_id).first()
-    if not category_:
-      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Categoria inválida.'}, status=400)
+    if category_id is not None:
+      category_ = models.Category.objects.get(id=category_id)
+    else:
+      category_ = None
 
     if category_.type == 4:
       if not sell_price_:
@@ -899,9 +900,7 @@ def product_edit(request):
     name_ = request.POST.get('name')
     sell_price_ = request.POST.get('price')
     image_file = request.FILES.get('image')
-
-    product = models.Product.objects.get(id=request.POST.get('productID'))
-    category_ = product.category
+    category_ = request.POST.get('category')
 
     if category_.type == 4:
       if not sell_price_:
@@ -915,10 +914,18 @@ def product_edit(request):
     else:
       sell_price_ = None
 
+    product = models.Product.objects.get(id=request.POST.get('productID'))
     product.name = name_
     product.sell_price = sell_price_
+
+    if category_ == 'null':
+      product.category = None      
+    else:
+      product.category = models.Category.objects.get(id=category_)
+
     if image_file:
       product.image = image_file
+
     product.save()
 
     return JsonResponse({'status': 'success', 'message': 'Registro editado com sucesso!'})
