@@ -43,7 +43,6 @@
                 <div class="meal-accordion-panel" id="{{ item.id }}">
                     <div class="meal-ingredients-container" id="{{ item.id }}">
                     {% if type_id == 4 %}
-                      <p>Nenhum ingrediente necessário para bebidas.</p>
                     {% else %}
                       {% for ingredient in item.ingredient_set %}
                         <div class="meal-ingredient">
@@ -70,8 +69,7 @@
                         <button class="meal-button edit" name="edit" id="{{ item.id }}"></button>
                         <button class="meal-button delete" name="remove" id="{{ item.id }}"></button>
                       {% else %}
-                        <button class="meal-button edit" name="edit" id="{{ item.id }}"></button>
-                        <button class="meal-button delete" name="remove" id="{{ item.id }}"></button>
+                        <p>Para alterar/remover bebidas vá para a guia Produtos.</p>
                       {% endif %}
                     {% endif %}
                   </div>

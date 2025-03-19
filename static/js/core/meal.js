@@ -134,10 +134,11 @@ document.querySelector("[name='meal-add-form']").addEventListener('submit', asyn
   event.preventDefault();
 
   var formData = new FormData();
-  formData.append('category', document.querySelector('#meal-add-categories').value);
   formData.append('name', document.querySelector('#meal-add-name').value);
   formData.append('description', document.querySelector('#meal-add-description').value);
   formData.append('price', document.querySelector('#meal-add-price').value);
+  let category = document.querySelector('#meal-add-category').value;
+  formData.append('category', category ? category : null);
   let imageFile = document.querySelector('#meal-add-image').files[0];
   formData.append('image', imageFile ? imageFile : null);
 

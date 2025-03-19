@@ -398,11 +398,10 @@ def meal_add(request):
     except ValueError:
       return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço inválido.'}, status=400)
 
-    if category_id is not None:
-      category_ = models.Category.objects.get(id=category_id)
-    else:
+    if category_id == 'null':
       category_ = None
-
+    else:
+      category_ = models.Category.objects.get(id=category_id)
 
     models.Meal.objects.create(
       category=category_,
@@ -849,30 +848,29 @@ def product_add(request):
     return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
 
   try:
-    category_id = request.POST.get('category') or None
+    category_id = request.POST.get('category')
     name_ = request.POST.get('name')
     sell_price_ = request.POST.get('price')
     image_file = request.FILES.get('image')
 
-    if not category_id or not name_:
+    if not name_:
       return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos obrigatórios.'}, status=400)
 
-    if category_id is not None:
-      category_ = models.Category.objects.get(id=category_id)
-    else:
+    if category_id == 'null':
       category_ = None
-
-    if category_.type == 4:
-      if not sell_price_:
-        return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço obrigatório para esta categoria.'}, status=400)
-      try:
-        sell_price_ = float(sell_price_)
-        if sell_price_ <= 0:
-          return JsonResponse({'status': 'error', 'error': '400', 'message': 'O preço não pode ser zero ou negativo.'}, status=400)
-      except ValueError:
-        return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço inválido.'}, status=400)
     else:
-      sell_price_ = None
+      category_ = models.Category.objects.get(id=category_id)
+      if category_.type == 4:
+        if not sell_price_:
+          return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço obrigatório para esta categoria.'}, status=400)
+        try:
+          sell_price_ = float(sell_price_)
+          if sell_price_ <= 0:
+            return JsonResponse({'status': 'error', 'error': '400', 'message': 'O preço não pode ser zero ou negativo.'}, status=400)
+        except ValueError:
+          return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço inválido.'}, status=400)
+      else:
+        sell_price_ = None
 
     product = models.Product.objects.create(
       category=category_,
@@ -902,26 +900,28 @@ def product_edit(request):
     image_file = request.FILES.get('image')
     category_ = request.POST.get('category')
 
-    if category_.type == 4:
-      if not sell_price_:
-        return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço obrigatório para esta categoria.'}, status=400)
-      try:
-        sell_price_ = float(sell_price_)
-        if sell_price_ <= 0:
-          return JsonResponse({'status': 'error', 'error': '400', 'message': 'O preço não pode ser zero ou negativo.'}, status=400)
-      except ValueError:
-        return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço inválido.'}, status=400)
-    else:
-      sell_price_ = None
-
     product = models.Product.objects.get(id=request.POST.get('productID'))
     product.name = name_
-    product.sell_price = sell_price_
 
     if category_ == 'null':
-      product.category = None      
+      category_ = None   
+      sell_price_ = None   
     else:
-      product.category = models.Category.objects.get(id=category_)
+      category_ = models.Category.objects.get(id=category_)
+      if category_.type == 4:
+        if not sell_price_:
+          return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço obrigatório para esta categoria.'}, status=400)
+        try:
+          sell_price_ = float(sell_price_)
+          if sell_price_ <= 0:
+            return JsonResponse({'status': 'error', 'error': '400', 'message': 'O preço não pode ser zero ou negativo.'}, status=400)
+        except ValueError:
+          return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preço inválido.'}, status=400)
+      else:
+        sell_price_ = None
+
+    product.category = category_
+    product.sell_price = sell_price_
 
     if image_file:
       product.image = image_file
@@ -946,11 +946,18 @@ def product_data(request):
   try:
     product_id = request.POST.get('product')
     product = models.Product.objects.get(id=product_id)
+    if product.category:
+      category = product.category
+    else:
+      category = None
 
     productData = {
       'name' : product.name,
       'image' : request.build_absolute_uri(product.image.url) if product.image else None,
       'price' : product.sell_price,
+      'category' : {'type' : category.type, 
+                    'id' : category.id,
+                    'name' : category.name} if category else None,
     }
 
     return JsonResponse({'status': 'success', 'message': 'Infromação encontrada com sucesso!', 'productData' : productData})

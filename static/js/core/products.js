@@ -76,13 +76,16 @@ document.querySelectorAll("[name='add'], [name='edit'], [name='remove']")
     });
   });
 
-function loadCategories(selectId, fetchUrl) {
+function loadCategories(selectId, type, priceInput) {
   const categoriesSelect = document.getElementById(selectId);
-  categoriesSelect.disabled = false;
-  const priceInput = document.getElementById('product-sell-price'); 
-  selectId == 4 ? priceInput.style.display = 'block' : priceInput.style.display = 'none';   
+  const price = document.getElementById(priceInput); 
+  if(type == 4 ){
+    price.style.display = 'block'
+  } else {
+    price.style.display = 'none';
+  }
 
-  fetch(fetchUrl)
+  fetch(`add/get-categories/${type}/`)
     .then(response => response.json())
     .then(data => {
       categoriesSelect.innerHTML = '';
@@ -102,21 +105,22 @@ function loadCategories(selectId, fetchUrl) {
 }
 
 document.getElementById('product-add-type').addEventListener('change', function () {
-  const fetchUrl = `add/get-categories/${this.value}/`;
-  loadCategories('product-add-category', fetchUrl);
+  const type = this.value
+  loadCategories('product-add-category', type, 'product-sell-price');
 });
 
 document.getElementById('product-edit-type').addEventListener('change', function () {
-  const fetchUrl = `add/get-categories/${this.value}/`;
-  loadCategories('product-edit-category', fetchUrl);
+  const type = this.value
+  loadCategories('product-edit-category', type, 'product-sell-price-edit');
 });
 
 document.querySelector("[name='product-add-form']").addEventListener('submit', async function(event){
   event.preventDefault();
 
   var formData = new FormData();
-  formData.append('category', document.querySelector('#product-add-categories').value);
   formData.append('name', document.querySelector('#product-add-name').value);
+  let category = document.querySelector('#product-add-category').value;
+  formData.append('category', category ? category : null);
   let sellPrice = document.querySelector('#product-add-price').value
   sellPrice ? formData.append('price', sellPrice) : null;
   let imageFile = document.querySelector('#product-add-image').files[0];
@@ -151,7 +155,7 @@ document.querySelector("[name='product-edit-form']").addEventListener('submit', 
   formData.append('productID', this.id)
   formData.append('name', document.querySelector('#product-edit-name').value);
   formData.append('price', document.querySelector('#product-edit-price').value);
-  let category = document.querySelector('#meal-edit-category').value;
+  let category = document.querySelector('#product-edit-category').value;
   formData.append('category', category ? category : null);
   let imageFile = document.querySelector('#product-new-image').files[0];
   formData.append('image', imageFile ? imageFile : null);
@@ -215,7 +219,7 @@ document.querySelectorAll('.product-button.edit').forEach(button => {
 
     let csrfToken = getToken();
 
-    const editPrice = document.getElementById('product-edit-price-container');
+    const editPrice = document.getElementById('product-sell-price-edit');
 
     await fetch(`data/`, {
       method: 'POST',
@@ -239,22 +243,22 @@ document.querySelectorAll('.product-button.edit').forEach(button => {
             data.productData[input] ? editPrice.style.display = 'block' : editPrice.style.display = 'none'; 
           }
 
-          let categorySelect = document.querySelector(`#meal-edit-category`);
+          let categorySelect = document.querySelector(`#product-edit-category`);
           categorySelect.innerHTML = '';
           const nullCategory = document.createElement('option');
           nullCategory.value = null;
           nullCategory.textContent = "SEM CATEGORIA";         
           categorySelect.appendChild(nullCategory);
   
-          if (data.mealData.category){
-            document.querySelector(`#meal-edit-type`).value = data.mealData.category.type;   
+          if (data.productData.category){
+            document.querySelector(`#product-edit-type`).value = data.productData.category.type;   
             const option = document.createElement('option');
-            option.value = data.mealData.category.id;
-            option.textContent = data.mealData.category.name; 
+            option.value = data.productData.category.id;
+            option.textContent = data.productData.category.name; 
             option.selected = true;
             categorySelect.appendChild(option);
           } else {
-            document.querySelector(`#meal-edit-type`).value = "";
+            document.querySelector(`#product-edit-type`).value = "";
             nullCategory.selected = true;
           }
 
