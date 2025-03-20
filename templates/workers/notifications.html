@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  Notificações
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/workers/notifications.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <div class="main-content">
+
+    <h1 class="notifications-title">NOTIFICAÇÕES</h1>
+    <div class="notifications-container">
+
+      {% if workerRole.permission >= 4 %}
+        <div class="notification-button-add">
+          <button class="button-secondary" name="add" id="{{ worker.id }}">Enviar</button>
+        </div>
+      {% endif %}
+
+      <div class="notifications-accordion-container">
+        {% for entry, entry_data in entries.items %}
+          <div class="notification-sector-accordion" id="accordion">
+            <p class="notification-sector-label subtitle">SETOR: {{ entry_data.name }}</p>
+          </div>
+          <div class="notification-sector-accordion-panel">
+            {% for notification in entry_data.notifications %}
+              <div class="notification-accordion" id="accordion">
+                <p class="notification-label subtitle">{{ notification.date | date:"d/m/Y" }}</p>
+                <p>Enviado por {{ notification.sender.first_name }} - {{ notification.sender.role.name }}</p>
+              </div>
+              <div class="notification-accordion-panel">
+                  <div class="notification-message">
+                    <p class="subtitle">{{ notification.message }}</p>
+                  </div>
+                  <div class="notification-accordion-panel-buttons">
+                    {% if workerRole.permission >= 4 %}
+                        <button class="notification-button edit" name="edit" id="{{ notification.id }}"></button>
+                        <button class="notification-button delete" name="remove" id="{{ notification.id }}"></button>
+                    {% endif %}
+                  </div>   
+                <hr class="accordion-division">
+              </div>
+            {% endfor %}
+          </div>
+          <hr class="accordion-division">
+        {% endfor %}    
+      </div>
+    </div>
+  </div>
+
+  {% if workerRole.permission >= 4 %}
+    <!-- Modals -->
+    <div class="notification-modal-container" id="modal-add">
+      <div class="notification-modal-content">
+        <div class="notification-modal-header">
+            <h1 class="notification-modal-title-add">ENVIAR UMA MENSAGEM</h1>
+        </div>
+        <div class="notification-modal-body">
+          <div class="modal-add-form">
+            <form action="POST" name="notification-add-form" enctype="multipart/form-data">
+              <div class="notification-form-data">
+                <p class="notification-form-label subtitle">SETOR: </p>
+                <select id="notification-add-sector" class="form-input-select">
+                  <option value="">GERAL</option>
+                  {% for sector in sectors %}
+                    <option value="{{ sector.id }}">{{ sector.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="notification-form-data">
+                <p class="notification-form-label subtitle">MENSAGEM:</p>
+                <textarea class="notification-add-message" id="notification-add-message"></textarea>
+              </div>
+              <div class="modal-confirm-button">
+                <button class="button-primary" id="confirm-add" type="submit">CONFIRMAR</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notification-modal-container" id="modal-edit">
+      <div class="notification-modal-content">
+        <div class="notification-modal-header">
+          <h1 class="notification-modal-title-edit">EDITAR REGISTRO</h1>
+        </div>
+        <div class="notification-modal-body">
+          <div class="modal-edit-form">
+            <form method="POST" id="" name="notification-edit-form">
+              <div class="notification-form-data">
+                <p class="notification-form-label subtitle">MENSAGEM:</p>
+                <textarea class="notification-edit-message" id="notification-edit-message"></textarea>
+              </div>
+              <select id="notification-edit-sector" class="form-input-select">
+                <option value="">GERAL</option>
+                {% for sector in sectors %}
+                  <option value="{{ sector.id }}">{{ sector.name }}</option>
+                {% endfor %}
+              </select>
+              <div>
+                <button class="button-primary" type="submit">CONFIRMAR</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notification-modal-container" id="modal-remove">
+      <div class="notification-modal-content">
+        <div class="notification-modal-header">
+          <h1 class="notification-modal-title-remove">REMOVER REGISTRO</h1>
+        </div>
+        <div class="notification-modal-body">
+          <div class="modal-remove-form">
+            <form method="POST" id="" name="notification-remove-form">
+              <div class="form-text">
+                <p>Você tem certeza que deseja remover</p>
+                <p id="remove-notification">CATEGORIA</p>
+              </div>
+              <div>
+                <button class="button-primary" type="submit">CONFIRMAR</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <script src="{% static 'js/workers/notifications.js' %}"></script>
+
+{% endblock %}

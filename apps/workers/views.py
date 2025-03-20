@@ -5,6 +5,7 @@ from django.http import JsonResponse
 import json
 from django.db.models import Count, Max, Q
 from apps.core.models import Category
+from apps.core.views import validation_insert
 
 #   ============================================================
 #   INDEX - Defs related to Index page(dashboard)
@@ -27,7 +28,7 @@ def index(request):
 		'image': role.image.url if role.image else None,
 	}
 
-	notifications = models.Notification.objects.filter(sector_id = workerData['sector_id'])
+	notifications = models.Notification.objects.filter(Q(sector_id=workerData['sector_id']) | Q(sector_id__isnull=True))
 	sectors = models.Sector.objects.annotate(
 			ticket_count=Count('ticket', filter=~Q(ticket__status=3)),
 			max_priority=Max('ticket__priority', filter=~Q(ticket__status=3)) 
@@ -46,6 +47,7 @@ def index(request):
 	
 	return render(request, 'workers/index.html', context)
 
+# Retrieves the user shift information
 def get_shift(request):
 
 	worker = models.Worker.objects.get(id = request.session['worker']['id'])
@@ -106,5 +108,115 @@ def authentication(request):
 
 # Flushes the session
 def logout(request):
+	
 	request.session.flush()
 	return redirect('workers:login')
+
+#   ============================================================
+#   NOTIFICATIONS - Defs related to Notification system
+#   ============================================================ 
+
+# Renders the Notification page
+def notifications(request):
+	
+  if 'worker' not in request.session:
+    return redirect('workers:login')
+
+  if request.session.get('workerRole', {}).get('permission', 0) < 4:
+    return JsonResponse({'status': 'error', 'error': '403', 'message': 'Usuário não autorizado. Permissão insuficiente.'}, status=403)
+
+  sectors = models.Sector.objects.all()
+  entries = {sector.id: {'name': sector.name, 'notifications': []} for sector in sectors}
+
+  for sector in sectors:
+
+    notifications = models.Notification.objects.filter(sector_id=sector.id)  
+
+    for notification in notifications:
+      notificationsData = {
+        "id": notification.id,
+        "message": notification.message,
+        "sector" : notification.sector,
+				"sender" : notification.sender,
+				"date" : notification.date,
+      }
+
+      entries[sector.id]["notifications"].append(notificationsData)
+
+  general = models.Notification.objects.filter(sector_id=None)
+
+  entries[0] = {
+    "name": "GERAL",
+    "notifications": []
+  }
+
+  for notification in general:
+
+    general_data = {
+      "id": notification.id,
+      "message": notification.message,
+      "sector" : notification.sector,
+      "sender" : notification.sender,
+      "date" : notification.date,
+    }
+
+    entries[0]['notifications'].append(general_data)
+
+  context = {
+    'worker': request.session.get('worker'),
+    'workerRole': request.session.get('workerRole'),
+    'entries' : entries,
+		"sectors" : sectors,
+  }
+
+  return render(request, 'workers/notifications.html', context)
+
+def notification_add(request):
+	
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
+
+  try:
+
+    if not request.POST.get('message'):
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
+    
+    if request.POST.get('sector') == 'null':
+      sector_ = None
+    else:
+      sector_ = models.Sector.objects.get(id = request.POST.get('sector'))
+
+    sender_ = models.Worker.objects.get(id = request.POST.get('sender'))
+    message_ = request.POST.get('message')
+
+    models.Notification.objects.create(
+      sender = sender_,
+      sector = sector_,
+      message = message_,
+    )
+
+    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
+
+  except json.JSONDecodeError:
+    return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
+
+def notification_edit(request):
+	return
+
+def notification_remove(request):
+
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
+  
+  try:
+    notification_id = request.POST.get('notification')
+
+    models.Notification.objects.get(id = notification_id).delete()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro removido com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+  

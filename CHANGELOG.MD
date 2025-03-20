@@ -7,6 +7,20 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.13.0] - 19/03/2025 - Notifications
+
+### ADDED
+- Templates (`templates/workers/`):
+  - `notifications.html` - Template for managing notifications.
+
+- JavaScript (`static/js/`):
+  - `notifications.js` - Scripts for handling ticket-related interactions.
+
+- CSS (`static/css/`):
+  - `notifications.css` - Styles for the ticket management page.
+
+- New routes added in `workers/urls.py` for the corresponding views in `workers/views.py`:
+
 ## [0.13.0] - 19/03/2025 - Tickets
 
 ### ADDED
