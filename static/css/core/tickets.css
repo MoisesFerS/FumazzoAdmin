@@ -1,4 +1,4 @@
-.products-container{
+.tickets-container{
   width: 1024px;
   background-color: var(--color-detail3);
   border-radius: 3px;
@@ -7,7 +7,7 @@
   gap: 20px;
 }
 
-.products-accordion-container{
+.tickets-accordion-container{
   display: flex;
   flex-direction: column;   
   align-items: center;
@@ -15,43 +15,47 @@
   width: 1024px;
 } 
 
-.product-type-accordion-panel, .product-category-accordion-panel, .product-accordion-panel{
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height 0.2s ease;
-}
-
-.product-type-accordion{
+.ticket-accordion{
   width: 100%;
-  height: 150px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 100px;
+  display: grid;
+  grid-template-rows: 1fr auto;
   background-color: var(--color-detail1);
 }
 
-.product-type-accordion-panel{
-  width: 100%;
+.ticket-priority-bar{
+  border-width: 0px 0px 20px 0px;
+}
+
+.ticket-data-container{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  justify-content: center;
+}
+
+.ticket-accordion-panel{
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.2s ease;
+  width: 96%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.product-category-accordion{
-  width: 96%;
-  height: 100px;
-  background-color: var(--color-detail1);
+.ticket-data{
   display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0px 0px 3px 3px;
+  flex-direction: row;
+  gap: 10px;
+  padding: 15px;
 }
 
 .accordion-division{
-  border: 25px solid transparent;
+  border: 5px solid transparent;
 }
 
-.product-button-add{
+.ticket-button-add{
   height: fit-content;
   width: 100%;
   display: flex;
@@ -59,46 +63,22 @@
   justify-content: end;
 }
 
-.product-accordion{
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  background-color: var(--color-detail1);
-  width: 100%;
-  border-radius: 0px 0px 3px 3px;
-}
-
-.product-category-accordion-panel{
-  width: 92%;
-}
-
-.product-accordion-name{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.product-accordion-image{
-  height: 150px;
-  width: 150px;
-  padding-left: 15px;
-}
-
-.product-accordion-price{
-  padding: 15px;
-}
-
 .active{
   background-color: var(--color-detail2);
   transition: 0.4s ease;
 }
 
-.product-accordion-panel{
+.ticket-description-container{
+  width: 92%;
+  background-color: var(--color-detail2);
+  padding: 20px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
 }
 
-.product-accordion-panel-buttons{
+.ticket-panel-buttons{
   background-color: var(--color-detail2);
   height: 100px;
   border-radius: 0px 0px 3px 3px;
@@ -110,24 +90,7 @@
   align-items: center;
 }
 
-.product-data{
-  width: 92%;
-  background-color: var(--color-detail2);
-  padding: 20px;
-  display: flex;
-  flex-direction: row;
-  gap: 100px;
-  align-items: center;
-  justify-content: center;
-}
-
-.product-quantity-container, .product-price-container{
-  display: flex;
-  flex-direction: row;
-  gap: 15px;
-}
-
-.product-button{
+.ticket-button{
   height: 50px;
   width: 180px;
   border-radius: 5px;
@@ -153,7 +116,7 @@
 /* ===== CONTAINER ===== */
 
 /* Dark background */
-.product-modal-container{
+.ticket-modal-container{
   display: none; 
   position: fixed; 
   z-index: 1;
@@ -170,7 +133,7 @@
 /* ===== CONTENT ===== */
 
 /* Modal content */
-.product-modal-content {
+.ticket-modal-content {
   position: relative;
   background-color: var(--color-primary);
   margin: auto;
@@ -182,12 +145,11 @@
   -webkit-animation-name: animatetop;
   -webkit-animation-duration: 0.4s;
   animation-name: animatetop;
-  animation-duration: 0.4s;
-  border-radius: 10px;
+  animation-duration: 0.4s
 }
 
 /* Modal header, where is located the title */
-.product-modal-header {
+.ticket-modal-header {
   height: 150px;
   display: flex;
   justify-content: center;
@@ -195,48 +157,52 @@
 }
 
 /* Modal body, where is located the information */
-.product-modal-body {
-  width: 100%;
+.ticket-modal-body {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-self: center;
-  overflow-y: scroll;
 }
 
 .modal-confirm-button{
-
   margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   justify-self: end;
   height: 150px;
-
 }
 
-
-.product-add-form{
-  display: grid;
-  padding: 50px;
-  grid-template-columns: repeat(2, 1fr); 
-  grid-template-rows: repeat(4, 150px); 
-  justify-content: center;
-}
-
-.form-confirm-button{
-  justify-content: center;
-  justify-items: center;
-  grid-column: 1 /span 2;
-}
 /* ===== ANIMATION ===== */
 
 @-webkit-keyframes animatetop {
-from {top:-300px; opacity:0} 
-to {top:0; opacity:1}
+  from {top:-300px; opacity:0} 
+  to {top:0; opacity:1}
 }
 
 @keyframes animatetop {
-from {top:-300px; opacity:0}
-to {top:0; opacity:1}
+  from {top:-300px; opacity:0}
+  to {top:0; opacity:1}
+}
+
+/*  ============================================================
+    STATUS - Status used on the page
+    ============================================================ */ 
+
+/* Green */
+.low-priority{
+  border-color: var(--color-detail5);
+  background-color: var(--color-detail5);
+}
+
+/* Yellow */
+.medium-priority{
+  border-color: var(--color-detail6);
+  background-color: var(--color-detail6);
+}
+
+/* Red */
+.high-priority{
+  border-color: var(--color-detail7);
+  background-color: var(--color-detail7);
 }

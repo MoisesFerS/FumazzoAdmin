@@ -126,7 +126,7 @@
     TICKET - Ticket system
     ============================================================ */ 
 
-.ticket-form-content{
+.ticket-container{
     width: 930px;
     display: flex;
     flex-direction: column;
@@ -135,16 +135,22 @@
     gap: 30px;
 }
 
-.ticket-form-data-container{
+.ticket-form{
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
 
-.form-description{
+.ticket-form-data{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.ticket-description{
     grid-column: 1 /span 2;
 }
 
-.ticket-form-description{
+.ticket-add-description{
     width: 100%;
     height: 300px;
 }

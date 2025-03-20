@@ -2,6 +2,7 @@ from django.db import models
 from apps.workers.models import Worker
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.text import slugify 
+import datetime
 
 class Unit(models.Model):
     id = models.AutoField(primary_key=True)
@@ -99,7 +100,8 @@ class Ticket(models.Model):
     priority = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.TextField()
-    status = models.IntegerField(default=0)
+    status = models.IntegerField(default=1)
+    date = models.DateField(default=datetime.date.today)
 
 class Table(models.Model):
     id = models.AutoField(primary_key=True)

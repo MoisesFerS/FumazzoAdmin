@@ -7,6 +7,27 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.13.0] - 19/03/2025 - Tickets
+
+### ADDED
+- Templates (`templates/core/`):
+  - `tickets.html` - Template for managing tickets.
+
+- JavaScript (`static/js/`):
+  - `tickets.js` - Scripts for handling ticket-related interactions.
+
+- CSS (`static/css/`):
+  - `tickets.css` - Styles for the ticket management page.
+
+- New routes added in `core/urls.py` for the corresponding views in `core/views.py`:
+  - `tickets` - Renders the ticket management page.
+  - `ticket_add` - Adds a new `Ticket` entry.
+  - `ticket_status` - Updates the status of a `Ticket`.
+  - `ticket_remove` - Deletes a `Ticket` entry.
+
+- Navigation Update:
+  - Added a link to the Tickets page in the navbar under the "Select and Manage" section.
+
 ## [0.12.0] - 18/03/2025 - Products and Categories
 
 ### ADDED

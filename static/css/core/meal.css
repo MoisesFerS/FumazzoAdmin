@@ -227,7 +227,8 @@
   -webkit-animation-name: animatetop;
   -webkit-animation-duration: 0.4s;
   animation-name: animatetop;
-  animation-duration: 0.4s
+  animation-duration: 0.4s;
+  border-radius: 10px;
 }
 
 /* Modal header, where is located the title */
@@ -240,21 +241,51 @@
 
 /* Modal body, where is located the information */
 .meal-modal-body {
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-self: center;
 }
 
+#confirm-add{
+  grid-column: 1 /span 2;
+}
+
 .modal-confirm-button{
 
   margin-top: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  justify-self: end;
   height: 150px;
 
+}
+
+.form-add-description{
+  width: 350px;
+  height: 100px;
+}
+
+.form-add-price{
+  width: 250px;
+  height: 45px;
+}
+
+
+.meal-form-data{
+  padding-left: 35px;
+}
+
+.meal-add-form{
+  padding: 50px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 4 colunas */
+  grid-template-rows: repeat(3, 150px); /* 3 linhas, cada uma com 150px de altura */
+  justify-content: center;
+}
+
+.form-confirm-button{
+  justify-content: center;
+  justify-items: center;
+  grid-column: 1 /span 2;
 }
 
 /* ===== ANIMATION ===== */

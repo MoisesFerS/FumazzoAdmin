@@ -97,10 +97,10 @@
         </div>
         <div class="meal-modal-body">
           <div class="modal-add-form">
-            <form action="POST" name="meal-add-form" enctype="multipart/form-data">
+            <form action="POST" name="meal-add-form" enctype="multipart/form-data" class="meal-add-form">
               <div class="meal-form-data">
                 <p class="meal-form-label subtitle">TIPO: </p>
-                <select id="meal-add-type" class="form-input-select">
+                <select id="meal-add-type" class="form-input-select select-primary">
                   <option value="" selected>SELECIONE UM TIPO</option>
                   <option value="1">LANCHES</option>
                   <option value="2">SOBREMESAS</option>
@@ -109,29 +109,29 @@
               </div>
               <div class="meal-form-data">
                 <p class="meal-form-label subtitle">CATEGORIA: </p>
-                <select id="meal-add-category" class="form-input-select" disabled>
+                <select id="meal-add-category" class="form-input-select select-primary" disabled>
                   <option value="">SEM CATEGORIA</option>
                 </select>
               </div>
               <div class="meal-form-data">
                 <p class="meal-form-label subtitle">NOME: </p>
-                <input id="meal-add-name" placeholder="Digite o nome da refeição">
+                <input id="meal-add-name" placeholder="Digite o nome da refeição" class="select-primary">
               </div>
               <div class="meal-form-data">
                 <p class="meal-form-label subtitle">DESCRIÇÃO: </p>
-                <textarea id="meal-add-description" placeholder="Digite a descrição da refeição"></textarea>
+                <textarea id="meal-add-description" placeholder="Digite a descrição da refeição" class="form-add-description"></textarea>
               </div>
               <div class="meal-form-data">
                 <p class="meal-form-label subtitle">PREÇO: </p>
-                <input type="number" id="meal-add-price" step="0.01" placeholder="Digite o preço">
+                <input type="number" id="meal-add-price" step="0.01" placeholder="Digite o preço" class="form-add-price">>
               </div>
               <div class="meal-form-data">
                 <p class="meal-form-label subtitle">IMAGEM: </p>
-                <input type="file" id="meal-add-image" accept="image/*">
+                <input type="file" id="meal-add-image" accept="image/*" class="form-add-image">
               </div>
-              <div class="modal-confirm-button">
-                <button class="button-primary" id="confirm-add" type="submit">CONFIRMAR</button>
-              </div>
+              <div class="form-confirm-button">
+              <button class="button-primary" id="confirm-add" type="submit">CONFIRMAR</button>
+            </div>
             </form>
           </div>
         </div>

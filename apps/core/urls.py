@@ -58,6 +58,9 @@ urlpatterns = [
   path('products/remove/', views.product_remove, name="product-remove"),
 
   # Ticket system
-  path('ticket/add/', views.ticket_add, name="ticket-add"),
+  path('tickets/', views.tickets, name="tickets"),
+  path('tickets/add/', views.ticket_add, name="ticket-add"),
+  path('tickets/status/', views.ticket_status, name="ticket-status"),
+  path('tickets/remove/', views.ticket_remove, name="ticket-remove"),
 
 ]

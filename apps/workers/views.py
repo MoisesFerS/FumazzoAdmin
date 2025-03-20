@@ -33,7 +33,7 @@ def index(request):
 			max_priority=Max('ticket__priority', filter=~Q(ticket__status=3)) 
 	)
 
-	tickets_categories = Category.objects.filter(type=6)
+	tickets_categories = Category.objects.filter(type=7)
 
 	context = {
 		'worker': request.session.get('worker'),
