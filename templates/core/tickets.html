@@ -40,9 +40,9 @@ Tickets
               <div class="ticket-data">
                 <p class="ticket-data-label">STATUS:</p>
                 <select id="{{ ticket.id }}" class="ticket-status-select">
-                  <option value="1">ABERTO</option>
-                  <option value="2">EM ANDAMENTO</option>
-                  <option value="3">FECHADO</option> 
+                  <option value="1" {% if ticket.status == 1 %} selected {% endif %}>ABERTO</option>
+                  <option value="2" {% if ticket.status == 2 %} selected {% endif %}>EM ANDAMENTO</option>
+                  <option value="3" {% if ticket.status == 3 %} selected {% endif %}>FECHADO</option> 
                 </select>
               </div> 
             </div> 

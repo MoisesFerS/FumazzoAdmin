@@ -141,8 +141,8 @@ document.querySelectorAll('.ticket-status-select')
     select.addEventListener('change', async function(){
 
     var formData = new FormData();
-    formData.append('ticket', select.value);
-    formData.append('status', document.querySelector('.ticket-status-select').value);
+    formData.append('ticket', select.id);
+    formData.append('status', select.value);
 
     let csrfToken = getToken(); 
 
@@ -154,7 +154,7 @@ document.querySelectorAll('.ticket-status-select')
     .then(response => response.json())
     .then(data => {
       if(data.status == 'success'){
-        location.reload(); 
+
       } else {          
         message.style.display = 'block';        
         message.querySelector('#message-text').innerHTML = data.message; 

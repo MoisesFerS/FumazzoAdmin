@@ -895,11 +895,12 @@ def product_remove(request):
 #   TICKETS SYSTEM - Defs related to Products page
 #   ============================================================ 
 
+# Renders the Tickets page
 def tickets(request):
   if 'worker' not in request.session:
     return redirect('workers:login')
 
-  tickets = models.Ticket.objects.all().order_by('-date', '-status')
+  tickets = models.Ticket.objects.all().order_by('-date', 'status')
   sectors = Sector.objects.all()
   categories = models.Category.objects.filter(type=7)
 
@@ -944,6 +945,7 @@ def ticket_add(request):
   except json.JSONDecodeError:
     return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
 
+# Change the ticket status
 def ticket_status(request):
   
   validation_response = validation_insert(request)
@@ -960,6 +962,7 @@ def ticket_status(request):
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
 
+# Removes a ticket entry
 def ticket_remove(request):
   
   validation_response = validation_insert(request)
