@@ -82,12 +82,12 @@ WSGI_APPLICATION = 'FumazzoAdmin.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',  # Usando o backend PostgreSQL
-        'NAME': 'postgres',  # Nome do banco de dados fornecido pelo Supabase
-        'USER': 'postgres.vezutwhcnhzoysmbvbhy',  # Usuário fornecido pelo Supabase
-        'PASSWORD': 'y0GbcpsCut2Gu7i0',  # Senha que você definiu no Supabase
-        'HOST': 'aws-0-sa-east-1.pooler.supabase.com',  # Host fornecido pelo Supabase
-        'PORT': '5432',  # Porta padrão do PostgreSQL
+        'ENGINE': 'django.db.backends.postgresql', 
+        'NAME': 'postgres', 
+        'USER': 'postgres.vezutwhcnhzoysmbvbhy', 
+        'PASSWORD': 'y0GbcpsCut2Gu7i0', 
+        'HOST': 'aws-0-sa-east-1.pooler.supabase.com',  
+        'PORT': '5432', 
     }
 }
 
@@ -131,8 +131,8 @@ PHONENUMBER_DEFAULT_REGION = 'BR'
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles_build', 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # Media files (Upload from the users)
