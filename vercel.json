@@ -3,28 +3,17 @@
   "builds": [
     {
       "src": "FumazzoAdmin/wsgi.py",
-      "use": "@vercel/python",
-      "config": {
-        "runtime": "python3.11"
-      }
+      "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/static/(.*)",
-      "dest": "/staticfiles/$1"
+      "dest": "/static/$1"
     },
     {
       "src": "/(.*)",
       "dest": "FumazzoAdmin/wsgi.py"
     }
-  ],
-  "build": {
-    "env": {
-      "DJANGO_SETTINGS_MODULE": "FumazzoAdmin.settings"
-    },
-    "commands": [
-      "python manage.py collectstatic --noinput"
-    ]
-  }
+  ]
 }
