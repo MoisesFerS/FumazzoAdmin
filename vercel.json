@@ -28,7 +28,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "FumazzoAdmin/asgi.py"
+      "dest": "FumazzoAdmin/wsgi.py"
     }
   ]
 }
