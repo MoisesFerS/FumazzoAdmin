@@ -2,13 +2,11 @@
   "version": 2,
   "builds": [
     {
-      "src": "manage.py",
+      "src": "FumazzoAdmin/wsgi.py",
       "use": "@vercel/python",
-      "config": { "runtime": "python3.11" }
-    },
-    {
-      "src": "build_files.sh",
-      "use": "@vercel/static-build"
+      "config": {
+        "runtime": "python3.11"
+      }
     }
   ],
   "routes": [
