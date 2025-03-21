@@ -7,7 +7,7 @@
     <section class="identity-container">
       <p class="identity-title">Administrativo</p>
       {% if worker.id %}
-      <section class="identity-worker-container">
+      <section class="identity-worker-container" id="{{ worker.id }}">
         <p class="identity-worker-text">{{ worker.first_name }}</p>
         <p class="identity-worker-separator"> - </p>
         <p class="identity-worker-text">{{ workerRole.name }}</p>
@@ -32,7 +32,7 @@
       </li>
     </ul>
     <a class="navbar-link" href="#">Promoções</a>
-    <a class="navbar-link" href="#">Notificação</a>
+    <a class="navbar-link" href="{% url 'workers:notifications' %}">Notificação</a>
     <a href="{% url 'workers:logout' %}" class="button-primary">Sair</a>
     {% endif %}
   </nav>

@@ -7,24 +7,37 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.14.0] - 21/03/2025 - Notifications
+
+### ADDED
+- Templates (`templates/workers/`):
+  - `notifications.html` - Template for managing notifications.
+- JavaScript (`static/js/`):
+  - `notifications.js` - Scripts for handling notification-related interactions.
+- CSS (`static/css/`):
+  - `notifications.css` - Styles for the notification management page.
+- New routes added in `workers/urls.py` for the corresponding views in `workers/views.py`:
+  - `notifications` - Renders the notification management page.
+  - `notification_add` - Adds a new `Notification` entry.
+  - `notification_edit` - Updates the data of a `Notification` entry.
+  - `notification_data` - Retrieves data for editing an entry.
+  - `notification_remove` - Deletes a `Notification` entry.
+- Added a link to the navbar button referent to the notifications page.
+
 ## [0.13.0] - 19/03/2025 - Tickets
 
 ### ADDED
 - Templates (`templates/core/`):
   - `tickets.html` - Template for managing tickets.
-
 - JavaScript (`static/js/`):
   - `tickets.js` - Scripts for handling ticket-related interactions.
-
 - CSS (`static/css/`):
   - `tickets.css` - Styles for the ticket management page.
-
 - New routes added in `core/urls.py` for the corresponding views in `core/views.py`:
   - `tickets` - Renders the ticket management page.
   - `ticket_add` - Adds a new `Ticket` entry.
   - `ticket_status` - Updates the status of a `Ticket`.
   - `ticket_remove` - Deletes a `Ticket` entry.
-
 - Navigation Update:
   - Added a link to the Tickets page in the navbar under the "Select and Manage" section.
 
