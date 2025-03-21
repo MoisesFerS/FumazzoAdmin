@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -81,12 +82,12 @@ WSGI_APPLICATION = 'FumazzoAdmin.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
+        'ENGINE': 'django.db.backends.postgresql',  # Usando o backend PostgreSQL
+        'NAME': 'postgres',  # Nome do banco de dados fornecido pelo Supabase
+        'USER': 'postgres.vezutwhcnhzoysmbvbhy',  # Usuário fornecido pelo Supabase
+        'PASSWORD': 'y0GbcpsCut2Gu7i0',  # Senha que você definiu no Supabase
+        'HOST': 'aws-0-sa-east-1.pooler.supabase.com',  # Host fornecido pelo Supabase
+        'PORT': '5432',  # Porta padrão do PostgreSQL
     }
 }
 
@@ -130,8 +131,8 @@ PHONENUMBER_DEFAULT_REGION = 'BR'
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles_build', 'static')]
 
 
 # Media files (Upload from the users)
