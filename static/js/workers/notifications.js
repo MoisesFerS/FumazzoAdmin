@@ -73,9 +73,11 @@ document.querySelector("[name='notification-add-form']").addEventListener('submi
   event.preventDefault();
 
   var formData = new FormData();
-  formData.append('sector', document.querySelector('#notification-add-sector').value);
   formData.append('message', document.querySelector('#notification-add-message').value);
   formData.append('sender', this.id)
+
+  let sectorID = document.querySelector('#notification-add-sector').value
+  formData.append('sector', sectorID ? sectorID : null);
 
   let csrfToken = getToken(); 
 
@@ -173,7 +175,7 @@ document.querySelectorAll('.notification-button.edit').forEach(button => {
     .then(response => response.json())
     .then(data => {
       if (data.status === 'success') {
-        let info = ['name']
+        let info = ['message', 'sector']
 
         info.forEach(input => {
           let editInfo = document.querySelector(`#notification-edit-${input}`)

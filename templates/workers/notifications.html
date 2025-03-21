@@ -30,8 +30,12 @@
           <div class="notification-sector-accordion-panel">
             {% for notification in entry_data.notifications %}
               <div class="notification-accordion" id="accordion">
-                <p class="notification-label subtitle">{{ notification.date | date:"d/m/Y" }}</p>
-                <p>Enviado por {{ notification.sender.first_name }} - {{ notification.sender.role.name }}</p>
+                <div class="notification-accordion-label">
+                  <p class="notification-label">DATA: {{ notification.date | date:"d/m/Y" }}</p>
+                </div>
+                <div class="notification-accordion-label">
+                  <p class="notification-label">ENVIADO POR: {{ notification.sender.first_name }} - {{ notification.sender.role.name }}</p>
+                </div>                
               </div>
               <div class="notification-accordion-panel">
                   <div class="notification-message">

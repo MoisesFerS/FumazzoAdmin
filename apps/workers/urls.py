@@ -30,6 +30,7 @@ urlpatterns = [
 	# Notification system
   path('notifications/', views.notifications, name='notifications'),
   path('notifications/add/', views.notification_add, name="notification-add"),
+  path('notifications/data/', views.notification_data, name="notification-data"),
   path('notifications/edit/', views.notification_edit, name="notification-edit"),
   path('notifications/remove/', views.notification_remove, name="notification-remove"),
 

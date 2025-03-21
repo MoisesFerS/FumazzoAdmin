@@ -181,8 +181,8 @@ def notification_add(request):
 
     if not request.POST.get('message'):
       return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
-    
-    if request.POST.get('sector') == 'null':
+
+    if request.POST.get('sector') == 'null' or '':
       sector_ = None
     else:
       sector_ = models.Sector.objects.get(id = request.POST.get('sector'))
@@ -200,6 +200,27 @@ def notification_add(request):
 
   except json.JSONDecodeError:
     return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
+
+# Retrieves the notification data
+def notification_data(request):
+
+  try:
+    notification_id = request.POST.get('notification')
+    notification = models.Notification.objects.get(id=notification_id)
+    if notification.sector:
+      sector = notification.sector.id
+    else:
+      sector = None
+
+    notificationData = {
+      'message' : notification.message,
+      'sector' : sector
+    }
+
+    return JsonResponse({'status': 'success', 'message': 'Infromação encontrada com sucesso!', 'notificationData' : notificationData})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
 
 def notification_edit(request):
 	return
