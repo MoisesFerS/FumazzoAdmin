@@ -71,40 +71,40 @@ def login(request):
 
 # Authenticates the user
 def authentication(request):
-	if request.method != 'POST':
-		return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
+  if request.method != 'POST':
+    return JsonResponse({'status': 'error', 'error': '405', 'message': 'Método inválido.'}, status=405)
 
-	try:
+  try:
 
-		if not request.POST.get('id') or not request.POST.get('password'):
-			return JsonResponse({'status': 'error', 'error': '400', 'message': 'ID e senha são obrigatórios.'}, status=400)
+    if not request.POST.get('id') or not request.POST.get('password'):
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'ID e senha são obrigatórios.'}, status=400)        
 
-		try:
-			worker = models.Worker.objects.get(id=request.POST.get('id'))
-		except models.Worker.DoesNotExist:
-			return JsonResponse({'status': 'error', 'error': '400', 'message': 'Credenciais inválidas.'}, status=400)
-		
-		if bcrypt.checkpw(request.POST.get('password').encode('UTF-8'), worker.password.encode('UTF-8')):
+    try:
+      worker = models.Worker.objects.get(id=request.POST.get('id'))
+    except models.Worker.DoesNotExist:
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Credenciais inválidas.'}, status=400)
 
-			role = worker.role
+    if bcrypt.checkpw(request.POST.get('password').encode('UTF-8'), worker.password.encode('UTF-8')):
 
-			request.session['worker'] = {
-				'id': worker.id,
-				'first_name': worker.first_name,
-				'last_name': worker.last_name,
-			}
-			request.session['workerRole'] = {
-				'permission': role.permission,
-				'name': role.name,
-			}
+      role = worker.role
 
-			return JsonResponse({'status': 'success', 'message': 'Login realizado com sucesso!', 'redirect_url': '/workers/'})
+      request.session['worker'] = {
+        'id': worker.id,
+        'first_name': worker.first_name,
+        'last_name': worker.last_name,
+      }
+      request.session['workerRole'] = {
+        'permission': role.permission,
+        'name': role.name,
+      }
 
-		else:
-			return JsonResponse({'status': 'error', 'error': '400', 'message': 'Credenciais inválidas.'}, status=400)
+      return JsonResponse({'status': 'success', 'message': 'Login realizado com sucesso!', 'redirect_url': '/workers/'})
 
-	except json.JSONDecodeError:
-		return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON.'}, status=400)
+    else:
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Credenciais inválidas.'}, status=400)
+
+  except json.JSONDecodeError:
+    return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON.'}, status=400)
 
 # Flushes the session
 def logout(request):
