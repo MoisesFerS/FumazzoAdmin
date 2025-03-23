@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'phonenumber_field',
+    'storages',
     'apps.core',
     'apps.workers',
 ]
@@ -138,10 +139,10 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Media files (Upload from the users)
 # https://docs.djangoproject.com/en/5.1/topics/files/
 
-MEDIA_URL = '/media/'
-# MEDIAFILES_DIRS = [os.path.join(BASE_DIR, 'mediafiles')]
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
-
+SUPABASE_URL='https://vezutwhcnhzoysmbvbhy.supabase.co'
+SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZlenV0d2hjbmh6b3lzbWJ2Ymh5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MjU2MjYyNiwiZXhwIjoyMDU4MTM4NjI2fQ.y3acg9XUICMVgrb7tut_M2yOslY0pjbZAYFUQiJeHg8'
+SUPABASE_BUCKET='media-files'
+DEFAULT_FILE_STORAGE = 'FumazzoAdmin.storage_backends.SupabaseStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
