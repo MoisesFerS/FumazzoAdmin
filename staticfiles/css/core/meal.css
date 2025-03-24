@@ -1,0 +1,301 @@
+.meal-container{
+  width: 1024px;
+  background-color: var(--color-detail3);
+  border-radius: 3px;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 20px;
+}
+
+.meal-accordion-container{
+  display: flex;
+  flex-direction: column;   
+  align-items: center;
+  z-index: 0;
+  width: 1024px;
+} 
+
+.meal-type-accordion-panel, .meal-category-accordion-panel, .meal-accordion-panel{
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.2s ease;
+}
+
+.meal-type-accordion{
+  width: 100%;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-detail1);
+}
+
+.meal-type-accordion-panel{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.meal-category-accordion{
+  width: 96%;
+  height: 100px;
+  background-color: var(--color-detail1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0px 0px 3px 3px;
+}
+
+.accordion-division{
+  border: 25px solid transparent;
+}
+
+.meal-button-add{
+  height: fit-content;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
+.meal-accordion{
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  background-color: var(--color-detail1);
+  width: 100%;
+  border-radius: 0px 0px 3px 3px;
+}
+
+.meal-category-accordion-panel{
+  width: 92%;
+}
+
+.meal-accordion-name{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.meal-accordion-image{
+  height: 150px;
+  width: 150px;
+  padding-left: 15px;
+}
+
+.meal-accordion-price{
+  padding: 15px;
+}
+
+.active{
+  background-color: var(--color-detail2);
+  transition: 0.4s ease;
+}
+
+.meal-accordion-panel{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.meal-accordion-panel-buttons{
+  background-color: var(--color-detail2);
+  height: 100px;
+  border-radius: 0px 0px 3px 3px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+  justify-content: center;
+  align-items: center;
+}
+
+.meal-ingredients-container{
+  background-color: var(--color-detail2);
+  width: 96%;
+  overflow-y: scroll;
+  max-height: 500px;
+}
+
+.meal-ingredient{
+  padding: 20px;
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+}
+
+.ingredient-image{
+  width: 75px;
+  height: 75px;
+}
+
+.ingredient-quantity-container{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  justify-content: end;
+  align-items: center;
+}
+
+.ingredient-increment-button{
+  width: 50px;
+  height: 50px;
+  background-size: cover; 
+  background-position: center;
+  background-image: url('../../images/buttons/increment.png');
+  border-radius: 3px;
+}
+
+.ingredient-subtract-button{
+  width: 50px;
+  height: 50px;
+  background-size: cover; 
+  background-position: center;
+  background-image: url('../../images/buttons/subtract.png');
+  border-radius: 3px;
+}
+
+.ingredient-remove-button{
+  width: 50px;
+  height: 50px;
+  background-size: cover; 
+  background-position: center;
+  background-image: url('../../images/buttons/remove.png');
+  border-radius: 3px;
+}
+
+.meal-button{
+  height: 50px;
+  width: 180px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.ingredient{
+  background-size: cover; 
+  background-position: center;
+  background-image: url(../../images/buttons/ingredient.png);
+}
+
+.edit{
+  background-size: cover; 
+  background-position: center;
+  background-image: url(../../images/buttons/edit.png);
+}
+
+.delete{
+  background-size: cover; 
+  background-position: center;
+  background-image: url(../../images/buttons/delete.png);
+}
+
+/*  ============================================================
+    MODALS - Modals used on the page
+    ============================================================ */ 
+
+/* ===== CONTAINER ===== */
+
+/* Dark background */
+.meal-modal-container{
+  display: none; 
+  position: fixed; 
+  z-index: 1;
+  padding-top: 100px; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.4); 
+}
+
+/* ===== CONTENT ===== */
+
+/* Modal content */
+.meal-modal-content {
+  position: relative;
+  background-color: var(--color-primary);
+  margin: auto;
+  width: 1024px;
+  height: 750px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  -webkit-animation-name: animatetop;
+  -webkit-animation-duration: 0.4s;
+  animation-name: animatetop;
+  animation-duration: 0.4s;
+  border-radius: 10px;
+}
+
+/* Modal header, where is located the title */
+.meal-modal-header {
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal body, where is located the information */
+.meal-modal-body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+}
+
+#confirm-add{
+  grid-column: 1 /span 2;
+}
+
+.modal-confirm-button{
+
+  margin-top: auto;
+  height: 150px;
+
+}
+
+.form-add-description{
+  width: 350px;
+  height: 100px;
+}
+
+.form-add-price{
+  width: 250px;
+  height: 45px;
+}
+
+
+.meal-form-data{
+  padding-left: 35px;
+}
+
+.meal-add-form{
+  padding: 50px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 4 colunas */
+  grid-template-rows: repeat(3, 150px); /* 3 linhas, cada uma com 150px de altura */
+  justify-content: center;
+}
+
+.form-confirm-button{
+  justify-content: center;
+  justify-items: center;
+  grid-column: 1 /span 2;
+}
+
+/* ===== ANIMATION ===== */
+
+@-webkit-keyframes animatetop {
+from {top:-300px; opacity:0} 
+to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+from {top:-300px; opacity:0}
+to {top:0; opacity:1}
+}

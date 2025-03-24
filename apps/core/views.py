@@ -681,6 +681,8 @@ def category_remove(request):
         ticket.category = None
         ticket.save()  
 
+    category.delete()
+
     return JsonResponse({'status': 'success', 'message': 'Registro removido com sucesso!'})
 
   except models.Category.DoesNotExist:

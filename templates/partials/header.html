@@ -6,7 +6,7 @@
     </a>
     <section class="identity-container">
       <p class="identity-title">Administrativo</p>
-      {% if worker.id %}
+      {% if worker.id is not None %}
       <section class="identity-worker-container" id="{{ worker.id }}">
         <p class="identity-worker-text">{{ worker.first_name }}</p>
         <p class="identity-worker-separator"> - </p>
@@ -14,7 +14,7 @@
       </section>
       {% endif %}
     </section>
-    {% if worker.id %}
+    {% if worker.id is not None %}
     <a class="navbar-link" href="{% url 'workers:index' %}">Página Inicial</a>
     <ul class="navbar-dropdown">
       <li class="navbar-dropdown-container">
