@@ -13,10 +13,14 @@ class SupabaseStorage(Storage):
 
     def _save(self, name, content):
         bucket = self.supabase.storage.from_(self.bucket_name)
-        content.seek(0) 
-        response = bucket.upload(name, content.read())  
+        
+        file_content = content.read()  
+        
+        response = bucket.upload(name, file_content)
+        
         if response.get("error"):
             raise Exception(f"Erro ao enviar arquivo para Supabase: {response['error']}")
+        
         return name
 
     def url(self, name):
