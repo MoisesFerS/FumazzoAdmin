@@ -82,16 +82,16 @@ WSGI_APPLICATION = 'FumazzoAdmin.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
+load_dotenv()
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql', 
-        'NAME': 'postgres', 
-        'USER': 'postgres.vezutwhcnhzoysmbvbhy', 
-        'PASSWORD': 'y0GbcpsCut2Gu7i0', 
-        'HOST': 'aws-0-sa-east-1.pooler.supabase.com',  
-        'PORT': '5432', 
-    }
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql', 
+    'NAME': 'postgres', 
+    'USER': 'postgres.vezutwhcnhzoysmbvbhy', 
+    'PASSWORD': os.getenv('PASSWORD'), 
+    'HOST': os.getenv('HOST'),  
+    'PORT': os.getenv('PORT'), 
+  }
 }
 
 # Password validation
@@ -139,9 +139,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Media files (Upload from the users)
 # https://docs.djangoproject.com/en/5.1/topics/files/
 
-SUPABASE_URL='https://vezutwhcnhzoysmbvbhy.supabase.co'
-SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZlenV0d2hjbmh6b3lzbWJ2Ymh5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MjU2MjYyNiwiZXhwIjoyMDU4MTM4NjI2fQ.y3acg9XUICMVgrb7tut_M2yOslY0pjbZAYFUQiJeHg8'
-SUPABASE_BUCKET='media-files'
+SUPABASE_URL=os.getenv('SUPABASE_URL')
+SUPABASE_KEY=os.getenv('SUPABASE_KEY')
+SUPABASE_BUCKET=os.getenv('SUPABASE_BUCKET')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

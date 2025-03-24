@@ -7,6 +7,21 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.15.0] - 21/03/2025 - Vercel Deployment
+
+### ADDED
+- Files:
+  - `vercel.json` - Settings used to deploy the project to vercel.
+  - `storage_backends.py` - Method used to upload files to Supabase storaage.
+
+### CHANGED
+- Database:
+  - The database wont be local anymore, now the project will use the `Supabase` as `database` and `storage`.
+- `Settings.py`:
+  - Remaking the project in Django 4.1.
+  - Changes needed to adapt to cloud database/storage.
+- `wsgi.py` - Changed to adapt to Vercel.
+
 ## [0.14.0] - 21/03/2025 - Notifications
 
 ### ADDED

@@ -1,3 +1,4 @@
+import os
 from django.core.files.storage import Storage
 from supabase import create_client, Client
 
@@ -5,10 +6,10 @@ class SupabaseStorage(Storage):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.supabase: Client = create_client(
-            'https://vezutwhcnhzoysmbvbhy.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZlenV0d2hjbmh6b3lzbWJ2Ymh5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MjU2MjYyNiwiZXhwIjoyMDU4MTM4NjI2fQ.y3acg9XUICMVgrb7tut_M2yOslY0pjbZAYFUQiJeHg8',
+          os.getenv('SUPABASE_URL'),
+          os.getenv('SUPABASE_KEY'),
         )
-        self.bucket_name = 'media-files'
+        self.bucket_name = os.getenv('SUPABASE_BUCKET')
 
     def _save(self, name, content):
         bucket = self.supabase.storage.from_(self.bucket_name)
