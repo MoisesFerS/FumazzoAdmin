@@ -36,7 +36,7 @@ Produtos
                 {% for item in category.items %}
                   <div class="product-accordion" id="accordion">
                     {% if item.image %}
-                      <img class="product-accordion-image" src="{{ item.image.url }}" alt="{{ item.image.name|cut:'core/products/' }}">
+                      <img class="product-accordion-image" src="{{ item.image }}" alt="{{ item.image.name|cut:'core/products/' }}">
                     {% endif %}
                     <p class="product-accordion-name subtitle" id="{{ item.id }}">{{ item.name }}</p>
                   </div>
