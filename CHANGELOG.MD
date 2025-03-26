@@ -7,6 +7,17 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.16.0] - 21/03/2025 - Sale
+
+### ADDED
+- Templates (`templates/core/`):
+  - `sales.html` - Template for managing sales.
+- JavaScript (`static/js/`):
+  - `sales.js` - Scripts for handling sale-related interactions.
+- CSS (`static/css/`):
+  - `sales.css` - Styles for the sale management page.
+- New routes added in `core/urls.py` for the corresponding views in `core/views.py`:
+
 ## [0.15.0] - 21/03/2025 - Vercel Deployment
 
 ### ADDED

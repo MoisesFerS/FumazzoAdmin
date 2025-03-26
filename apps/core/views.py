@@ -894,7 +894,7 @@ def product_remove(request):
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
 
 #   ============================================================
-#   TICKETS SYSTEM - Defs related to Products page
+#   TICKETS SYSTEM - Defs related to Ticket page
 #   ============================================================ 
 
 # Renders the Tickets page
@@ -981,6 +981,29 @@ def ticket_remove(request):
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
   
+#   ============================================================
+#   sales SYSTEM - Defs related to Products page
+#   ============================================================ 
+
+# Renders the sales page
+def sales(request):
+  if 'worker' not in request.session:
+    return redirect('workers:login')
+
+  sales = models.Ticket.objects.all().order_by('-date', 'status')
+  sectors = Sector.objects.all()
+  categories = models.Category.objects.filter(type=7)
+
+  context = {
+    'worker': request.session.get('worker'),
+    'workerRole': request.session.get('workerRole'),
+    'sales' : sales,
+    'sectors' : sectors,
+    'categories' : categories,
+  }
+
+  return render(request, 'core/sales.html', context)
+
 #   ============================================================
 #   GLOBAL DEFS - Defs used by various requests
 #   ============================================================ 
