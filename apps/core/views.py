@@ -985,25 +985,86 @@ def ticket_remove(request):
 #   sales SYSTEM - Defs related to Products page
 #   ============================================================ 
 
-# Renders the sales page
+# Renders the Sales page
 def sales(request):
   if 'worker' not in request.session:
     return redirect('workers:login')
 
-  sales = models.Ticket.objects.all().order_by('-date', 'status')
-  sectors = Sector.objects.all()
-  categories = models.Category.objects.filter(type=7)
+  sales = models.Sale.objects.all()
 
   context = {
     'worker': request.session.get('worker'),
     'workerRole': request.session.get('workerRole'),
     'sales' : sales,
-    'sectors' : sectors,
-    'categories' : categories,
   }
 
   return render(request, 'core/sales.html', context)
 
+# Add a sale entry
+def sale_add(request):
+
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
+
+  try:
+
+    if not request.POST.get('reason') or not request.POST.get('description'):
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
+    
+    reason_ = request.POST.get('reason')
+    sector_ = Sector.objects.filter(id = request.POST.get('sector')).first()
+    priority_ = request.POST.get('priority')
+    category_ = Category.objects.filter(id = request.POST.get('category')).first()
+    description_ = request.POST.get('description')
+
+    sale.objects.create(
+      reason = reason_,
+      sector = sector_,
+      priority = priority_,
+      category = category_,
+      description = description_,
+    )
+
+    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
+
+  except json.JSONDecodeError:
+    return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
+
+# Change the sale status
+def sale_status(request):
+  
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
+  
+  try:
+    sale = Sale.objects.get(id=request.POST.get('sale'))
+    sale.status = request.POST.get('status')
+    sale.save()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro removido com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
+# Removes a sale entry
+def sale_remove(request):
+  
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
+  
+  try:
+    sale_id = request.POST.get('sale')
+
+    sale.objects.get(id=sale_id).delete()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro removido com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+  
 #   ============================================================
 #   GLOBAL DEFS - Defs used by various requests
 #   ============================================================ 

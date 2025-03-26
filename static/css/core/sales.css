@@ -1,0 +1,9 @@
+.sales-container{
+  width: 1024px;
+  background-color: var(--color-detail3);
+  border-radius: 3px;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 20px;
+}
+

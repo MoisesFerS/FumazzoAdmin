@@ -1,18 +1,28 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Produtos
+Promoções
 {% endblock %}
 
 {% load static %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/core/products.css' %}">
+  <link rel="stylesheet" href="{% static 'css/core/sales.css' %}">
 {% endblock %}
 
 {% block content %}
 
   <div class="main-content">
+
+    <div class="sales-container">
+
+      {% if workerRole.permission >= 4 %}
+        <div class="sale-button-add">
+          <button class="button-secondary" name="add">Cadastrar</button>
+        </div>
+      {% endif %}
+
+    </div>
 
   </div>
 
