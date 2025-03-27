@@ -65,8 +65,7 @@ urlpatterns = [
 
   # Sale system
   path('sales/', views.sales, name="sales"),
-  path('sales/add/', views.ticket_add, name="sale-add"),
-  path('sales/status/', views.sale_status, name="sale-status"),
+  path('sales/add/', views.sale_add, name="sale-add"),
   path('sales/remove/', views.sale_remove, name="sale-remove"),
 
 ]

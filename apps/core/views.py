@@ -1009,44 +1009,25 @@ def sale_add(request):
 
   try:
 
-    if not request.POST.get('reason') or not request.POST.get('description'):
+    if not request.POST.get('code') or not request.POST.get('type') or not request.POST.get('date') or not request.POST.get('discount'):
       return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
     
-    reason_ = request.POST.get('reason')
-    sector_ = Sector.objects.filter(id = request.POST.get('sector')).first()
-    priority_ = request.POST.get('priority')
-    category_ = Category.objects.filter(id = request.POST.get('category')).first()
-    description_ = request.POST.get('description')
+    code_ = request.POST.get('code')
+    type_ = request.POST.get('type')
+    date_ = request.POST.get('date')
+    discount_ = request.POST.get('discount')
 
-    sale.objects.create(
-      reason = reason_,
-      sector = sector_,
-      priority = priority_,
-      category = category_,
-      description = description_,
+    models.Sale.objects.create(
+      code = code_,
+      type = type_,
+      end_date = date_,
+      discount = discount_,
     )
 
     return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
 
   except json.JSONDecodeError:
     return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
-
-# Change the sale status
-def sale_status(request):
-  
-  validation_response = validation_insert(request)
-  if validation_response:  
-    return validation_response
-  
-  try:
-    sale = Sale.objects.get(id=request.POST.get('sale'))
-    sale.status = request.POST.get('status')
-    sale.save()
-
-    return JsonResponse({'status': 'success', 'message': 'Registro removido com sucesso!'})
-
-  except Exception as e:
-    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
 
 # Removes a sale entry
 def sale_remove(request):
@@ -1058,7 +1039,7 @@ def sale_remove(request):
   try:
     sale_id = request.POST.get('sale')
 
-    sale.objects.get(id=sale_id).delete()
+    models.Sale.objects.get(id=sale_id).delete()
 
     return JsonResponse({'status': 'success', 'message': 'Registro removido com sucesso!'})
 

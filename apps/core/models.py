@@ -112,8 +112,8 @@ class Table(models.Model):
 
 class Sale(models.Model):
     id = models.AutoField(primary_key=True)
+    code = models.CharField(max_length=30)
     discount = models.IntegerField()
-    start_date = models.DateField()
     end_date = models.DateField()
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
