@@ -7,7 +7,7 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
-## [0.16.0] - 21/03/2025 - Sale
+## [0.16.0] - 27/03/2025 - Sale
 
 ### ADDED
 - Templates (`templates/core/`):
@@ -25,7 +25,7 @@ The format is based on:
 - Models Update:
   - Removed the field `start_date` from `Sale` model.
 
-## [0.15.0] - 21/03/2025 - Vercel Deployment
+## [0.15.0] - 24/03/2025 - Vercel Deployment
 
 ### ADDED
 - Files:
