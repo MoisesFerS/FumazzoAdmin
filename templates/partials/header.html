@@ -31,7 +31,7 @@
         </ul>
       </li>
     </ul>
-    <a class="navbar-link" href="#">Promoções</a>
+    <a class="navbar-link" href="{% url 'core:sales' %}">Promoções</a>
     <a class="navbar-link" href="{% url 'workers:notifications' %}">Notificação</a>
     <a href="{% url 'workers:logout' %}" class="button-primary">Sair</a>
     {% endif %}

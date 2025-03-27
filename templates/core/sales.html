@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Promoções
+{% endblock %}
+
+{% load static %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/core/sales.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <div class="main-content">
+
+    <div class="sales-container">
+
+      {% if workerRole.permission >= 4 %}
+        <div class="sale-button-add">
+          <button class="button-secondary" name="add">Cadastrar</button>
+        </div>
+      {% endif %}
+
+      <div class="sale-items">
+        {% for sale in sales %}
+          <div class="sale remove" id="{{ sale.id }}">
+            <div class="sale-header">
+              {% if sale.type == 1 %}
+                <p class="sale-discount">{{ sale.discount }}%</p>
+              {% elif sale.type == 2 %}
+                <p class="sale-discount">R${{ sale.discount }}</p>
+              {% endif %}
+              <p class="sale-date">{{ sale.end_date | date:'d/m/Y' }}</p>
+            </div>
+            <div class="sale-body">
+              <p class="sale-reason">CUMPOM</p>
+              <p class="subtitle">{{ sale.code }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {% if workerRole.permission >= 4 %}
+  <!-- Modals -->
+  <div class="sale-modal-container" id="modal-add">
+    <div class="sale-modal-content">
+      <div class="sale-modal-header">
+          <h1 class="sale-modal-title-add">ADICIONAR REFEIÇÃO</h1>
+      </div>
+      <div class="sale-modal-body">
+        <div class="modal-add-form">
+          <form action="POST" name="sale-add-form" enctype="multipart/form-data" class="sale-add-form">
+            <div class="sale-form-data">
+              <p class="sale-form-label subtitle">TIPO: </p>
+              <select id="sale-add-type" class="form-input-select select-primary">
+                <option value="" selected>SELECIONE UM TIPO</option>
+                <option value="1">%</option>
+                <option value="2">R$</option>
+              </select>
+            </div>
+            <div class="sale-form-data">
+              <p class="sale-form-label subtitle">CÓDIGO:</p>
+              <input id="sale-add-code" placeholder="Digite o código do cupom" class="select-primary">
+            </div>
+            <div class="sale-form-data" id="sale-discount">
+              <p class="sale-form-label subtitle">DESCONTO:</p>
+              <input type="number" id="sale-add-discount" step="0.01" placeholder="Digite o preço do desconto." class="select-primary">
+            </div>
+            <div class="sale-form-data">
+              <p class="sale-form-label subtitle">DATA LIMITE:</p>
+              <input type="date" id="sale-add-date" class="select-primary">
+            </div>  
+            <div class="form-confirm-button">       
+              <button class="button-primary" id="confirm-add" type="submit">CONFIRMAR</button> 
+            </div>            
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sale-modal-container" id="modal-remove">
+    <div class="sale-modal-content">
+      <div class="sale-modal-header">
+        <h1 class="sale-modal-title-remove">REMOVER REGISTRO</h1>
+      </div>
+      <div class="sale-modal-body">
+        <div class="modal-remove-form">
+          <form method="POST" id="" name="sale-remove-form">
+            <div class="form-text">
+              <p>Você tem certeza que deseja remover este cupom?</p>
+            </div>
+            <div>
+              <button class="button-primary" type="submit">CONFIRMAR</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <script src="{% static 'js/core/sales.js' %}"></script>
+
+{% endblock %}
