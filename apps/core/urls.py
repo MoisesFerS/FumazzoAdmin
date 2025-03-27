@@ -68,4 +68,7 @@ urlpatterns = [
   path('sales/add/', views.sale_add, name="sale-add"),
   path('sales/remove/', views.sale_remove, name="sale-remove"),
 
+  # Supplier system
+  path('suppliers/', views.suppliers, name="suppliers"),
+
 ]

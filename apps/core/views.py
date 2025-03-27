@@ -982,7 +982,7 @@ def ticket_remove(request):
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
   
 #   ============================================================
-#   sales SYSTEM - Defs related to Products page
+#   SALES SYSTEM - Defs related to Products page
 #   ============================================================ 
 
 # Renders the Sales page
@@ -1046,6 +1046,72 @@ def sale_remove(request):
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
   
+#   ============================================================
+#   suppliers SYSTEM - Defs related to Products page
+#   ============================================================ 
+
+# Renders the suppliers page
+def suppliers(request):
+  if 'worker' not in request.session:
+    return redirect('workers:login')
+
+  suppliers = models.Supplier.objects.all()
+
+  context = {
+    'worker': request.session.get('worker'),
+    'workerRole': request.session.get('workerRole'),
+    'suppliers' : suppliers,
+  }
+
+  return render(request, 'core/suppliers.html', context)
+
+# Add a sale entry
+def sale_add(request):
+
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
+
+  try:
+
+    if not request.POST.get('code') or not request.POST.get('type') or not request.POST.get('date') or not request.POST.get('discount'):
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
+    
+    code_ = request.POST.get('code')
+    type_ = request.POST.get('type')
+    date_ = request.POST.get('date')
+    discount_ = request.POST.get('discount')
+
+    models.Sale.objects.create(
+      code = code_,
+      type = type_,
+      end_date = date_,
+      discount = discount_,
+    )
+
+    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
+
+  except json.JSONDecodeError:
+    return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
+
+# Removes a sale entry
+def sale_remove(request):
+  
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
+  
+  try:
+    sale_id = request.POST.get('sale')
+
+    models.Sale.objects.get(id=sale_id).delete()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro removido com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+  
+
 #   ============================================================
 #   GLOBAL DEFS - Defs used by various requests
 #   ============================================================ 

@@ -7,7 +7,18 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
-## [0.16.0] - 27/03/2025 - Sale
+## [0.17.0] - 27/03/2025 - Suppliers system
+
+### ADDED
+- Templates (`templates/core/`):
+  - `suppliers.html` - Template for managing suppliers.
+- JavaScript (`static/js/`):
+  - `suppliers.js` - Scripts for handling supplier-related interactions.
+- CSS (`static/css/`):
+  - `suppliers.css` - Styles for the supplier management page.
+- New routes added in `core/urls.py` for the corresponding views in `core/views.py`:
+
+## [0.16.0] - 27/03/2025 - Sale system
 
 ### ADDED
 - Templates (`templates/core/`):
