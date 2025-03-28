@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Produtos
+{% endblock %}
+
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/core/suppliers.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <div class="main-content">
+    <h1 class="suppliers-title">FORNECEDORES</h1>
+    <div class="suppliers-container">
+
+      {% if workerRole.permission >= 4 %}
+        <div class="supplier-button-add">
+          <button class="button-secondary" name="add">Cadastrar</button>
+        </div>
+      {% endif %}
+
+      <div class="suppliers-accordion-container">
+        {% for supplier in suppliers %}
+          <div class="supplier-accordion">
+            <div class="supplier-label">
+              <p class="title">{{ supplier.name }}</p>
+            </div>
+          </div>
+          <div class="supplier-accordion-panel">
+            <div class="supplier-data">
+              <div>
+                <p class="subtitle">ENDEREÇO:</p>
+                <p class="subtitle">{{ supplier.address }}</p>
+              </div>            
+              <div>
+                <p class="subtitle">TELEFONE:</p>
+                <p class="subtitle">{{ supplier.phone }}</p>
+              </div>
+              <div>
+                <p class="subtitle">E-MAIL:</p>
+                <p class="subtitle">{{ supplier.email }}</p>
+              </div>
+            </div>
+            <div class="supplier-accordion-panel-buttons">
+              {% if workerRole.permission >= 4 %}
+                  <button class="supplier-button edit" name="edit" id="{{ supplier.id }}"></button>
+                  <button class="supplier-button delete" name="remove" id="{{ supplier.id }}"></button>
+              {% endif %}
+            </div>   
+            <hr class="accordion-division">
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {% if workerRole.permission >= 4 %}
+    <!-- Modals -->
+    <div class="supplier-modal-container" id="modal-add">
+      <div class="supplier-modal-content">
+        <div class="supplier-modal-header">
+            <h1 class="supplier-modal-title-add">ADICIONAR REFEIÇÃO</h1>
+        </div>
+        <div class="supplier-modal-body">
+          <div class="modal-add-form">
+            <form action="POST" name="supplier-add-form" enctype="multipart/form-data" class="supplier-add-form">
+              <div class="supplier-form-data">
+                <p class="supplier-form-label subtitle">NOME: </p>
+                <input id="supplier-add-name" placeholder="Digite o nome do fornecedor" class="select-primary">
+              </div>
+              <div class="supplier-form-data">
+                <p class="supplier-form-label subtitle">ENDEREÇO: </p>
+                <input id="supplier-add-address" placeholder="Digite o endereço do fornecedor" class="select-primary">
+              </div>
+              <div class="supplier-form-data">
+                <p class="supplier-form-label subtitle">TELEFONE: </p>
+                <input id="supplier-add-phone" type="number" placeholder="Digite apenas os números" class="select-primary">
+              </div>
+              <div class="supplier-form-data">
+                <p class="supplier-form-label subtitle">E-MAIL: </p>
+                <input id="supplier-add-email" placeholder="Digite o e-mail do fornecedor" class="select-primary">
+              </div>
+              <div class="form-confirm-button">       
+                <button class="button-primary" id="confirm-add" type="submit">CONFIRMAR</button> 
+              </div>            
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="supplier-modal-container" id="modal-edit">
+      <div class="supplier-modal-content">
+        <div class="supplier-modal-header">
+          <h1 class="supplier-modal-title-edit">EDITAR REGISTRO</h1>
+        </div>
+        <div class="supplier-modal-body">
+          <div class="modal-edit-form">
+            <form method="POST" id="" name="supplier-edit-form">
+              <div class="supplier-form-data">
+                <p class="supplier-form-label subtitle">NOME: </p>
+                <input id="supplier-edit-name" placeholder="Digite o nome do fornecedor" class="select-primary">
+              </div>
+              <div class="supplier-form-data">
+                <p class="supplier-form-label subtitle">ENDEREÇO: </p>
+                <input id="supplier-edit-address" placeholder="Digite o endereço do fornecedor" class="select-primary">
+              </div>
+              <div class="supplier-form-data">
+                <p class="supplier-form-label subtitle">TELEFONE: </p>
+                <input id="supplier-edit-phone" placeholder="Digite apenas os números" class="select-primary">
+              </div>
+              <div class="supplier-form-data">
+                <p class="supplier-form-label subtitle">E-MAIL: </p>
+                <input id="supplier-edit-email" placeholder="Digite o e-mail do fornecedor" class="select-primary">
+              </div>
+              <div>
+                <button class="button-primary" type="submit">CONFIRMAR</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="supplier-modal-container" id="modal-remove">
+      <div class="supplier-modal-content">
+        <div class="supplier-modal-header">
+          <h1 class="supplier-modal-title-remove">REMOVER REGISTRO</h1>
+        </div>
+        <div class="supplier-modal-body">
+          <div class="modal-remove-form">
+            <form method="POST" id="" name="supplier-remove-form">
+              <div class="form-text">
+                <p>Você tem certeza que deseja remover</p>
+                <p id="remove-supplier">REFEIÇÃO</p>
+              </div>
+              <div>
+                <button class="button-primary" type="submit">CONFIRMAR</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <script src="{% static 'js/core/suppliers.js' %}"></script>
+
+{% endblock %}

@@ -982,7 +982,7 @@ def ticket_remove(request):
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
   
 #   ============================================================
-#   sales SYSTEM - Defs related to Products page
+#   SALES SYSTEM - Defs related to Products page
 #   ============================================================ 
 
 # Renders the Sales page
@@ -1046,6 +1046,117 @@ def sale_remove(request):
   except Exception as e:
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
   
+#   ============================================================
+#   SUPPLIERS SYSTEM - Defs related to Supplier page
+#   ============================================================ 
+
+# Renders the suppliers page
+def suppliers(request):
+  if 'worker' not in request.session:
+    return redirect('workers:login')
+
+  suppliers = models.Supplier.objects.all()
+
+  context = {
+    'worker': request.session.get('worker'),
+    'workerRole': request.session.get('workerRole'),
+    'suppliers' : suppliers,
+  }
+
+  return render(request, 'core/suppliers.html', context)
+
+# Add a supplier entry
+def supplier_add(request):
+
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
+
+  try:
+
+    if not request.POST.get('name') or not request.POST.get('phone') or not request.POST.get('email') or not request.POST.get('address'):
+      return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
+    
+    name_ = request.POST.get('name')
+    phone_ = request.POST.get('phone')
+    email_ = request.POST.get('email')
+    address_ = request.POST.get('address')
+
+    models.Supplier.objects.create(
+      name = name_,
+      phone = phone_,
+      email = email_,
+      address = address_,
+    )
+
+    return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
+
+  except json.JSONDecodeError:
+    return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
+
+# Updates a supplier entry
+def supplier_edit(request):
+
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
+
+  try:
+    name_ = request.POST.get('name')
+    phone_ = request.POST.get('phone')
+    email_ = request.POST.get('email')
+    address_ = request.POST.get('address')
+
+    supplier = models.Supplier.objects.get(id=request.POST.get('supplierID'))
+    supplier.name = name_
+    supplier.address = address_
+    supplier.email = email_
+    supplier.phone = phone_
+
+    supplier.save()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro editado com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
+# Retrieves the product data
+def supplier_data(request):
+
+  try:
+    supplier_id = request.POST.get('supplier')
+    supplier = models.Supplier.objects.get(id=supplier_id)
+
+    supplierData = {
+      'name' : supplier.name,
+      'phone' : str(supplier.phone),
+      'email' : supplier.email,
+      'address' : supplier.address,
+    }
+
+    return JsonResponse({'status': 'success', 'message': 'Infromação encontrada com sucesso!', 'supplierData' : supplierData})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
+# Removes a supplier entry
+def supplier_remove(request):
+  
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
+  
+  try:
+    supplier_id = request.POST.get('supplier')
+
+    models.Supplier.objects.get(id=supplier_id).delete()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro removido com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+  
+
 #   ============================================================
 #   GLOBAL DEFS - Defs used by various requests
 #   ============================================================ 
