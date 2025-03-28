@@ -87,13 +87,13 @@
 .edit{
   background-size: cover; 
   background-position: center;
-  background-image: url(../../images/buttons/edit.png);
+  background-image: url("../../images/buttons/edit.e509719a165b.png");
 }
 
 .delete{
   background-size: cover; 
   background-position: center;
-  background-image: url(../../images/buttons/delete.png);
+  background-image: url("../../images/buttons/delete.11203347e914.png");
 }
 
 /*  ============================================================

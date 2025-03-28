@@ -70,5 +70,9 @@ urlpatterns = [
 
   # Supplier system
   path('suppliers/', views.suppliers, name="suppliers"),
+  path('suppliers/add/', views.supplier_add, name="supplier-add"),
+  path('suppliers/edit/', views.supplier_edit, name="supplier-edit"),
+  path('suppliers/data/', views.supplier_data, name="supplier-data"),
+  path('suppliers/remove/', views.supplier_remove, name="supplier-remove"),
 
 ]

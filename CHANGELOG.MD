@@ -7,7 +7,7 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
-## [0.17.0] - 27/03/2025 - Suppliers system
+## [0.17.0] - 28/03/2025 - Suppliers system
 
 ### ADDED
 - Templates (`templates/core/`):
@@ -17,6 +17,12 @@ The format is based on:
 - CSS (`static/css/`):
   - `suppliers.css` - Styles for the supplier management page.
 - New routes added in `core/urls.py` for the corresponding views in `core/views.py`:
+  - `suppliers` - Renders the supplier management page.
+  - `supplier_add` - Adds a new `Supplier` entry.
+  - `supplier_edit` - Updates the data of a `Supplier` entry.
+  - `supplier_data` - Retrieves data for editing an entry.
+  - `supplier_remove` - Deletes a `Supplier` entry.
+- Added a link to the navbar button referent to the suppliers page.
 
 ## [0.16.0] - 27/03/2025 - Sale system
 
@@ -31,6 +37,7 @@ The format is based on:
   - `sale` - Renders the sale management page.
   - `sale_add` - Adds a new `Sale` entry.
   - `sale_remove` - Deletes a `Sale` entry.
+- Added a link to the navbar button referent to the suppliers page.
 
 ### CHANGED
 - Models Update:

@@ -31,17 +31,23 @@ Produtos
           </div>
           <div class="supplier-accordion-panel">
             <div class="supplier-data">
-              <p>ENDEREÇO:</p>
-              <p>{{ supplier.address }}</p>
-              <p>TELEFONE:</p>
-              <p>{{ supplier.phone }}</p>
-              <p>E-MAIL:</p>
-              <p>{{ supplier.email }}</p>
+              <div>
+                <p class="subtitle">ENDEREÇO:</p>
+                <p class="subtitle">{{ supplier.address }}</p>
+              </div>            
+              <div>
+                <p class="subtitle">TELEFONE:</p>
+                <p class="subtitle">{{ supplier.phone }}</p>
+              </div>
+              <div>
+                <p class="subtitle">E-MAIL:</p>
+                <p class="subtitle">{{ supplier.email }}</p>
+              </div>
             </div>
             <div class="supplier-accordion-panel-buttons">
               {% if workerRole.permission >= 4 %}
-                  <button class="supplier-button edit" name="edit" id="{{ item.id }}"></button>
-                  <button class="supplier-button delete" name="remove" id="{{ item.id }}"></button>
+                  <button class="supplier-button edit" name="edit" id="{{ supplier.id }}"></button>
+                  <button class="supplier-button delete" name="remove" id="{{ supplier.id }}"></button>
               {% endif %}
             </div>   
             <hr class="accordion-division">
@@ -62,32 +68,21 @@ Produtos
           <div class="modal-add-form">
             <form action="POST" name="supplier-add-form" enctype="multipart/form-data" class="supplier-add-form">
               <div class="supplier-form-data">
-                <p class="supplier-form-label subtitle">TIPO: </p>
-                <select id="supplier-add-type" class="form-input-select select-primary">
-                  <option value="" selected>SELECIONE UM TIPO</option>
-                  <option value="4">BEBIDAS</option>
-                  <option value="5">PRODUTOS</option>
-                  <option value="6">INGREDIENTES</option>
-                </select>
-              </div>
-              <div class="supplier-form-data">
-                <p class="supplier-form-label subtitle">CATEGORIA: </p>
-                <select id="supplier-add-category" class="form-input-select select-primary">
-                  <option value="">SEM CATEGORIA</option>
-                </select>
-              </div>
-              <div class="supplier-form-data">
                 <p class="supplier-form-label subtitle">NOME: </p>
-                <input id="supplier-add-name" placeholder="Digite o nome do produto" class="select-primary">
-              </div>
-              <div class="supplier-form-data" id="supplier-sell-price" style="display: none;">
-                <p class="supplier-form-label subtitle">PREÇO: </p>
-                <input type="number" id="supplier-add-price" step="0.01" placeholder="Digite o preço de venda" class="select-primary">
+                <input id="supplier-add-name" placeholder="Digite o nome do fornecedor" class="select-primary">
               </div>
               <div class="supplier-form-data">
-                <p class="supplier-form-label subtitle">IMAGEM: </p>
-                <input type="file" id="supplier-add-image" accept="image/*">
-              </div>  
+                <p class="supplier-form-label subtitle">ENDEREÇO: </p>
+                <input id="supplier-add-address" placeholder="Digite o endereço do fornecedor" class="select-primary">
+              </div>
+              <div class="supplier-form-data">
+                <p class="supplier-form-label subtitle">TELEFONE: </p>
+                <input id="supplier-add-phone" type="number" placeholder="Digite apenas os números" class="select-primary">
+              </div>
+              <div class="supplier-form-data">
+                <p class="supplier-form-label subtitle">E-MAIL: </p>
+                <input id="supplier-add-email" placeholder="Digite o e-mail do fornecedor" class="select-primary">
+              </div>
               <div class="form-confirm-button">       
                 <button class="button-primary" id="confirm-add" type="submit">CONFIRMAR</button> 
               </div>            
@@ -106,32 +101,20 @@ Produtos
           <div class="modal-edit-form">
             <form method="POST" id="" name="supplier-edit-form">
               <div class="supplier-form-data">
-                <p class="supplier-form-label subtitle">TIPO: </p>
-                <select id="supplier-edit-type" class="form-input-select">
-                  <option value="" selected>SELECIONE UM TIPO</option>
-                  <option value="4">BEBIDAS</option>
-                  <option value="5">PRODUTOS</option>
-                  <option value="6">INGREDIENTES</option>
-                </select>
-              </div>
-              <div class="supplier-form-data">
-                <p class="supplier-form-label subtitle">CATEGORIA: </p>
-                <select id="supplier-edit-category" class="form-input-select">
-                  <option value="">SEM CATEGORIA</option>
-                </select>
-              </div>
-              <div class="supplier-form-data">
                 <p class="supplier-form-label subtitle">NOME: </p>
-                <input id="supplier-edit-name" placeholder="Digite o nome da refeição">
-              </div>
-              <div class="supplier-form-data" id="supplier-sell-price-edit">
-                <p class="supplier-form-label subtitle">PREÇO: </p>
-                <input type="number" id="supplier-edit-price" step="0.01" placeholder="Digite o preço">
+                <input id="supplier-edit-name" placeholder="Digite o nome do fornecedor" class="select-primary">
               </div>
               <div class="supplier-form-data">
-                <p class="supplier-form-label subtitle">IMAGEM: </p>
-                <img id="supplier-edit-image" class="supplier-accordion-image" src="" alt="">
-                <input type="file" id="supplier-new-image" accept="image/*">
+                <p class="supplier-form-label subtitle">ENDEREÇO: </p>
+                <input id="supplier-edit-address" placeholder="Digite o endereço do fornecedor" class="select-primary">
+              </div>
+              <div class="supplier-form-data">
+                <p class="supplier-form-label subtitle">TELEFONE: </p>
+                <input id="supplier-edit-phone" placeholder="Digite apenas os números" class="select-primary">
+              </div>
+              <div class="supplier-form-data">
+                <p class="supplier-form-label subtitle">E-MAIL: </p>
+                <input id="supplier-edit-email" placeholder="Digite o e-mail do fornecedor" class="select-primary">
               </div>
               <div>
                 <button class="button-primary" type="submit">CONFIRMAR</button>

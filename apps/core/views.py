@@ -1047,7 +1047,7 @@ def sale_remove(request):
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
   
 #   ============================================================
-#   suppliers SYSTEM - Defs related to Products page
+#   SUPPLIERS SYSTEM - Defs related to Supplier page
 #   ============================================================ 
 
 # Renders the suppliers page
@@ -1065,8 +1065,8 @@ def suppliers(request):
 
   return render(request, 'core/suppliers.html', context)
 
-# Add a sale entry
-def sale_add(request):
+# Add a supplier entry
+def supplier_add(request):
 
   validation_response = validation_insert(request)
   if validation_response:  
@@ -1074,19 +1074,19 @@ def sale_add(request):
 
   try:
 
-    if not request.POST.get('code') or not request.POST.get('type') or not request.POST.get('date') or not request.POST.get('discount'):
+    if not request.POST.get('name') or not request.POST.get('phone') or not request.POST.get('email') or not request.POST.get('address'):
       return JsonResponse({'status': 'error', 'error': '400', 'message': 'Preencha todos os campos.'}, status=400)
     
-    code_ = request.POST.get('code')
-    type_ = request.POST.get('type')
-    date_ = request.POST.get('date')
-    discount_ = request.POST.get('discount')
+    name_ = request.POST.get('name')
+    phone_ = request.POST.get('phone')
+    email_ = request.POST.get('email')
+    address_ = request.POST.get('address')
 
-    models.Sale.objects.create(
-      code = code_,
-      type = type_,
-      end_date = date_,
-      discount = discount_,
+    models.Supplier.objects.create(
+      name = name_,
+      phone = phone_,
+      email = email_,
+      address = address_,
     )
 
     return JsonResponse({'status': 'success', 'message': 'Registro alterado com sucesso!'})
@@ -1094,17 +1094,62 @@ def sale_add(request):
   except json.JSONDecodeError:
     return JsonResponse({'status': 'error', 'error': '400', 'message': 'Erro ao processar JSON'}, status=400)
 
-# Removes a sale entry
-def sale_remove(request):
+# Updates a supplier entry
+def supplier_edit(request):
+
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
+
+  try:
+    name_ = request.POST.get('name')
+    phone_ = request.POST.get('phone')
+    email_ = request.POST.get('email')
+    address_ = request.POST.get('address')
+
+    supplier = models.Supplier.objects.get(id=request.POST.get('supplierID'))
+    supplier.name = name_
+    supplier.address = address_
+    supplier.email = email_
+    supplier.phone = phone_
+
+    supplier.save()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro editado com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
+# Retrieves the product data
+def supplier_data(request):
+
+  try:
+    supplier_id = request.POST.get('supplier')
+    supplier = models.Supplier.objects.get(id=supplier_id)
+
+    supplierData = {
+      'name' : supplier.name,
+      'phone' : str(supplier.phone),
+      'email' : supplier.email,
+      'address' : supplier.address,
+    }
+
+    return JsonResponse({'status': 'success', 'message': 'Infromação encontrada com sucesso!', 'supplierData' : supplierData})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
+# Removes a supplier entry
+def supplier_remove(request):
   
   validation_response = validation_insert(request)
   if validation_response:  
     return validation_response
   
   try:
-    sale_id = request.POST.get('sale')
+    supplier_id = request.POST.get('supplier')
 
-    models.Sale.objects.get(id=sale_id).delete()
+    models.Supplier.objects.get(id=supplier_id).delete()
 
     return JsonResponse({'status': 'success', 'message': 'Registro removido com sucesso!'})
 
