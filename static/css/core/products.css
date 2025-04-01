@@ -197,7 +197,6 @@
 /* Modal body, where is located the information */
 .product-modal-body {
   width: 100%;
-  display: flex;
   flex-direction: column;
   justify-content: center;
   align-self: center;

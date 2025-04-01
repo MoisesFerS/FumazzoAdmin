@@ -67,7 +67,7 @@ def get_products(request):
   for category in categories:
     products_in_category = [
       {'id': product.id, 'name': product.name}
-      for product in products if product.category.id == category.id
+      for product in products if product.category and product.category.id == category.id
     ]
     data.append({
       'categories': category.name,

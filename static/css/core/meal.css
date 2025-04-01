@@ -242,11 +242,12 @@
 /* Modal body, where is located the information */
 .meal-modal-body {
   width: 100%;
-  display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow-y: scroll;
   align-self: center;
 }
+
 
 #confirm-add{
   grid-column: 1 /span 2;

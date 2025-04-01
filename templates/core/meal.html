@@ -148,15 +148,15 @@
             <form method="POST" id="" name="meal-edit-form">
               <div class="meal-form-data">
                 <p class="meal-form-label subtitle">NOME: </p>
-                <input id="meal-edit-name" placeholder="Digite o nome da refeição">
+                <input id="meal-edit-name" placeholder="Digite o nome da refeição" class="select-primary">
               </div>
               <div class="meal-form-data">
                 <p class="meal-form-label subtitle">DESCRIÇÃO: </p>
-                <textarea id="meal-edit-description" placeholder="Digite a descrição da refeição"></textarea>
+                <textarea id="meal-edit-description" placeholder="Digite a descrição da refeição" class="select-primary"></textarea>
               </div>
               <div class="meal-form-data">
                 <p class="meal-form-label subtitle">TIPO: </p>
-                <select id="meal-edit-type" class="form-input-select">
+                <select id="meal-edit-type" class="form-input-select select-primary">
                   <option value="" selected>SELECIONE UM TIPO</option>
                   <option value="1">LANCHES</option>
                   <option value="2">SOBREMESAS</option>
@@ -165,13 +165,13 @@
               </div>
               <div class="meal-form-data">
                 <p class="meal-form-label subtitle">CATEGORIA: </p>
-                <select id="meal-edit-category" class="form-input-select">
+                <select id="meal-edit-category" class="form-input-select select-primary">
                   <option value="">SEM CATEGORIA</option>
                 </select>
               </div>
               <div class="meal-form-data">
                 <p class="meal-form-label subtitle">PREÇO: </p>
-                <input type="number" id="meal-edit-price" step="0.01" placeholder="Digite o preço">
+                <input type="number" id="meal-edit-price" step="0.01" placeholder="Digite o preço" class="select-primary">
               </div>
               <div class="meal-form-data">
                 <p class="meal-form-label subtitle">IMAGEM: </p>
@@ -196,8 +196,7 @@
           <div class="modal-remove-form">
             <form method="POST" id="" name="meal-remove-form">
               <div class="form-text">
-                <p>Você tem certeza que deseja remover</p>
-                <p id="remove-meal">REFEIÇÃO</p>
+                <p>Você tem certeza que deseja remover esta refeição?</p>
               </div>
               <div>
                 <button class="button-primary" type="submit">CONFIRMAR</button>
@@ -217,7 +216,7 @@
           <div class="modal-ingredient-form">
             <form method="POST" id="" name="meal-ingredient-form">
               <div class="form-text">
-                <select id="meal-add-ingredients">
+                <select id="meal-add-ingredients" class="select-primary">
                   <option value="" selected disabled hidden>SELECIONE UM INGREDIENTE</option>
                 </select>
               </div>

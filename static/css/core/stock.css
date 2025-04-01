@@ -163,6 +163,8 @@
   color: var(--color-detail4);
 }
 
+
+
 /*  ============================================================
     MODALS - Modals used on the page
     ============================================================ */ 
@@ -224,7 +226,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  justify-self: end;
   height: 150px;
 
 }

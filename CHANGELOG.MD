@@ -7,6 +7,12 @@ The format is based on:
 [Keep a Changelog](https://keepachangelog.com/)
 [Semantic Versioning](https://semver.org/)
 
+## [0.17.1] - 28/03/2025 - Small fixes
+
+### CHANGED
+- `get-products` now verifies if the product has a category.
+- Fixed typos.
+
 ## [0.17.0] - 28/03/2025 - Suppliers system
 
 ### ADDED

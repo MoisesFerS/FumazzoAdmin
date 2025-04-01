@@ -67,7 +67,7 @@ Categorias
             <form action="POST" name="category-add-form" enctype="multipart/form-data">
               <div class="category-form-data">
                 <p class="category-form-label subtitle">TIPO: </p>
-                <select id="category-add-type" class="form-input-select">
+                <select id="category-add-type" class="form-input-select select-primary">
                   <option value="" selected disabled hidden>SELECIONE UM TIPO</option>
                   <option value="1">LANCHES</option>
                   <option value="2">SOBREMESAS</option>
@@ -80,7 +80,7 @@ Categorias
               </div>
               <div class="category-form-data">
                 <p class="category-form-label subtitle">NOME: </p>
-                <input id="category-add-name" placeholder="Digite o nome da categoria">
+                <input id="category-add-name" placeholder="Digite o nome da categoria" class="select-primary">
               </div>
               <div class="modal-confirm-button">
                 <button class="button-primary" id="confirm-add" type="submit">CONFIRMAR</button>
@@ -101,7 +101,7 @@ Categorias
             <form method="POST" id="" name="category-edit-form">
               <div class="category-form-data">
                 <p class="category-form-label subtitle">NOME: </p>
-                <input id="category-edit-name" placeholder="Digite o nome da categoria.">
+                <input id="category-edit-name" placeholder="Digite o nome da categoria." class="select-primary">
               </div>
               <div>
                 <button class="button-primary" type="submit">CONFIRMAR</button>
@@ -121,8 +121,7 @@ Categorias
           <div class="modal-remove-form">
             <form method="POST" id="" name="category-remove-form">
               <div class="form-text">
-                <p>Você tem certeza que deseja remover</p>
-                <p id="remove-category">CATEGORIA</p>
+                <p>Você tem certeza que deseja remover esta categoria?</p>
               </div>
               <div>
                 <button class="button-primary" type="submit">CONFIRMAR</button>

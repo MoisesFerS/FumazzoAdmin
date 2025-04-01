@@ -85,11 +85,11 @@ Estoque
       <div class="modal-add-form">
         <div class="stock-form-data">
           <h2 class="stock-form-label">DATA: </h2>
-          <input type="date" id="stock-add-date" class="form-input-text">
+          <input type="date" id="stock-add-date" class="form-input-text select-primary" >
         </div>
         <div class="stock-form-data">
           <h2 class="stock-form-label">FORNECEDOR: </h2>
-          <select id="stock-add-supplier" class="form-input-select">
+          <select id="stock-add-supplier" class="form-input-select select-primary">
             {% for supplier in suppliers %}
             <option value="{{ supplier.id }}">{{ supplier.name }}</option>
             {% endfor %}
@@ -97,7 +97,7 @@ Estoque
         </div>
         <div class="stock-form-data">
           <h2 class="stock-form-label">RECEPTOR: </h2>
-          <select id="stock-add-receiver" class="form-input-select">
+          <select id="stock-add-receiver" class="form-input-select select-primary">
             {% for receiver in receivers %}
             <option value="{{ receiver.id }}">{{ receiver.first_name }}</option>
             {% endfor %}
@@ -118,20 +118,20 @@ Estoque
     </div>
     <div class="stock-modal-body">
       <div class="modal-edit-form">
-        <select id="stock-edit-supplier" class="form-input-select">
+        <select id="stock-edit-supplier" class="form-input-select select-primary">
           {% for supplier in suppliers %}
           <option value="{{ supplier.id }}">{{ supplier.name }}</option>
           {% endfor %}
         </select>
-        <select id="stock-edit-receiver" class="form-input-select">
+        <select id="stock-edit-receiver" class="form-input-select select-primary">
           {% for receiver in receivers %}
           <option value="{{ receiver.id }}">{{ receiver.first_name }}</option>
           {% endfor %}
         </select>
-        <input type="date" id="stock-edit-date" class="form-input-text" />
-        <h2 class="products-title">PRODUTOS:</h2>
+        <input type="date" id="stock-edit-date" class="form-input-text select-primary"/>
+        <h2 class="products-title">PRODUTOS: QTD PREÇO</h2>
         <div class="products-container" id="products-container"></div>
-        <button class="product-button-add title" id="add-product" type="button">+</button>
+        <button class="product-button-add button-secondary" id="add-product" type="button">Adicionar</button>
         <div class="modal-confirm-button">
           <button class="button-primary" id="confirm-edit">CONFIRMAR</button>
         </div>
