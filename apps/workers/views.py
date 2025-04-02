@@ -223,7 +223,26 @@ def notification_data(request):
     return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
 
 def notification_edit(request):
-	return
+  
+  validation_response = validation_insert(request)
+  if validation_response:  
+    return validation_response
+
+  try:
+    message_ = request.POST.get('message')
+    sector_ = models.Sector.objects.get(id=request.POST.get('sector'))
+
+    notification = models.Notification.objects.get(id=request.POST.get('notificationID'))
+    notification.message = message_
+    notification.sector = sector_
+
+    notification.save()
+
+    return JsonResponse({'status': 'success', 'message': 'Registro editado com sucesso!'})
+
+  except Exception as e:
+    return JsonResponse({'status': 'error', 'error': '500', 'message': f'Erro interno: {str(e)}'}, status=500)
+
 
 def notification_remove(request):
 

@@ -107,6 +107,7 @@ document.querySelector("[name='notification-edit-form']").addEventListener('subm
   var formData = new FormData();
   formData.append('notificationID', this.id)
   formData.append('message', document.querySelector('#notification-edit-message').value);
+  formData.append('sector', document.querySelector('#notification-edit-sector').value);
 
   let csrfToken = getToken(); 
 
